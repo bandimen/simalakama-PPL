@@ -125,12 +125,12 @@ class IrsController extends Controller
         $activePeriodType = null;
         $matkuls = null;
         if ($currentPeriod) {
-            if ($currentPeriod->semester == 'gasal') {
+            if ($currentPeriod->semester == 'Gasal') {
                 $matkuls = MataKuliah::where(function($query) {
                     $query->where('semester', '0') 
                           ->orWhereRaw('semester % 2 != 0');
                 })->orderBy('semester', 'asc')->get();
-            } elseif ($currentPeriod->semester == 'genap') {
+            } elseif ($currentPeriod->semester == 'Genap') {
                 $matkuls = MataKuliah::whereRaw('semester % 2 = 0')->orderBy('semester', 'asc')->get();
             }
 
