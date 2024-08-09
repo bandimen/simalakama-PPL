@@ -51,7 +51,7 @@ class IrsController extends Controller
                     'irs_id' => $irs->id,
                     'kodemk' => $item['kodemk'],
                     'jadwal_kuliah_id' => $item['jadwal_kuliah_id'],
-                    'status' => $item['status'] ?? 'baru'
+                    'status' => $item['status'] ?? 'Baru'
                 ]);
             }
             
@@ -125,12 +125,12 @@ class IrsController extends Controller
         $activePeriodType = null;
         $matkuls = null;
         if ($currentPeriod) {
-            if ($currentPeriod->semester == 'gasal') {
+            if ($currentPeriod->semester == 'Gasal') {
                 $matkuls = MataKuliah::where(function($query) {
                     $query->where('semester', '0') 
                           ->orWhereRaw('semester % 2 != 0');
                 })->orderBy('semester', 'asc')->get();
-            } elseif ($currentPeriod->semester == 'genap') {
+            } elseif ($currentPeriod->semester == 'Genap') {
                 $matkuls = MataKuliah::whereRaw('semester % 2 = 0')->orderBy('semester', 'asc')->get();
             }
 
