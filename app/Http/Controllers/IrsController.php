@@ -51,7 +51,7 @@ class IrsController extends Controller
                     'irs_id' => $irs->id,
                     'kodemk' => $item['kodemk'],
                     'jadwal_kuliah_id' => $item['jadwal_kuliah_id'],
-                    'status' => $item['status'] ?? 'baru'
+                    'status' => $item['status'] ?? 'Baru'
                 ]);
             }
             
