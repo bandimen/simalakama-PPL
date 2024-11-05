@@ -8,6 +8,7 @@ use App\Http\Controllers\KaprodiController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\BagianAkademikController;
+use App\Http\Controllers\IrsController;
 use App\Http\Controllers\PembimbingAkademikController;
 
 // kalo belum login
@@ -24,11 +25,21 @@ Route::get('/home', function() {
 
 // ini routing yang bisa dijalankan apabila dlm kondisi login
 Route::middleware(['auth'])->group(function () {
-  Route::get('/mhs', [MahasiswaController::class, 'index']);
-  Route::get('/mhs/irs', [MahasiswaController::class, 'irs']);
-  Route::get('/mhs/khs', [MahasiswaController::class, 'khs']);
+  Route::get('/mhs', [MahasiswaController::class, 'index'])->name('mhs');
+  Route::get('/mhs/akademik', [MahasiswaController::class, 'buatirs']);
+  Route::get('/mhs/akademik/buatirs', [MahasiswaController::class, 'buatirs']);
+  Route::get('/mhs/akademik/lihatirs', [MahasiswaController::class, 'lihatirs']);
+
+  //buat irs
+  Route::get('/jadwal/{kodemk}', [MahasiswaController::class, 'getJadwal']);
+  Route::post('/irs/details', [IrsController::class, 'storeDetail']);
+  Route::get('/irs/selected-schedules', [IrsController::class, 'getSelectedSchedules']);
+  Route::post('/irs/store', [IrsController::class, 'store']);
+
 
   Route::get('/pa', [PembimbingAkademikController::class, 'index']);
+  Route::get('/pa/perwalian', [PembimbingAkademikController::class, 'perwalian']);
+  Route::get('/pa/rekapmhs', [PembimbingAkademikController::class, 'rekapmhs']);
 
   Route::get('/ba', [BagianAkademikController::class, 'index']);
 

@@ -11,22 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('mahasiswa', function (Blueprint $table) {
+        Schema::create('ruangs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade'); 
-            $table->foreignId('pembimbing_akademik_id')->constrained()->onDelete('cascade'); 
-            $table->string('nim')->unique();
-            $table->string('jurusan');
+            $table->string('nama')->unique();
+            $table->integer('kapasitas');
             $table->timestamps();
-        });     
+        });
     }
-    
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('mahasiswas');
+        Schema::dropIfExists('ruangs');
     }
 };

@@ -64,4 +64,7 @@ class User extends Authenticatable
         return $this->roles()->whereIn('name', (array)$roleNames)->exists();
     }
 
+    public function mahasiswa()
+    {
+        return $this->hasOne(Mahasiswa::class, 'user_id', 'id');    }
 }

@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PembimbingAkademik extends Model
+class Kaprodi extends Model
 {
-    protected $table = 'pembimbing_akademik';
+    protected $table = 'kaprodi';
     protected $fillable = ['nidn'];
 
     public function dosen()
@@ -14,7 +14,4 @@ class PembimbingAkademik extends Model
         return $this->belongsTo(Dosen::class);
     }
 
-    public function mahasiswas() {
-        return $this->hasMany(Mahasiswa::class);
-    }
 }

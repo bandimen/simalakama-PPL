@@ -5,12 +5,15 @@
           <div class="flex-shrink-0">
             <img class="h-8 w-8" src="/images/logo-undip.png" alt="Simalakama Undip">
           </div>
+          <div class="ml-4 flex items-baseline space-x-4 text-white">
+            <h2>SIMALAKAMA UNDIP</h2>
+          </div>
           <div class="hidden md:block">
             <div class="ml-10 flex items-baseline space-x-4">
               <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
             <x-nav-link-mhs href="/pa" :active="request()->is('pa')" >Home</x-nav-link-mhs>
-            <x-nav-link-mhs href="/pa/irs" :active="request()->is('pa/irs')" >IRS</x-nav-link-mhs>
-            <x-nav-link-mhs href="/pa/khs" :active="request()->is('pa/khs')" >KHS</x-nav-link-mhs>
+            <x-nav-link-mhs href="/pa/perwalian" :active="request()->is('pa/perwalian')" >Perwalian</x-nav-link-mhs>
+            <x-nav-link-mhs href="/pa/rekapmhs" :active="request()->is('pa/rekapmhs')" >Rekap Mhs</x-nav-link-mhs>
             {{-- <x-nav-link-mhs href="/contact" :active="request()->is('contact')" >Contact</x-nav-link-mhs> --}}
             </div>
           </div>
@@ -94,8 +97,8 @@
       <div class="space-y-1 px-2 pb-3 pt-2 sm:px-3">
         <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
         <x-nav-link-mhs href="/pa" :active="request()->is('pa')" >Home</x-nav-link-mhs>
-        <x-nav-link-mhs href="/pa/irs" :active="request()->is('pa/irs')" >IRS</x-nav-link-mhs>
-        <x-nav-link-mhs href="/pa/khs" :active="request()->is('pa/khs')" >KHS</x-nav-link-mhs>
+        <x-nav-link-mhs href="/pa/perwalian" :active="request()->is('pa/perwalian')" >Perwalian</x-nav-link-mhs>
+        <x-nav-link-mhs href="/pa/rekapmhs" :active="request()->is('pa/rekapmhs')" >Rekap Mhs</x-nav-link-mhs>
         {{-- <x-nav-link-mhs href="/contact" :active="request()->is('contact')" >Contact</x-nav-link-mhs> --}}
       </div>
       <div class="border-t border-gray-700 pb-3 pt-4">

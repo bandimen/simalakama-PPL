@@ -31,6 +31,7 @@ class SessionController extends Controller
             
             // Ambil semua role user
             $userRoles = $user->roles;
+
         
             // ni kalo punya banyak role
             if ($userRoles->count() > 1) {
