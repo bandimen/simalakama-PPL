@@ -26,15 +26,15 @@ Route::get('/home', function() {
 // ini routing yang bisa dijalankan apabila dlm kondisi login
 Route::middleware(['auth'])->group(function () {
   Route::get('/mhs', [MahasiswaController::class, 'index'])->name('mhs');
-  Route::get('/mhs/akademik', [MahasiswaController::class, 'buatirs']);
-  Route::get('/mhs/akademik/buatirs', [MahasiswaController::class, 'buatirs']);
-  Route::get('/mhs/akademik/lihatirs', [MahasiswaController::class, 'lihatirs']);
-
+  Route::get('/mhs/akademik', [IrsController::class, 'buatirs']);
   //buat irs
+  Route::get('/mhs/akademik/buatirs', [IrsController::class, 'buatirs']);
+  Route::get('/mhs/akademik/lihatirs', [IrsController::class, 'lihatirs']);
   Route::get('/jadwal/{kodemk}', [MahasiswaController::class, 'getJadwal']);
   Route::post('/irs/details', [IrsController::class, 'storeDetail']);
   Route::get('/irs/selected-schedules', [IrsController::class, 'getSelectedSchedules']);
   Route::post('/irs/store', [IrsController::class, 'store']);
+  
 
 
   Route::get('/pa', [PembimbingAkademikController::class, 'index']);

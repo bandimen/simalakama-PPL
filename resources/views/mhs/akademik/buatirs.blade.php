@@ -12,11 +12,24 @@
     <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
       <h1 class="text-2xl font-bold tracking-tight text-gray-900">Buat IRS</h1>
       <br>
-      <p>Ini nanti isinya alert semacam "masa periode pengisian irs/masa perubahan irs/masa pembatalan irs/ tidak dalam periode irs"</p>
+      @if ($activePeriodType == 'pengisian')
+      <div id="alert-additional-content-1" class="p-4 mb-4 text-blue-800 border border-blue-300 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400 dark:border-blue-800" role="alert">
+        <div class="flex items-center">
+          <svg class="flex-shrink-0 w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+          </svg>
+          <span class="sr-only">Info</span>
+          <h3 class="text-lg font-medium">Anda dalam Masa Pengisian IRS</h3>
+        </div>
+        <div class="mt-2 mb-4 text-sm">
+          Masa pengisian IRS dimulai pada tanggal {{ $currentPeriod->periode_pengisian_start }} hingga {{ $currentPeriod->periode_pengisian_end }}.
+        </div>
+      </div>
+
       <br>
       <p>ini isinya informasi tentang mahasiswanya kek nama, ip semester lalu, semester skrg berapa, ipk berapa</p>
       <br>
-{{-- kotak untuk milih mata kuliah --}}
+      {{-- kotak untuk milih mata kuliah --}}
       <section class="block max-w p-6 bg-white border border-gray-200 rounded-lg  dark:bg-gray-800 dark:border-gray-700 ">
         <label for="courses">
           <p class="mb-2 text-m font-bold tracking-tight text-gray-900 dark:text-white">Pilih Mata Kuliah</p>
@@ -57,7 +70,34 @@
         <div id="selectedScheduleList">
           <ul id="selectedScheduleList"></ul>
         </div>
-          </section>
+      </section>
+
+      @elseif ($activePeriodType == 'perubahan')
+
+      @elseif ($activePeriodType == 'pembatalan')
+
+      @else
+      <div id="alert-additional-content-2" class="p-4 mb-4 text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800" role="alert">
+        <div class="flex items-center">
+          <svg class="flex-shrink-0 w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+          </svg>
+          <span class="sr-only">Info</span>
+          <h3 class="text-lg font-medium">Tidak dalam masa IRS-an</h3>
+        </div>
+        <div class="mt-2 mb-4 text-sm">
+          Masa IRS-an sudah selesai. Tidak ada lagi pengisian, perubahan, dan pembatalan IRS untuk semester ini, silakan nikmati perkuliahan dengan baik. Miaw.
+        </div>
+        <div class="flex">
+          <a href="/mhs">
+            <button type="button" class="text-red-800 bg-transparent border border-red-800 hover:bg-red-900 hover:text-white focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-xs px-3 py-1.5 text-center dark:hover:bg-red-600 dark:border-red-600 dark:text-red-500 dark:hover:text-white dark:focus:ring-red-800" data-dismiss-target="#alert-additional-content-2" aria-label="Close">
+              Kembali
+            </button>
+          </a>
+        </div>
+      </div>
+      @endif
+
       
     </div>
   </main>

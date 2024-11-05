@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Irs;
 use App\Models\IrsDetail;
+use App\Models\MataKuliah;
 use App\Models\JadwalKuliah;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Laravel\Ui\AuthRouteMethods;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class IrsController extends Controller
 {
@@ -108,4 +111,52 @@ class IrsController extends Controller
     {
         //
     }
+
+    public function buatirs() {
+        $matkul = MataKuliah::all();
+
+        $currentDateTime = now(); // Mendapatkan waktu saat ini
+
+        $currentPeriod = DB::table('irs_periods')
+        ->where('periode_pengisian_start', '<=', $currentDateTime)
+        ->where('periode_pengisian_end', '>=', $currentDateTime)
+        ->orWhere(function($query) use ($currentDateTime) {
+            $query->where('periode_perubahan_start', '<=', $currentDateTime)
+                  ->where('periode_perubahan_end', '>=', $currentDateTime);
+        })
+        ->orWhere(function($query) use ($currentDateTime) {
+            $query->where('periode_pembatalan_start', '<=', $currentDateTime)
+                  ->where('periode_pembatalan_end', '>=', $currentDateTime);
+        })
+        ->orWhere(function($query) use ($currentDateTime) {
+            $query->where('periode_perkuliahan_start', '<=', $currentDateTime)
+                  ->where('periode_perkuliahan_end', '>=', $currentDateTime);
+        })
+        ->first();
+        
+
+        $activePeriodType = null;
+
+        if ($currentPeriod) {
+            if ($currentDateTime->between($currentPeriod->periode_pengisian_start, $currentPeriod->periode_pengisian_end)) {
+                $activePeriodType = 'pengisian';
+            } elseif ($currentDateTime->between($currentPeriod->periode_perubahan_start, $currentPeriod->periode_perubahan_end)) {
+                $activePeriodType = 'perubahan';
+            } elseif ($currentDateTime->between($currentPeriod->periode_pembatalan_start, $currentPeriod->periode_pembatalan_end)) {
+                $activePeriodType = 'pembatalan';
+            }
+        }
+        return view('mhs.akademik.buatirs', 
+        [
+            'title' => 'Akademik', 
+            'matkuls' => $matkul, 
+            'currentPeriod' => $currentPeriod, 
+            'activePeriodType' => $activePeriodType
+        ]);
+    }
+
+    public function lihatirs() {
+        return view('mhs.akademik.lihatirs', ['title' => 'Akademik']);
+    }
+
 }
