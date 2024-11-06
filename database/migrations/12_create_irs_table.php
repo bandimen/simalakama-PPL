@@ -17,8 +17,8 @@ return new class extends Migration
             $table->foreign('nim')->references('nim')->on('mahasiswas')->onDelete('cascade');
             $table->integer('semester');
             $table->string('tahun_ajaran');
-            $table->enum('status', ['disetujui', 'belum disetujui'])->default('belum disetujui');
             $table->integer('total_sks');
+            $table->enum('status', ['disetujui', 'belum disetujui'])->default('belum disetujui');
             $table->timestamps();
         });
     }
