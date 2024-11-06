@@ -7,6 +7,7 @@ use App\Models\Mahasiswa;
 use App\Models\MataKuliah;
 use App\Models\JadwalKuliah;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class MahasiswaController extends Controller
@@ -23,14 +24,7 @@ class MahasiswaController extends Controller
     //     return view('mhs.akademik.buatirs', ['title' => 'Akademik']);
     // }
 
-    public function buatirs() {
-        $matkul = MataKuliah::all();
-        return view('mhs.akademik.buatirs', ['title' => 'Akademik', 'matkuls' => $matkul]);
-    }
 
-    public function lihatirs() {
-        return view('mhs.akademik.lihatirs', ['title' => 'Akademik']);
-    }
 
     public function getJadwal($kodemk)
     {

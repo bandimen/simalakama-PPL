@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             RuangTableSeeder::class,
             PengampuMataKuliahTableSeeder::class,
             JadwalKuliahTableSeeder::class,
+            IrsPeriodsTableSeeder::class,
         ]);
     }
 }
