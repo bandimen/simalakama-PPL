@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('dekan', function (Blueprint $table) {
+        Schema::create('dekans', function (Blueprint $table) {
             $table->id();
             $table->string('nidn'); 
             $table->foreign('nidn')->references('nidn')->on('dosen')->onDelete('cascade'); 
