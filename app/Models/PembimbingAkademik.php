@@ -11,7 +11,7 @@ class PembimbingAkademik extends Model
 
     public function dosen()
     {
-        return $this->belongsTo(Dosen::class);
+        return $this->belongsTo(Dosen::class, 'nidn', 'nidn');
     }
 
     public function mahasiswas() {

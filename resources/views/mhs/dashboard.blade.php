@@ -12,7 +12,7 @@
         <br>
         
         <!-- Card Pertama -->
-        <div class="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-l hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 mb-4">
+        <div class="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-l  dark:border-gray-700 dark:bg-gray-800  mb-4">
             <img class="object-contain w-28 h-28 rounded-full md:rounded-lg" src="/images/mhs/{{ $mahasiswa->foto }}" alt="">
             <div class="flex flex-col justify-between p-4 leading-normal">
                 <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $mahasiswa->nama }}</h5>
@@ -27,7 +27,7 @@
         <!-- Container untuk Card Kedua dan Ketiga dalam satu baris -->
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2 w-full">
             <!-- Card Kedua -->
-            <div class="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow p-4 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+            <div class="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow p-4 dark:border-gray-700 dark:bg-gray-800">
                 <!-- Judul -->
                 <h5 class="mb-4 text-xl font-bold text-center text-gray-900 dark:text-white">Status Akademik</h5>
                     
@@ -39,7 +39,7 @@
                     <!-- Tahun Akademik -->
                     <div class="px-4">
                         <p class="text-sm font-medium text-gray-500">Tahun Akademik</p>
-                        <p class="text-lg font-bold text-gray-900">2024/2025</p>
+                        <p class="text-lg font-bold text-gray-900">{{ $currentPeriod->tahun_ajaran }}</p>
                     </div>
 
                     <!-- Semester Studi -->
@@ -52,14 +52,14 @@
                     <div class="px-4">
                         <p class="text-sm font-medium text-gray-500">Status Mahasiswa</p>
                         <p class="text-lg font-bold">
-                            <span class="inline-block px-4 py-1 text-white rounded-lg" style="background-color: #28a745;">Aktif</span>
+                            <span class="inline-block px-4 py-1 text-white rounded-lg" style="background-color: #28a745;">{{ $mahasiswa->status }}</span>
                         </p>
                     </div>
                 </div>
             </div>
 
             <!-- Card Ketiga -->
-            <div class="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow p-4 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+            <div class="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow p-4 dark:border-gray-700 dark:bg-gray-800">
                 <!-- Judul -->
                 <h5 class="mb-4 text-xl font-bold text-center text-gray-900 dark:text-white">Prestasi Akademik</h5>
                     
@@ -76,7 +76,7 @@
 
                     <!-- SKS -->
                     <div class="px-4">
-                        <p class="text-sm font-medium text-gray-500">SKS</p>
+                        <p class="text-sm font-medium text-gray-500">SKSk</p>
                         <p class="text-lg font-bold text-gray-900">84</p>
                     </div>
                 </div>
@@ -86,13 +86,13 @@
         <!-- Container untuk Card Keempat, Kelima dan keenam dalam satu baris -->
         <div class="grid grid-cols-1 gap-4 md:grid-cols-3 w-full mt-5">
             <!-- Card Keempat -->
-            <div class="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow p-4 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+            <div class="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow p-4 dark:border-gray-700 dark:bg-gray-800">
                 <!-- Judul -->
                 <h5 class="mb-2 text-xl font-bold text-center text-gray-900 dark:text-white">Wali Dosen</h5>
                     <!-- Nama dan NIDN PA -->
                     <div class="px-4">
-                        <p class="text-sm font-medium text-gray-500">{{ $mahasiswa->nama }}</p>
-                        <p class="text-sm font-medium text-center text-gray-500">{{ $mahasiswa->nim }}</p>
+                        <p class="text-sm font-medium text-gray-500">{{ $pa->nama }}</p>
+                        <p class="text-sm font-medium text-center text-gray-500">NIDN: {{ $pa->nidn }}</p>
                     </div>
             </div>
 
@@ -107,13 +107,13 @@
                         <!-- Judul -->
                         <h5 class="text-xl font-bold text-gray-900 dark:text-white">Isian Rencana Studi</h5> 
                         <!-- Tahun Akademik -->
-                        <p class="text-sm font-medium text-gray-500">2024/2025</p>
+                        <p class="text-sm font-medium text-gray-500">{{ $currentPeriod->tahun_ajaran }}</p>
                     </div>
                 </div>
             </a>
 
             <!-- Card Keenam -->
-            <div class="flex flex-col bg-white border border-gray-200 rounded-lg shadow p-4 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+            <a href="/mhs/akademik" class="flex flex-col bg-white border border-gray-200 rounded-lg shadow p-4 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
                 <!-- Container untuk Gambar dan Teks dalam satu baris -->
                 <div class="flex items-center">
                     <!-- Gambar di sebelah kiri -->
@@ -123,10 +123,10 @@
                         <!-- Judul -->
                         <h5 class="text-xl font-bold text-gray-900 dark:text-white">Kartu Hasil Studi</h5>
                         <!-- Tahun Akademik -->
-                        <p class="text-sm font-medium text-gray-500">2024/2025</p>
+                        <p class="text-sm font-medium text-gray-500">{{ $currentPeriod->tahun_ajaran }}</p>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
     </div>
 </main>
