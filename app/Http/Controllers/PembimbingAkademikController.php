@@ -12,8 +12,15 @@ class PembimbingAkademikController extends Controller
         return view('pa.dashboard', ['title' => 'Dashboard - PA']);
     }
     public function perwalian() {
+        $pa = Auth::user()->pembimbingAkademik;
 
-        return view('pa.perwalian', ['title' => 'Perwalian - PA']);
+        $irs = DB::table('irs')
+                ->join('mahasiswas', 'irs.nim', '=', 'mahasiswas.nim')
+                ->select('irs.*', 'mahasiswas.*')
+                ->where('mahasiswas.nidn', '=', $pa->nidn)
+                ->get();
+
+        return view('pa.perwalian', ['title' => 'Perwalian - PA', 'irs' => $irs]);
     }
     public function rekapmhs() {
         return view('pa.rekapmhs', ['title' => 'Rekap Mhs - PA']);
