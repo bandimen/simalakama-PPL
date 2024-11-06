@@ -44,6 +44,8 @@ Route::middleware(['auth'])->group(function () {
   Route::get('/ba', [BagianAkademikController::class, 'index']);
 
   Route::get('/dekan', [DekanController::class, 'index']);
+  Route::get('/dekan/matkul', [DekanController::class, 'matkul']);
+  Route::get('/dekan/ruangacc', [DekanController::class, 'ruangacc']);
 
   Route::get('/kaprodi', [KaprodiController::class, 'index']);
 
