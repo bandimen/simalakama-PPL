@@ -21,6 +21,7 @@ class IrsTableSeeder extends Seeder
                 'total_sks' => 16,
                 'status' => 'belum disetujui'
             ],
+
         ];
 
         foreach($irs as $i){
