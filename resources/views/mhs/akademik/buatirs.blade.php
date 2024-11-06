@@ -41,7 +41,7 @@
         </section>
 
         {{-- kotak untuk milih mata kuliah --}}
-        <section class="block max-w p-6 bg-white border border-gray-200 rounded-lg  dark:bg-gray-800 dark:border-gray-700 ">
+        <section class="block max-w p-6 bg-white border border-gray-200 rounded-lg  dark:bg-gray-800 dark:border-gray-700 mt-6">
           <label for="courses">
             <p class="mb-2 text-m font-bold tracking-tight text-gray-900 dark:text-white">Pilih Mata Kuliah</p>
           </label>
@@ -62,14 +62,48 @@
           
         <br>
         {{-- ini buat milih jadwal --}}
-        <section class="block max-w p-6 bg-white border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700">
+
+        <br>
+        {{-- Section untuk memilih jadwal --}}
+        <section class="block max-w p-6 bg-white border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700 mt-1">
           <label for="schedule">
             <p class="mb-2 text-m font-bold tracking-tight text-gray-900 dark:text-white">Pilih Jadwal</p>
           </label>
-          <p class="font-normal text-sm text-gray-700 dark:text-gray-400">Jadwal mata kuliah yang dipilih akan ditampilkan di bawah ini.</p>
-          <div id="scheduleDisplay" class="mt-4"></div>
+          <p class="font-normal text-sm text-gray-700 dark:text-gray-400">Silakan pilih waktu untuk setiap mata kuliah yang diambil.</p>
+
+          {{-- Tabel Jadwal --}}
+        <div id="scheduleDisplay" class="mt-4 overflow-x-auto flex justify-center">
+            <div class="w-full">
+                <table class="min-w-full border-collapse border border-gray-300 dark:border-gray-600 text-sm text-gray-700 dark:text-white">
+                    <thead>
+                        <tr>
+                            <th class="border border-gray-300 dark:border-gray-600 p-2 bg-gray-100 dark:bg-gray-700 text-center">Waktu</th>
+                            <th class="border border-gray-300 dark:border-gray-600 p-2 bg-gray-100 dark:bg-gray-700 text-center">Senin</th>
+                            <th class="border border-gray-300 dark:border-gray-600 p-2 bg-gray-100 dark:bg-gray-700 text-center">Selasa</th>
+                            <th class="border border-gray-300 dark:border-gray-600 p-2 bg-gray-100 dark:bg-gray-700 text-center">Rabu</th>
+                            <th class="border border-gray-300 dark:border-gray-600 p-2 bg-gray-100 dark:bg-gray-700 text-center">Kamis</th>
+                            <th class="border border-gray-300 dark:border-gray-600 p-2 bg-gray-100 dark:bg-gray-700 text-center">Jumat</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for ($hour = 7; $hour <= 19; $hour++)
+                            <tr>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2 text-center">
+                                    {{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:00
+                                </td>
+                                @for ($day = 0; $day < 5; $day++)
+                                    <td class="border border-gray-300 dark:border-gray-600 p-2 text-center">
+                                        {{-- Tempat untuk memilih jadwal mata kuliah --}}
+                                    </td>
+                                @endfor
+                            </tr>
+                        @endfor
+                    </tbody>
+                </table>
+            </div>
+        </div>
         </section>
-        
+
         <br>
         {{-- ini isinya pop up buat nampilin irs yg jadi diambil --}}
         {{-- ini karena aku blm bisa bikin pop up jadi kubikin manual aja hehe --}}
