@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Dekan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,5 +13,15 @@ class DekanController extends Controller
         $user = Auth::user();
         $dekan = $user->dekan;
         return view('dekan.dashboard', ['title' => 'Dashboard Dekan', 'dekan' => $dekan]);
+    }
+    public function matkul() {
+        $user = Auth::user();
+        $dekan = $user->dekan;
+        return view('dekan.matkul', ['title' => 'Mata Kuliah', 'dekan' => $dekan]);
+    }
+    public function ruangacc() {
+        $user = Auth::user();
+        $dekan = $user->dekan;
+        return view('dekan.ruangacc', ['title' => 'Ruang Kuliah', 'dekan' => $dekan]);
     }
 }
