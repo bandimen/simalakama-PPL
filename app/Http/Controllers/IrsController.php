@@ -113,6 +113,9 @@ class IrsController extends Controller
     }
 
     public function buatirs() {
+        // Mendapatkan data mahasiswa dari user yang login
+        $mahasiswa = Auth::user()->mahasiswa;
+
         $currentDateTime = now(); 
     
         $currentPeriod = DB::table('irs_periods')
@@ -159,7 +162,8 @@ class IrsController extends Controller
             'title' => 'Akademik', 
             'matkuls' => $matkuls, 
             'currentPeriod' => $currentPeriod, 
-            'activePeriodType' => $activePeriodType
+            'activePeriodType' => $activePeriodType,
+            'mahasiswa' => $mahasiswa
         ]);
     }
     

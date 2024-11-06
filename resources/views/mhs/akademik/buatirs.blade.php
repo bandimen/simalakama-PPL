@@ -28,9 +28,18 @@
           </div>
         </div>
 
-        <br>
-        <p>ini isinya informasi tentang mahasiswanya kek nama, ip semester lalu, semester skrg berapa, ipk berapa</p>
-        <br>
+        {{-- kotak informasi mahasiswa --}}
+        <section class="block max-w p-6 bg-white border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700">
+            <p class="mb-2 text-m tracking-tight text-gray-700 dark:text-white">Nama: {{ $mahasiswa->nama }}</p>
+            <p class="mb-2 text-m tracking-tight text-gray-700 dark:text-white">NIM: {{ $mahasiswa->nim }}</p>
+            <!-- Garis Horizontal -->
+            <hr class="border-gray-300 w-full mb-4 dark:border-gray-600">
+            <p class="mb-2 text-m tracking-tight text-gray-700 dark:text-white">Tahun Ajaran: {{ $mahasiswa->tahun_ajaran }}</p>
+            <p class="mb-2 text-m tracking-tight text-gray-700 dark:text-white">Indeks Prestasi Kumulatif: {{ $mahasiswa->ipk }}</p>
+            <p class="mb-2 text-m tracking-tight text-gray-700 dark:text-white">Indeks Prestasi Semester (lalu): {{ $mahasiswa->ips_lalu }}</p>
+            <p class="mb-2 text-m tracking-tight text-gray-700 dark:text-white">Maksimal Beban SKS: {{ $mahasiswa->max_sks }}</p>
+        </section>
+
         {{-- kotak untuk milih mata kuliah --}}
         <section class="block max-w p-6 bg-white border border-gray-200 rounded-lg  dark:bg-gray-800 dark:border-gray-700 ">
           <label for="courses">
