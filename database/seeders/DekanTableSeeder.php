@@ -16,6 +16,7 @@ class DekanTableSeeder extends Seeder
         $dekans = [
             [
                 'nidn' => '0017037201', // NIDN Pak Kusworo Adi
+                'user_id' => 7,
             ]
         ];
 

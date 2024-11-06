@@ -16,6 +16,7 @@ class KaprodiTableSeeder extends Seeder
         $kaprodis = [
             [
                 'nidn' => '0011087104', // NIDN Pak Aris S
+                'user_id' => 6,
             ]
         ];
 

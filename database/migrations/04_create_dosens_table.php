@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('nama');
             $table->string('alamat')->nullable();
             $table->string('foto')->nullable();
-            $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null'); 
             $table->timestamps();
         });
     }

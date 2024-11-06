@@ -16,13 +16,12 @@ class PembimbingAkademiksTableSeeder extends Seeder
         $pembimbingAkademiks = [
             [
                 'nidn' => '0001047404', // NIDN Pak Aris PW
+                'user_id' => 5,
             ],
             [
                 'nidn' => '0011087104', // NIDN Pak Aris S
+                'user_id' => 6,
             ],
-            [
-                'nidn' => '0017037201', // NIDN Pak Kusworo
-            ]
 
 
         ];

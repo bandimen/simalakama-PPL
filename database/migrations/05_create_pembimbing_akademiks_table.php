@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nidn'); 
             $table->foreign('nidn')->references('nidn')->on('dosen')->onDelete('cascade'); 
+            $table->foreignId('user_id')->unique()->constrained('users')->onDelete('cascade'); 
             $table->timestamps();
         });
         

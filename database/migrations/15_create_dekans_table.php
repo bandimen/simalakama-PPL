@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('dekans', function (Blueprint $table) {
             $table->id();
             $table->string('nidn'); 
-            $table->foreign('nidn')->references('nidn')->on('dosen')->onDelete('cascade'); 
+            $table->foreign('nidn')->references('nidn')->on('dosen')->onDelete('cascade');
+            $table->foreignId('user_id')->unique()->constrained('users')->onDelete('cascade'); // Relasi ke users
             $table->timestamps();
         });
         
