@@ -113,31 +113,39 @@ class IrsController extends Controller
     }
 
     public function buatirs() {
-        $matkul = MataKuliah::all();
-
-        $currentDateTime = now(); // Mendapatkan waktu saat ini
-
+        $currentDateTime = now(); 
+    
         $currentPeriod = DB::table('irs_periods')
-        ->where('periode_pengisian_start', '<=', $currentDateTime)
-        ->where('periode_pengisian_end', '>=', $currentDateTime)
-        ->orWhere(function($query) use ($currentDateTime) {
-            $query->where('periode_perubahan_start', '<=', $currentDateTime)
-                  ->where('periode_perubahan_end', '>=', $currentDateTime);
-        })
-        ->orWhere(function($query) use ($currentDateTime) {
-            $query->where('periode_pembatalan_start', '<=', $currentDateTime)
-                  ->where('periode_pembatalan_end', '>=', $currentDateTime);
-        })
-        ->orWhere(function($query) use ($currentDateTime) {
-            $query->where('periode_perkuliahan_start', '<=', $currentDateTime)
-                  ->where('periode_perkuliahan_end', '>=', $currentDateTime);
-        })
-        ->first();
-        
-
+            ->where(function($query) use ($currentDateTime) {
+                $query->where('periode_pengisian_start', '<=', $currentDateTime)
+                      ->where('periode_pengisian_end', '>=', $currentDateTime)
+                      ->orWhere(function($query) use ($currentDateTime) {
+                          $query->where('periode_perubahan_start', '<=', $currentDateTime)
+                                ->where('periode_perubahan_end', '>=', $currentDateTime);
+                      })
+                      ->orWhere(function($query) use ($currentDateTime) {
+                          $query->where('periode_pembatalan_start', '<=', $currentDateTime)
+                                ->where('periode_pembatalan_end', '>=', $currentDateTime);
+                      })
+                      ->orWhere(function($query) use ($currentDateTime) {
+                          $query->where('periode_perkuliahan_start', '<=', $currentDateTime)
+                                ->where('periode_perkuliahan_end', '>=', $currentDateTime);
+                      });
+            })
+            ->first();
+            
         $activePeriodType = null;
-
+        $matkuls = null;
         if ($currentPeriod) {
+            if ($currentPeriod->semester == 'gasal') {
+                $matkuls = MataKuliah::where(function($query) {
+                    $query->where('semester', '0') 
+                          ->orWhereRaw('semester % 2 != 0');
+                })->orderBy('semester', 'asc')->get();
+            } elseif ($currentPeriod->semester == 'genap') {
+                $matkuls = MataKuliah::whereRaw('semester % 2 = 0')->orderBy('semester', 'asc')->get();
+            }
+
             if ($currentDateTime->between($currentPeriod->periode_pengisian_start, $currentPeriod->periode_pengisian_end)) {
                 $activePeriodType = 'pengisian';
             } elseif ($currentDateTime->between($currentPeriod->periode_perubahan_start, $currentPeriod->periode_perubahan_end)) {
@@ -146,14 +154,15 @@ class IrsController extends Controller
                 $activePeriodType = 'pembatalan';
             }
         }
-        return view('mhs.akademik.buatirs', 
-        [
+    
+        return view('mhs.akademik.buatirs', [
             'title' => 'Akademik', 
-            'matkuls' => $matkul, 
+            'matkuls' => $matkuls, 
             'currentPeriod' => $currentPeriod, 
             'activePeriodType' => $activePeriodType
         ]);
     }
+    
 
     public function lihatirs() {
         return view('mhs.akademik.lihatirs', ['title' => 'Akademik']);
