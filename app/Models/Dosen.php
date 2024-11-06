@@ -17,4 +17,10 @@ class Dosen extends Model
     {
         return $this->hasOne(Kaprodi::class, 'nidn', 'nidn');
     }
+
+    public function dekan()
+    {
+        return $this->hasOne(Dekan::class, 'nidn', 'nidn');
+    }
+
 }

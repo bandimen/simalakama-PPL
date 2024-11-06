@@ -8,8 +8,9 @@ use Illuminate\Support\Facades\Auth;
 class DekanController extends Controller
 {
     public function index() {
-        echo "ini dashboard dekan";
-        echo "<h1>" . Auth::user()->name . "</h1>";
-        echo "<a href='/logout'>Logout</a>";
+        // data mahasiswa yg diambil di proses sessionController pas login dibawa ke view
+        $user = Auth::user();
+        $dekan = $user->dekan;
+        return view('dekan.dashboard', ['title' => 'Dashboard Dekan', 'dekan' => $dekan]);
     }
 }

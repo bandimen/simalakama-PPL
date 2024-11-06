@@ -19,7 +19,12 @@ class PembimbingAkademiksTableSeeder extends Seeder
             ],
             [
                 'nidn' => '0011087104', // NIDN Pak Aris S
+            ],
+            [
+                'nidn' => '0017037201', // NIDN Pak Kusworo
             ]
+
+
         ];
 
         foreach ($pembimbingAkademiks as $pembimbing) {

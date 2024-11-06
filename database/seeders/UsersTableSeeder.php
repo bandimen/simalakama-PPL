@@ -51,6 +51,12 @@ class UsersTableSeeder extends Seeder
             'email' => 'arissugiharto@simalakama.com',
             'password' => bcrypt('123456'),
             'roles' => ['pembimbingakademik', 'kaprodi']
+        ],
+        [
+            'name' => 'Kusworo Adi',
+            'email' => 'kusworoadi@simalakama.com',
+            'password' => bcrypt('123456'),
+            'roles' => ['dekan']
         ]
     ];
 
