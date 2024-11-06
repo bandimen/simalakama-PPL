@@ -17,4 +17,9 @@ class PembimbingAkademik extends Model
     public function mahasiswas() {
         return $this->hasMany(Mahasiswa::class);
     }
+    
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

@@ -12,10 +12,7 @@ class PembimbingAkademikController extends Controller
         return view('pa.dashboard', ['title' => 'Dashboard - PA']);
     }
     public function perwalian() {
-        $irs = DB::table('irs')
-                ->join('mahasiswas', 'irs.nim', '=', 'mahasiswas.nim')
-                ->select()
-                ->get();
+
         return view('pa.perwalian', ['title' => 'Perwalian - PA']);
     }
     public function rekapmhs() {
