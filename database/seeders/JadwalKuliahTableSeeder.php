@@ -14,6 +14,7 @@ class JadwalKuliahTableSeeder extends Seeder
     public function run(): void
     {
         $jadwalKuliah = [
+            // semester 5
             ['kodemk' => 'PAIK6501', 'ruang_id' => 1, 'kelas' => 'D', 'hari' => 'Selasa', 'waktu_mulai' => '13:00:00', 'waktu_selesai' => '16:20:00'], //pbp
             ['kodemk' => 'PAIK6501', 'ruang_id' => 1, 'kelas' => 'C', 'hari' => 'Selasa', 'waktu_mulai' => '07:00:00', 'waktu_selesai' => '10:20:00'], //pbp
             ['kodemk' => 'PAIK6502', 'ruang_id' => 18, 'kelas' => 'D', 'hari' => 'Kamis', 'waktu_mulai' => '15:40:00', 'waktu_selesai' => '18:10:00'], //ktp
