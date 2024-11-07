@@ -53,7 +53,7 @@
                         <p class="text-sm font-medium text-gray-500">Status Mahasiswa</p>
                         <p class="text-lg font-bold">
                         @php
-                            $backgroundColor = $mahasiswa->status == 'aktif' ? '#28a745' : '#db0202';
+                            $backgroundColor = $mahasiswa->status == 'Aktif' ? '#28a745' : '#db0202';
                         @endphp
                         <span class="inline-block px-4 py-1 text-white rounded-lg" style="background-color: {{ $backgroundColor }}">{{ $mahasiswa->status }}</span>
                         </p>
