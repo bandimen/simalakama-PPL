@@ -15,7 +15,7 @@ class IrsPeriodsTableSeeder extends Seeder
     {
         $periods = [
             [
-                'semester' => 'gasal',
+                'semester' => 'Gasal',
                 'tahun_ajaran' => '2024/2025',
                 'periode_pengisian_start' => '2024-07-01 00:00:00',
                 'periode_pengisian_end' => '2024-08-14 23:59:59',

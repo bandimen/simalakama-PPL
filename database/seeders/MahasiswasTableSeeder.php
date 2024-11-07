@@ -20,7 +20,7 @@ class MahasiswasTableSeeder extends Seeder
                 'alamat' => 'Jl. Pendidikan No. 1',
                 'angkatan' => 2024,
                 'no_hp' => '081234567890',
-                'status' => 'aktif',
+                'status' => 'Aktif',
                 'foto' => 'fendi.jpg',
                 'pembimbing_akademik_id' => 1, // ID pembimbing akademik yang sesuai
                 'user_id' => 1 // ID user yang sesuai
@@ -31,7 +31,7 @@ class MahasiswasTableSeeder extends Seeder
                 'alamat' => 'Jl. Ilmu No. 2',
                 'angkatan' => 2023,
                 'no_hp' => '081234567891',
-                'status' => 'aktif',
+                'status' => 'Aktif',
                 'foto' => 'farrel.jpg',
                 'pembimbing_akademik_id' => 1, // ID pembimbing akademik yang sesuai
                 'user_id' => 2 // ID user yang sesuai
@@ -42,7 +42,7 @@ class MahasiswasTableSeeder extends Seeder
                 'alamat' => 'Jl. Teknologi No. 3',
                 'angkatan' => 2022,
                 'no_hp' => '081234567892',
-                'status' => 'aktif',
+                'status' => 'Aktif',
                 'foto' => 'naufal.jpg',
                 'pembimbing_akademik_id' => 2, // ID pembimbing akademik yang sesuai
                 'user_id' => 3 // ID user yang sesuai
@@ -53,7 +53,7 @@ class MahasiswasTableSeeder extends Seeder
                 'alamat' => 'Jl. Desain No. 4',
                 'angkatan' => 2021,
                 'no_hp' => '081234567893',
-                'status' => 'aktif',
+                'status' => 'Aktif',
                 'foto' => 'tiara.jpg',
                 'pembimbing_akademik_id' => 2, // ID pembimbing akademik yang sesuai
                 'user_id' => 4 // ID user yang sesuai

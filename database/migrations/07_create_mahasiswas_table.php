@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text('alamat')->nullable();
             $table->year('angkatan');
             $table->string('no_hp')->nullable();
-            $table->enum('status', ['aktif', 'cuti'])->default('aktif');
+            $table->enum('status', ['Aktif', 'Cuti'])->default('Aktif');
             $table->string('foto')->nullable();
             
             $table->foreignId('pembimbing_akademik_id')->nullable()->constrained('pembimbing_akademik')->onDelete('set null'); // Make it nullable

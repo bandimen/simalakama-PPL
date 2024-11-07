@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('nama');
             $table->integer('sks');
             $table->integer('semester');
-            $table->enum('sifat', ['wajib', 'pilihan']);
+            $table->enum('sifat', ['Wajib', 'Pilihan']);
             $table->timestamps();
         });
     }

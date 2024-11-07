@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('kodemk');
             $table->foreign('kodemk')->references('kodemk')->on('mata_kuliahs')->onDelete('cascade');
             $table->foreignId('jadwal_kuliah_id')->constrained()->onDelete('cascade');
-            $table->enum('status', ['baru', 'perbaikan', 'ulang']);
+            $table->enum('status', ['Baru', 'Perbaikan', 'Ulang']);
             $table->timestamps();
         });
     }

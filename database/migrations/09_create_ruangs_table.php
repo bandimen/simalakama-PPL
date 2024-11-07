@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nama')->unique();
             $table->integer('kapasitas');
-            $table->enum('status', ['disetujui', 'belum disetujui'])->default('belum disetujui');
+            $table->enum('status', ['Disetujui', 'Belum disetujui'])->default('Belum disetujui');
             $table->timestamps();
         });
     }
