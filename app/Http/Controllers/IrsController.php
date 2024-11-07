@@ -11,9 +11,11 @@ use Laravel\Ui\AuthRouteMethods;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\IrsPeriodsController;
 
 class IrsController extends Controller
 {
+    
     public function store(Request $request)
     {
         
@@ -116,27 +118,10 @@ class IrsController extends Controller
         // Mendapatkan data mahasiswa dari user yang login
         $mahasiswa = Auth::user()->mahasiswa;
 
-        $currentDateTime = now(); 
-    
-        $currentPeriod = DB::table('irs_periods')
-            ->where(function($query) use ($currentDateTime) {
-                $query->where('periode_pengisian_start', '<=', $currentDateTime)
-                      ->where('periode_pengisian_end', '>=', $currentDateTime)
-                      ->orWhere(function($query) use ($currentDateTime) {
-                          $query->where('periode_perubahan_start', '<=', $currentDateTime)
-                                ->where('periode_perubahan_end', '>=', $currentDateTime);
-                      })
-                      ->orWhere(function($query) use ($currentDateTime) {
-                          $query->where('periode_pembatalan_start', '<=', $currentDateTime)
-                                ->where('periode_pembatalan_end', '>=', $currentDateTime);
-                      })
-                      ->orWhere(function($query) use ($currentDateTime) {
-                          $query->where('periode_perkuliahan_start', '<=', $currentDateTime)
-                                ->where('periode_perkuliahan_end', '>=', $currentDateTime);
-                      });
-            })
-            ->first();
-            
+        $irsPeriodsController = new IrsPeriodsController();
+        $currentPeriod = $irsPeriodsController->getCurrentPeriod();
+        $currentDateTime = now();
+
         $activePeriodType = null;
         $matkuls = null;
         if ($currentPeriod) {
