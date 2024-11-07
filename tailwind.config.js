@@ -8,6 +8,7 @@ export default {
         './resources/**/*.blade.php',
         './resources/**/*.js',
         './resources/**/*.vue',
+        'node_modules/preline/dist/*.js',
         "./node_modules/flowbite/**/*.js"
     ],
     darkMode: 'class',
@@ -56,7 +57,9 @@ export default {
         },
     },
     plugins: [
-        require('flowbite/plugin')
+        require('flowbite/plugin'),
+        require('preline/plugin'),
+
     ],
 };
 

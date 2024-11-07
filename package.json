@@ -20,6 +20,7 @@
         "vue": "^3.2.37"
     },
     "dependencies": {
-        "flowbite": "^2.5.2"
+        "flowbite": "^2.5.2",
+        "preline": "^2.5.1"
     }
 }
