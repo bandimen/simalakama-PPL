@@ -46,6 +46,5 @@ class MahasiswaController extends Controller
                     ->get();
         return response()->json($jadwals);
     }
-    
-    
+
 }

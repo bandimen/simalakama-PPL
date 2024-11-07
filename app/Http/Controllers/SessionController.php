@@ -60,7 +60,7 @@ class SessionController extends Controller
 
     public function showSelectRolePage()
     {
-        $roles = Auth::user()->roles; // Ambil semua role user
+        $roles = Auth::user()->roles; 
         return view('select-role', compact('roles'));
     }
 

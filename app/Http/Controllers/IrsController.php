@@ -157,4 +157,15 @@ class IrsController extends Controller
         return view('mhs.akademik.lihatirs', ['title' => 'Akademik']);
     }
 
+    public function getIRSforPA($pa)
+    {
+        $irs = DB::table('irs')
+        ->join('mahasiswas', 'irs.nim', '=', 'mahasiswas.nim')
+        ->select('irs.*', 'mahasiswas.nama', 'mahasiswas.angkatan', 'mahasiswas.pembimbing_akademik_id')
+        ->where('mahasiswas.pembimbing_akademik_id', '=', $pa->id)
+        ->get();
+
+        return $irs;
+    }
+
 }

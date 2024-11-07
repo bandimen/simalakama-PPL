@@ -30,7 +30,7 @@
                   <div>
                     <ul>
                       @foreach ($errors->all() as $error)
-                      <span class="font-medium">Alert!</span> {{ $error }}
+                      {{ $error }}
                       @endforeach
                     </ul>
                   </div>

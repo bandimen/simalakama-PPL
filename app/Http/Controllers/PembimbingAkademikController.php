@@ -14,11 +14,9 @@ class PembimbingAkademikController extends Controller
     public function perwalian() {
         $pa = Auth::user()->pembimbingAkademik;
 
-        $irs = DB::table('irs')
-                ->join('mahasiswas', 'irs.nim', '=', 'mahasiswas.nim')
-                ->select('irs.*', 'mahasiswas.nama', 'mahasiswas.angkatan', 'mahasiswas.pembimbing_akademik_id')
-                ->where('mahasiswas.pembimbing_akademik_id', '=', $pa->id)
-                ->get();
+        $irsController = new IrsController();
+        $irs = $irsController->getIRSforPA($pa);
+
 
         return view('pa.perwalian', ['title' => 'Perwalian - PA', 'irs' => $irs]);
     }
