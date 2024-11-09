@@ -28,5 +28,5 @@ class IrsDetail extends Model
 
     public function jadwalKuliah()
     {
-        return $this->belongsTo(JadwalKuliah::class, 'id', 'jadwal_kuliah_id');    }
+        return $this->belongsTo(JadwalKuliah::class, 'jadwal_kuliah_id', 'id');    }
 }

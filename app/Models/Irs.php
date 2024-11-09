@@ -24,7 +24,7 @@ class Irs extends Model
         return $this->belongsTo(Mahasiswa::class, 'nim', 'nim');
     }
 
-    public function irsDetail()
+    public function irsDetails()
     {
         return $this->hasMany(IrsDetail::class, 'irs_id', 'id');
     }

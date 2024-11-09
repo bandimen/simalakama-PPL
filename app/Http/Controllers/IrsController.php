@@ -159,11 +159,17 @@ class IrsController extends Controller
 
     public function getIRSforPA($pa)
     {
+        // select semua irs sesuai id
         $irs = DB::table('irs')
         ->join('mahasiswas', 'irs.nim', '=', 'mahasiswas.nim')
         ->select('irs.*', 'mahasiswas.nama', 'mahasiswas.angkatan', 'mahasiswas.pembimbing_akademik_id')
         ->where('mahasiswas.pembimbing_akademik_id', '=', $pa->id)
         ->get();
+
+        //hubungkan tabel irs dengan tabel irs_details satu satu 
+        $irs->each(function ($item) {
+            $item->irsDetails = IrsDetail::where('irs_id', $item->id)->get();
+        });
 
         return $irs;
     }
@@ -184,6 +190,15 @@ class IrsController extends Controller
             ->update(['status' => 'Belum disetujui']);
 
         return redirect()->back();
+    }
+
+    public function getIrsDetails($id)
+    {
+        $irsDetails = DB::table('irs_details')
+                    ->where('irs_id', $id)
+                    ->get();
+
+        return $irsDetails;
     }
 
 }

@@ -212,13 +212,12 @@
                                     </th>
                                 </tr>
                             </thead>
-                            {{-- <tbody>
+                            <tbody>
                                 @php
                                 $counterDetail = 0;
-                                $details = $i->irsDetail;
+                                $details = $i->irsDetails;
                                 @endphp
-                            @if ($details->isNotEmpty())
-                                    
+                            @if ($details)
                                 @foreach ($details as $detail)
                                 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                     <td class="px-6 py-4">
@@ -228,19 +227,19 @@
                                         {{ $detail->kodemk }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        MK
+                                        {{ $detail->mataKuliah->nama }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        Kelas
+                                        {{ $detail->jadwalKuliah->kelas }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        SKS
+                                        {{ $detail->mataKuliah->sks }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        Ruang
+                                        {{ $detail->jadwalKuliah->ruang->nama }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        Status
+                                        {{ $detail->status }}
                                     </td>
                                     <td class="px-6 py-4">
                                         Dosen Pengamppu
@@ -252,7 +251,7 @@
                                     Tidak ada mata kuliah.
                                 </td>
                                 @endif
-                            </tbody> --}}
+                            </tbody>
 
                         </table>
                     </div>
