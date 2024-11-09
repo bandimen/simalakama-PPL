@@ -170,7 +170,6 @@ class IrsController extends Controller
         $irs->each(function ($item) {
             $item->irsDetails = IrsDetail::where('irs_id', $item->id)->get();
         });
-
         return $irs;
     }
 
