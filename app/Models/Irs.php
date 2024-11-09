@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Irs extends Model
 {
     protected $table = 'irs';
+    protected $guarded = [];
     protected $fillable = [
         'nim',
         'semester',

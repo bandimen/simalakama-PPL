@@ -146,9 +146,9 @@
                     </td>
                     <td class="px-6 py-4 text-right">
                             @if ($i->status == 'Belum disetujui')
-                                <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Setujui</a>
+                                <a href="{{ route('setujuiIrs', $i->id) }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Setujui</a>
                             @elseif ($i->status == 'Disetujui')
-                                <a href="#" class="font-medium text-red-500 dark:text-red-500 hover:underline">Batalkan</a>
+                                <a href="{{ route('batalkanIrs', $i->id) }}" class="font-medium text-red-500 dark:text-red-500 hover:underline">Batalkan</a>
                             @endif
                     </td>
                 </tr>

@@ -168,4 +168,22 @@ class IrsController extends Controller
         return $irs;
     }
 
+    public function setujuiIrs($id)
+    {
+        DB::table('irs')
+            ->where('id', $id)
+            ->update(['status' => 'Disetujui']);
+
+        return redirect()->back();
+    }
+
+    public function batalkanIrs($id)
+    {
+        DB::table('irs')
+            ->where('id', $id)
+            ->update(['status' => 'Belum disetujui']);
+
+        return redirect()->back();
+    }
+
 }

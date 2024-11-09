@@ -34,12 +34,16 @@ Route::middleware(['auth'])->group(function () {
   Route::post('/irs/details', [IrsController::class, 'storeDetail']);
   Route::get('/irs/selected-schedules', [IrsController::class, 'getSelectedSchedules']);
   Route::post('/irs/store', [IrsController::class, 'store']);
+
   
 
 
   Route::get('/pa', [PembimbingAkademikController::class, 'index']);
   Route::get('/pa/perwalian', [PembimbingAkademikController::class, 'perwalian']);
   Route::get('/pa/rekapmhs', [PembimbingAkademikController::class, 'rekapmhs']);
+  // setujui n batalkan irs
+  Route::get('/pa/perwalian/setujui-irs/{id}', [IrsController::class, 'setujuiIrs'])->name('setujuiIrs'); //name ini  digunakan sbg alias
+  Route::get('/pa/perwalian/batalkan-irs/{id}', [IrsController::class, 'batalkanIrs'])->name('batalkanIrs');
 
   Route::get('/ba', [BagianAkademikController::class, 'index']);
 
