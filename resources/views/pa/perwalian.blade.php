@@ -170,7 +170,7 @@
                 <!-- Modal header -->
                 <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                        {{ $i->nama }} {{ $i->nim }}
+                        {{ $i->nama }} - {{ $i->nim }}
                     </h3>
                     <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="default-modal">
                         <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
@@ -187,32 +187,56 @@
                             <thead class="text-xs text-gray-700 uppercase bg-blue-200 dark:bg-blue-700 dark:text-blue-400">
                                 <tr>
                                     <th scope="col" class="px-6 py-3">
-                                        Product name
+                                        No
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        Color
+                                        Kode
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        Category
+                                        Mata Kuliah
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        Price
+                                        Kelas
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        SKS
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        Ruang
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        Status
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        Dosen Pengampu
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        Apple MacBook Pro 17"
-                                    </th>
                                     <td class="px-6 py-4">
-                                        Silver
+                                        No
                                     </td>
                                     <td class="px-6 py-4">
-                                        Laptop
+                                        Kode
                                     </td>
                                     <td class="px-6 py-4">
-                                        $2999
+                                        MK
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        Kelas
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        SKS
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        Ruang
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        Status
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        Dosen Pengamppu
                                     </td>
                                 </tr>
                             </tbody>
