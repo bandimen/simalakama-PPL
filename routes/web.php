@@ -27,6 +27,7 @@ Route::get('/home', function() {
 Route::middleware(['auth'])->group(function () {
   Route::get('/mhs', [MahasiswaController::class, 'index'])->name('mhs');
   Route::get('/mhs/akademik', [IrsController::class, 'buatirs']);
+  Route::get('/mhs/akademik/lihatkhs', [KhsController::class, 'lihatkhs']);
   //buat irs
   Route::get('/mhs/akademik/buatirs', [IrsController::class, 'buatirs']);
   Route::get('/mhs/akademik/lihatirs', [IrsController::class, 'lihatirs']);

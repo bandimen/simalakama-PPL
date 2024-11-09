@@ -152,11 +152,17 @@ class IrsController extends Controller
         ]);
     }
     
-
     public function lihatirs() {
-        return view('mhs.akademik.lihatirs', ['title' => 'Akademik']);
+        // Ambil data `IrsDetail` beserta relasinya
+        $irsDetails = IrsDetail::with(['mataKuliah', 'jadwalKuliah.ruang'])->get();
+        
+        // Kirim variabel `$irsDetails` ke view
+        return view('mhs.akademik.lihatirs', [
+            'title' => 'Akademik',
+            'irsDetails' => $irsDetails,
+        ]);
     }
-
+    
     public function getIRSforPA($pa)
     {
         // select semua irs sesuai id
