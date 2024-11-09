@@ -1,103 +1,170 @@
-function addCourse() {
+async function addCourse() {
   const courseSelect = document.getElementById("courses");
   const courseList = document.getElementById("courseList");
   const selectedCourse = courseSelect.value;
 
-  // Memastikan selectedCourse tidak kosong
   if (!selectedCourse) return;
 
   try {
-    const courseData = JSON.parse(selectedCourse); // Mengubah JSON menjadi objek JavaScript
-    const { kodemk, nama, sks, semester } = courseData; // Mengambil data yang diperlukan
+    const courseData = JSON.parse(selectedCourse); 
+    const { kodemk, nama, sks, semester } = courseData;
 
-    // Memeriksa apakah mata kuliah sudah ada di daftar
+    // Cek apakah mata kuliah sudah ada di daftar
     const existingCourses = Array.from(courseList.children).map(item => {
-      return item.textContent.split(" - ")[0].trim(); // Mendapatkan kode MK dari teks item
+      return item.textContent.split(" - ")[0].trim(); 
     });
 
     if (existingCourses.includes(kodemk)) {
-      alert("Mata kuliah sudah ada di daftar."); // Memberi tahu pengguna jika mata kuliah sudah ada
-      return; 
+      alert("Mata kuliah sudah ada di daftar.");
+      return;
     }
 
+    // Tambahkan ke daftar mata kuliah yang dipilih
     const listItem = document.createElement("li");
     listItem.className = "course-item";
-
-    // Buat elemen teks untuk nama mata kuliah dan kode
-    const courseName = document.createTextNode(`${kodemk} - ${nama} (${sks} SKS, Semester ${semester})`);
-
-    // Buat tombol X untuk menghapus
+    listItem.textContent = `${kodemk} - ${nama} (${sks} SKS, Semester ${semester})`;
+    
+    // Tombol untuk menghapus mata kuliah dari daftar
     const removeBtn = document.createElement("span");
-    removeBtn.className = "focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900";
-    removeBtn.textContent = " X";
+    removeBtn.className = "text-white bg-red-700 rounded-full text-xs px-2 py-1 ml-2";
+    removeBtn.textContent = "X";
     removeBtn.onclick = function () {
-      courseList.removeChild(listItem);
-      updateScheduleDisplay(); // Memperbarui tampilan jadwal ketika mata kuliah dihapus
+      courseList.removeChild(listItem); // Hapus dari daftar
+
+      // Hapus semua kotak jadwal dari tabel yang terkait dengan kodemk
+      const courseBoxes = document.querySelectorAll(`.courseBox-${kodemk}`);
+      courseBoxes.forEach(box => box.remove());
     };
 
-    // Tambahkan nama mata kuliah dan tombol X ke dalam item
-    listItem.appendChild(courseName);
     listItem.appendChild(removeBtn);
-
-    // Tambahkan item ke dalam list
     courseList.appendChild(listItem);
 
-    // Reset pilihan setelah ditambahkan ke list
     courseSelect.value = "";
 
-    // Memperbarui tampilan jadwal
-    updateScheduleDisplay();
+    await fetchAndDisplaySchedule(kodemk);
   } catch (error) {
     console.error("Error parsing course data:", error);
   }
 }
 
-function updateScheduleDisplay() {
-  const courseList = document.getElementById("courseList");
-  const scheduleDisplay = document.getElementById("scheduleDisplay");
-  scheduleDisplay.innerHTML = ""; // Menghapus jadwal sebelumnya
+async function fetchAndDisplaySchedule(kodemk) {
+  try {
+    const response = await fetch(`/jadwal/${kodemk}`, { cache: "no-store" });
+    const jadwalList = await response.json();
 
-  const selectedCourses = Array.from(courseList.children).map(item => {
-    return item.textContent.split(" - ")[0].trim(); // Mendapatkan kode MK dari teks item
-  });
+    console.log("Jadwal yang diterima untuk", kodemk, ":", jadwalList);
 
-  const allJadwalPromises = selectedCourses.map(kodemk => {
-    return fetch(`/jadwal/${kodemk}`)
-      .then(response => response.json());
-  });
+    jadwalList.forEach(jadwal => {
+      const { hari, waktu_mulai, waktu_selesai, kelas, ruang_id } = jadwal;
 
-  Promise.all(allJadwalPromises)
-    .then(results => {
-      const allJadwal = results.flat();
-      allJadwal.sort((a, b) => {
-        const daysOrder = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
-        const dayA = daysOrder.indexOf(a.hari);
-        const dayB = daysOrder.indexOf(b.hari);
-        return dayA === dayB ? a.waktu_mulai.localeCompare(b.waktu_mulai) : dayA - dayB;
-      });
+      const dayColumn = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat"].indexOf(hari);
+      const startTime = waktu_mulai.slice(0, 5);
+      const row = document.querySelector(`#scheduleDisplay tbody tr[data-time="${startTime}"]`);
 
-      allJadwal.forEach(jadwal => {
-        const jadwalItem = document.createElement("div");
-        jadwalItem.className = "card m-2 cursor-pointer"; // Menambahkan class card dan pointer
-        jadwalItem.innerHTML = `
-          <div class="card-body">
-            <h5 class="card-title">${jadwal.kodemk} - ${jadwal.mata_kuliah.nama}</h5>
-            <p class="card-text">Kelas: ${jadwal.kelas}</p>
-            <p class="card-text">Hari: ${jadwal.hari}</p>
-            <p class="card-text">Waktu: ${jadwal.waktu_mulai} - ${jadwal.waktu_selesai}</p>
-            <p class="card-text">Ruang: ${jadwal.ruang_id}</p>
-          </div>
+      if (row && dayColumn >= 0) {
+        const cell = row.children[dayColumn + 1];
+
+        const wrapper = document.createElement("div");
+        wrapper.className = "mb-2";
+
+        const courseBox = document.createElement("button");
+        courseBox.className = `bg-gray-100 text-black border border-black shadow-md rounded-md p-1 text-[8px] font-medium text-center w-[50px] courseBox-${kodemk}`;
+        courseBox.style.cursor = "pointer";
+
+        courseBox.innerHTML = `
+          <div>${kodemk}</div>
+          <div>Kelas: ${kelas}</div>
+          <div>Ruang: ${ruang_id}</div>
+          <div>${waktu_mulai} - ${waktu_selesai}</div>
         `;
 
-        // Tambahkan event click untuk menyimpan jadwal
-        jadwalItem.onclick = function() {
-          saveSelectedSchedule(jadwal); // Memanggil fungsi untuk menyimpan jadwal
-        };
+        // Tambahkan event klik untuk membuka modal
+        courseBox.onclick = () => showModal(kodemk, courseBox);
 
-        scheduleDisplay.appendChild(jadwalItem);
+        wrapper.appendChild(courseBox);
+        cell.appendChild(wrapper);
+
+        console.log("Menambahkan courseBox:", {
+          kodemk,
+          kelas,
+          hari,
+          ruang_id,
+          waktu_mulai,
+          waktu_selesai
+        });
+      } else {
+        console.warn(`Tidak dapat menemukan row atau cell untuk waktu: ${startTime} pada hari: ${hari}`);
+      }
+    });
+  } catch (error) {
+    console.error("Error fetching schedule for", kodemk, error);
+  }
+}
+
+// Fungsi untuk menampilkan modal konfirmasi pengambilan mata kuliah
+function showModal(kodemk, selectedCourseBox) {
+  const modal = document.getElementById("confirmationModal");
+  modal.classList.remove("hidden");
+
+  const confirmButton = document.getElementById("confirmButton");
+  const cancelButton = document.getElementById("cancelButton");
+
+  confirmButton.onclick = () => {
+    if (selectedCourseBox.classList.contains("bg-gray-100")) {
+      // Mata kuliah dipilih, ubah warna menjadi hijau dan matikan klik untuk yang lain
+      selectedCourseBox.style.backgroundColor = "#28a745";
+      selectedCourseBox.classList.replace("text-black", "text-white");
+
+      const similarCourseBoxes = document.querySelectorAll(`.courseBox-${kodemk}`);
+      similarCourseBoxes.forEach(box => {
+        box.onclick = null; // Matikan klik untuk semua courseBox serupa
+        if (box !== selectedCourseBox) {
+          box.style.backgroundColor = "#D1D5DB"; // Warna abu-abu gelap
+          box.classList.replace("text-black", "text-black");
+        }
       });
-    })
-    .catch(error => console.error('Error fetching schedules:', error));
+
+      // Tambahkan event klik untuk membatalkan pilihan
+      selectedCourseBox.onclick = () => showCancelModal(kodemk, selectedCourseBox);
+
+    } else {
+      alert("Mata kuliah ini sudah dipilih.");
+    }
+
+    modal.classList.add("hidden");
+  };
+
+  cancelButton.onclick = () => {
+    modal.classList.add("hidden");
+  };
+}
+
+// Fungsi untuk menampilkan modal konfirmasi pembatalan pengambilan mata kuliah
+function showCancelModal(kodemk, selectedCourseBox) {
+  const cancelModal = document.getElementById("cancelConfirmationModal");
+  cancelModal.classList.remove("hidden");
+
+  const confirmCancelButton = document.getElementById("confirmCancelButton");
+  const cancelCancelButton = document.getElementById("cancelCancelButton");
+
+  confirmCancelButton.onclick = () => {
+    // Mata kuliah dibatalkan, kembalikan warna dan aktifkan kembali klik
+    selectedCourseBox.style.backgroundColor = ""; // Kembalikan ke warna semula
+    selectedCourseBox.classList.replace("text-white", "text-black");
+
+    const similarCourseBoxes = document.querySelectorAll(`.courseBox-${kodemk}`);
+    similarCourseBoxes.forEach(box => {
+      box.style.backgroundColor = ""; // Kembalikan ke warna semula
+      box.classList.replace("text-white", "text-black");
+      box.onclick = () => showModal(kodemk, box); // Aktifkan kembali klik
+    });
+
+    cancelModal.classList.add("hidden");
+  };
+
+  cancelCancelButton.onclick = () => {
+    cancelModal.classList.add("hidden");
+  };
 }
 
 function saveSelectedSchedule(jadwal) {

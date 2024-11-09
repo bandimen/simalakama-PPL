@@ -28,6 +28,8 @@
           </div>
         </div>
 
+        <br>
+
         {{-- kotak informasi mahasiswa --}}
         <section class="block max-w p-6 bg-white border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700">
             <p class="mb-2 text-m tracking-tight text-gray-700 dark:text-white">Nama: {{ $mahasiswa->nama }}</p>
@@ -40,8 +42,10 @@
             <p class="mb-2 text-m tracking-tight text-gray-700 dark:text-white">Maksimal Beban SKS: {{ $mahasiswa->max_sks }}</p>
         </section>
 
+        <br>
+
         {{-- kotak untuk milih mata kuliah --}}
-        <section class="block max-w p-6 bg-white border border-gray-200 rounded-lg  dark:bg-gray-800 dark:border-gray-700 mt-6">
+        <section class="block max-w p-6 bg-white border border-gray-200 rounded-lg  dark:bg-gray-800 dark:border-gray-700">
           <label for="courses">
             <p class="mb-2 text-m font-bold tracking-tight text-gray-900 dark:text-white">Pilih Mata Kuliah</p>
           </label>
@@ -61,48 +65,67 @@
         </section>
           
         <br>
-        {{-- ini buat milih jadwal --}}
 
-        <br>
-        {{-- Section untuk memilih jadwal --}}
-        <section class="block max-w p-6 bg-white border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700 mt-1">
+        <section class="block w-full p-6 bg-white border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700 mt-1">
           <label for="schedule">
             <p class="mb-2 text-m font-bold tracking-tight text-gray-900 dark:text-white">Pilih Jadwal</p>
           </label>
           <p class="font-normal text-sm text-gray-700 dark:text-gray-400">Silakan pilih waktu untuk setiap mata kuliah yang diambil.</p>
 
           {{-- Tabel Jadwal --}}
-        <div id="scheduleDisplay" class="mt-4 overflow-x-auto flex justify-center">
+          <div id="scheduleDisplay" class="mt-4 overflow-x-auto flex justify-center">
             <div class="w-full">
-                <table class="min-w-full border-collapse border border-gray-300 dark:border-gray-600 text-sm text-gray-700 dark:text-white">
-                    <thead>
-                        <tr>
-                            <th class="border border-gray-300 dark:border-gray-600 p-2 bg-gray-100 dark:bg-gray-700 text-center">Waktu</th>
-                            <th class="border border-gray-300 dark:border-gray-600 p-2 bg-gray-100 dark:bg-gray-700 text-center">Senin</th>
-                            <th class="border border-gray-300 dark:border-gray-600 p-2 bg-gray-100 dark:bg-gray-700 text-center">Selasa</th>
-                            <th class="border border-gray-300 dark:border-gray-600 p-2 bg-gray-100 dark:bg-gray-700 text-center">Rabu</th>
-                            <th class="border border-gray-300 dark:border-gray-600 p-2 bg-gray-100 dark:bg-gray-700 text-center">Kamis</th>
-                            <th class="border border-gray-300 dark:border-gray-600 p-2 bg-gray-100 dark:bg-gray-700 text-center">Jumat</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @for ($hour = 7; $hour <= 19; $hour++)
-                            <tr>
-                                <td class="border border-gray-300 dark:border-gray-600 p-2 text-center">
-                                    {{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:00
-                                </td>
-                                @for ($day = 0; $day < 5; $day++)
-                                    <td class="border border-gray-300 dark:border-gray-600 p-2 text-center">
-                                        {{-- Tempat untuk memilih jadwal mata kuliah --}}
-                                    </td>
-                                @endfor
-                            </tr>
-                        @endfor
-                    </tbody>
-                </table>
+              <table class="min-w-full w-full border-collapse border border-gray-300 dark:border-gray-600 text-sm text-gray-700 dark:text-white">
+                <thead>
+                  <tr>
+                    <th class="border p-2 bg-gray-100 text-center" style="width: 80px;">Waktu</th>
+                    <th class="border p-2 bg-gray-100 text-center" data-day="Senin">Senin</th>
+                    <th class="border p-2 bg-gray-100 text-center" data-day="Selasa">Selasa</th>
+                    <th class="border p-2 bg-gray-100 text-center" data-day="Rabu">Rabu</th>
+                    <th class="border p-2 bg-gray-100 text-center" data-day="Kamis">Kamis</th>
+                    <th class="border p-2 bg-gray-100 text-center" data-day="Jumat">Jumat</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for ($hour = 7; $hour <= 19; $hour++)
+                    <tr data-time="{{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:00">
+                      <td class="border p-2 text-center">{{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:00</td>
+                      <td class="border p-2 text-center"></td>
+                      <td class="border p-2 text-center"></td>
+                      <td class="border p-2 text-center"></td>
+                      <td class="border p-2 text-center"></td>
+                      <td class="border p-2 text-center"></td>
+                    </tr>
+                  @endfor
+                </tbody>
+              </table>
             </div>
-        </div>
+          </div>
         </section>
+
+        <!-- Overlay dan Modal Alert IRS -->
+        <div id="confirmationModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-50">
+          <div class="bg-white rounded-lg p-6 w-80 text-center z-50">
+            <h2 class="text-xl font-semibold mb-4">Konfirmasi IRS</h2>
+            <p class="text-gray-700 mb-6">Apakah anda yakin ingin memilih mata kuliah ini?</p>
+            <div class="flex justify-center gap-4">
+              <button id="confirmButton" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Ya</button>
+              <button id="cancelButton" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Tidak</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Overlay dan Modal Alert Pembatalan IRS -->
+        <div id="cancelConfirmationModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-50">
+          <div class="bg-white rounded-lg p-6 w-80 text-center z-50">
+            <h2 class="text-xl font-semibold mb-4">Pembatalan IRS</h2>
+            <p class="text-gray-700 mb-6">Apakah anda yakin ingin membatalkan pengambilan mata kuliah ini?</p>
+            <div class="flex justify-center gap-4">
+              <button id="confirmCancelButton" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Ya</button>
+              <button id="cancelCancelButton" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Tidak</button>
+            </div>
+          </div>
+        </div>
 
         <br>
         {{-- ini isinya pop up buat nampilin irs yg jadi diambil --}}
