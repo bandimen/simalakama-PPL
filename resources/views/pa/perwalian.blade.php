@@ -181,7 +181,7 @@
                 </div>
                 <!-- Modal body -->
                 <div class="p-4 md:p-5 space-y-4">
-
+                    
                     <div class="relative overflow-x-auto">
                         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                             <thead class="text-xs text-gray-700 uppercase bg-blue-200 dark:bg-blue-700 dark:text-blue-400">
@@ -212,13 +212,20 @@
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            {{-- <tbody>
+                                @php
+                                $counterDetail = 0;
+                                $details = $i->irsDetail;
+                                @endphp
+                            @if ($details->isNotEmpty())
+                                    
+                                @foreach ($details as $detail)
                                 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                     <td class="px-6 py-4">
-                                        No
+                                        {{ ++$counterDetail }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        Kode
+                                        {{ $detail->kodemk }}
                                     </td>
                                     <td class="px-6 py-4">
                                         MK
@@ -239,7 +246,14 @@
                                         Dosen Pengamppu
                                     </td>
                                 </tr>
-                            </tbody>
+                                @endforeach
+                                @else
+                                <td class="px-6 py-4">
+                                    Tidak ada mata kuliah.
+                                </td>
+                                @endif
+                            </tbody> --}}
+
                         </table>
                     </div>
                     

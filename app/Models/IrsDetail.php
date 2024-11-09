@@ -8,6 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class IrsDetail extends Model
 {
+    protected $fillable = [
+        'id',
+        'irs_id',
+        'kodemk',
+        'jadwal_kuliah_id',
+        'status',
+    ];
+
     public function irs() 
     {
         return $this->belongsTo(Irs::class, 'irs_id', 'id');
