@@ -197,6 +197,4 @@
   </main>
 </div>
 
-
-
 </x-layout>

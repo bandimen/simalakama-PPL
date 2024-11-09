@@ -100,7 +100,7 @@
             </div>
 
             <!-- Card Kelima -->
-            <a href="/mhs/akademik" class="flex flex-col bg-white border border-gray-200 rounded-lg shadow p-4 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 transition duration-150 ease-in-out">
+            <a href="/mhs/akademik/buatirs" class="flex flex-col bg-white border border-gray-200 rounded-lg shadow p-4 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 transition duration-150 ease-in-out">
                 <!-- Container untuk Gambar dan Teks dalam satu baris -->
                 <div class="flex items-center">
                     <!-- Gambar di sebelah kiri -->
@@ -116,7 +116,7 @@
             </a>
 
             <!-- Card Keenam -->
-            <a href="/mhs/akademik" class="flex flex-col bg-white border border-gray-200 rounded-lg shadow p-4 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+            <a href="/mhs/akademik/lihatkhs" class="flex flex-col bg-white border border-gray-200 rounded-lg shadow p-4 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
                 <!-- Container untuk Gambar dan Teks dalam satu baris -->
                 <div class="flex items-center">
                     <!-- Gambar di sebelah kiri -->
