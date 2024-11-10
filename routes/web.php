@@ -2,14 +2,15 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\IrsController;
+use App\Http\Controllers\KhsController;
 use App\Http\Controllers\DekanController;
 use Illuminate\Contracts\Session\Session;
 use App\Http\Controllers\KaprodiController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\MahasiswaController;
-use App\Http\Controllers\BagianAkademikController;
-use App\Http\Controllers\IrsController;
 use App\Http\Controllers\MataKuliahController;
+use App\Http\Controllers\BagianAkademikController;
 use App\Http\Controllers\PembimbingAkademikController;
 
 // kalo belum login
