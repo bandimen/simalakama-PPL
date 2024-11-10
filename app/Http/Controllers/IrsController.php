@@ -174,8 +174,12 @@ class IrsController extends Controller
 
         //hubungkan tabel irs dengan tabel irs_details satu satu 
         $irs->each(function ($item) {
-            $item->irsDetails = IrsDetail::where('irs_id', $item->id)->get();
+            $item->irsDetails = IrsDetail::where('irs_id', $item->id)
+                                    ->get()->each(function($detail) {
+                                        $detail->dosenPengampuList = $detail->mataKuliah->dosenPengampu;
+                                    });
         });
+
         return $irs;
     }
 

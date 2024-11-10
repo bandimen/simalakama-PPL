@@ -245,7 +245,15 @@
                                         {{ $detail->status }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        Dosen Pengampu
+                                        @if ($detail->dosenPengampuList->isNotEmpty())
+                                            <ul>
+                                                @foreach ($detail->dosenPengampuList as $dosen)
+                                                    <li>{{ $dosen->nama }}</li>
+                                                @endforeach
+                                            </ul>
+                                        @else
+                                            Tidak ada Dosen Pengampu
+                                        @endif
                                     </td>
                                     <td class="px-6 py-4">
                                         <a href="#" title="delete"><img src="/images/icons/delete.png" alt="delete" class="h-4 w-4"></a>

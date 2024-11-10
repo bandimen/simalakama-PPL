@@ -15,4 +15,16 @@ class MataKuliah extends Model
     public function irsDetails(){
         return $this->hasMany(IrsDetail::class, 'kodemk', 'kodemk');
     }
+
+    public function dosenPengampu()
+    {
+        return $this->hasManyThrough(
+            Dosen::class,
+            PengampuMataKuliah::class,
+            'kodemk',  // foreign key di pengampumatakuliah
+            'nidn', //foreign key di dosen
+            'kodemk', // local key di matakuliah
+            'nidn' // local key di pengampumatakuliah
+        );
+    }
 }
