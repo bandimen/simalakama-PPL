@@ -46,7 +46,23 @@ class MataKuliahController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'kodemk' => 'required|string|unique:mata_kuliahs,kodemk',
+            'nama' => 'required|string',
+            'sks' => 'required|integer',
+            'semester' => 'required|integer',
+            'sifat' => 'required|in:Wajib,Pilihan',
+        ]);
+    
+        MataKuliah::create([
+            'kodemk' => $request->kodemk,
+            'nama' => $request->nama,
+            'sks' => $request->sks,
+            'semester' => $request->semester,
+            'sifat' => $request->sifat,
+        ]);
+    
+        return redirect()->route('mataKuliahs.index')->with('success', 'Mata kuliah berhasil ditambahkan.');
     }
 
     /**

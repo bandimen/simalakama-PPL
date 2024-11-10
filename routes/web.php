@@ -9,6 +9,7 @@ use App\Http\Controllers\SessionController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\BagianAkademikController;
 use App\Http\Controllers\IrsController;
+use App\Http\Controllers\MataKuliahController;
 use App\Http\Controllers\PembimbingAkademikController;
 
 // kalo belum login
@@ -51,6 +52,8 @@ Route::middleware(['auth'])->group(function () {
   Route::get('/dekan', [DekanController::class, 'index']);
   Route::get('/dekan/matkul', [DekanController::class, 'matkul']);
   Route::get('/dekan/ruangacc', [DekanController::class, 'ruangacc']);
+  Route::resource('mataKuliah', MataKuliahController::class);
+
 
   Route::get('/kaprodi', [KaprodiController::class, 'index']);
 
