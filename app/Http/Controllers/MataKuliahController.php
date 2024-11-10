@@ -16,17 +16,7 @@ class MataKuliahController extends Controller
      protected $table = 'mata_kuliahs';
      protected $fillable = ['kodemk', 'nama', 'sks', 'semester', 'sifat'];
  
-     // Relasi ke JadwalKuliah
-     public function jadwalKuliah()
-     {
-         return $this->hasMany(JadwalKuliah::class, 'kodemk', 'kodemk');
-     }
 
-
-     public function pengampuMataKuliah()
-     {
-         return $this->hasMany(PengampuMataKuliah::class, 'kodemk', 'kodemk');
-     }
 
     public function index()
     {
@@ -46,7 +36,23 @@ class MataKuliahController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // $request->validate([
+        //     'kodemk' => 'required|string|unique:mata_kuliahs,kodemk',
+        //     'nama' => 'required|string',
+        //     'sks' => 'required|integer',
+        //     'semester' => 'required|integer',
+        //     'sifat' => 'required|in:Wajib,Pilihan',
+        // ]);
+    
+        // MataKuliah::create([
+        //     'kodemk' => $request->kodemk,
+        //     'nama' => $request->nama,
+        //     'sks' => $request->sks,
+        //     'semester' => $request->semester,
+        //     'sifat' => $request->sifat,
+        // ]);
+    
+        // return redirect('/dekan');
     }
 
     /**

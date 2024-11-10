@@ -153,13 +153,30 @@ class IrsController extends Controller
     }
     
     public function lihatirs() {
-        // Ambil data `IrsDetail` beserta relasinya
-        $irsDetails = IrsDetail::with(['mataKuliah', 'jadwalKuliah.ruang'])->get();
-        
-        // Kirim variabel `$irsDetails` ke view
+        // Ambil data mahasiswa dari user yang login
+        $user = Auth::user();
+        $mahasiswa = $user->mahasiswa;
+    
+        // Ambil data Pembimbing Akademik (PA) dari mahasiswa
+        $pa = $mahasiswa->pembimbingAkademik?->dosen;
+    
+        // Ambil data IRS beserta detail dan relasi berdasarkan nim mahasiswa
+        $irs = Irs::where('nim', $mahasiswa->nim)
+                    ->with(['irsDetails.mataKuliah', 'irsDetails.jadwalKuliah.ruang'])
+                    ->first();
+    
+        // Dapatkan periode saat ini dari IrsPeriodsController
+        $irsPeriodsController = new IrsPeriodsController();
+        $currentPeriod = $irsPeriodsController->getCurrentPeriod();
+    
+        // Kirim variabel `$irs`, `$irsDetails`, `$mahasiswa`, `$pa`, dan `$currentPeriod` ke view
         return view('mhs.akademik.lihatirs', [
             'title' => 'Akademik',
-            'irsDetails' => $irsDetails,
+            'irs' => $irs,
+            'irsDetails' => $irs ? $irs->irsDetails : [],
+            'mahasiswa' => $mahasiswa,
+            'pa' => $pa, // Tambahkan data PA ke view
+            'currentPeriod' => $currentPeriod, // Tambahkan data periode saat ini ke view
         ]);
     }
     
