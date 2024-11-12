@@ -45,6 +45,24 @@ class IrsDetailsTableSeeder extends Seeder
                 'jadwal_kuliah_id' => 9,
                 'status' => 'Baru',
             ],
+            [
+                'irs_id' => 1,
+                'kodemk' => 'PAIK6102',
+                'jadwal_kuliah_id' => 31,
+                'status' => 'Baru',
+            ],
+            [
+                'irs_id' => 1,
+                'kodemk' => 'PAIK6303',
+                'jadwal_kuliah_id' => 35,
+                'status' => 'Baru',
+            ],
+            [
+                'irs_id' => 1,
+                'kodemk' => 'PAIK6702',
+                'jadwal_kuliah_id' =>39,
+                'status' => 'Baru',
+            ],
         ];
 
         foreach($irsDetails as $irsDetail){

@@ -43,6 +43,20 @@ class JadwalKuliahTableSeeder extends Seeder
             ['kodemk' => 'UUW00008', 'ruang_id' => 27, 'kelas' => 'B', 'hari' => 'Rabu', 'waktu_mulai' => '10:00:00', 'waktu_selesai' => '11:40:00'], //kwu
             ['kodemk' => 'UUW00008', 'ruang_id' => 10, 'kelas' => 'C', 'hari' => 'Jumat', 'waktu_mulai' => '14:00:00', 'waktu_selesai' => '15:40:00'], //kwu
             ['kodemk' => 'UUW00008', 'ruang_id' => 5, 'kelas' => 'D', 'hari' => 'Senin', 'waktu_mulai' => '09:00:00', 'waktu_selesai' => '10:40:00'], //kwu
+            ['kodemk' => 'PAIK6102', 'ruang_id' => 1, 'kelas' => 'A', 'hari' => 'Senin', 'waktu_mulai' => '07:00:00', 'waktu_selesai' => '09:30:00'], //daspro
+            ['kodemk' => 'PAIK6102', 'ruang_id' => 21, 'kelas' => 'B', 'hari' => 'Senin', 'waktu_mulai' => '13:00:00', 'waktu_selesai' => '15:30:00'], //daspro
+            ['kodemk' => 'PAIK6102', 'ruang_id' => 15, 'kelas' => 'C', 'hari' => 'Rabu', 'waktu_mulai' => '09:40:00', 'waktu_selesai' => '12:10:00'], //daspro
+            ['kodemk' => 'PAIK6102', 'ruang_id' => 11, 'kelas' => 'D', 'hari' => 'Jumat', 'waktu_mulai' => '15:40:00', 'waktu_selesai' => '18:10:00'], //daspro
+            ['kodemk' => 'PAIK6303', 'ruang_id' => 2, 'kelas' => 'A', 'hari' => 'Selasa', 'waktu_mulai' => '07:30:00', 'waktu_selesai' => '10:50:00'], //basdat
+            ['kodemk' => 'PAIK6303', 'ruang_id' => 25, 'kelas' => 'B', 'hari' => 'Senin', 'waktu_mulai' => '09:50:00', 'waktu_selesai' => '13:10:00'], //basdat
+            ['kodemk' => 'PAIK6303', 'ruang_id' => 3, 'kelas' => 'C', 'hari' => 'Kamis', 'waktu_mulai' => '13:00:00', 'waktu_selesai' => '16:20:00'], //basdat
+            ['kodemk' => 'PAIK6303', 'ruang_id' => 6, 'kelas' => 'D', 'hari' => 'rabu', 'waktu_mulai' => '12:10:00', 'waktu_selesai' => '15:30:00'], //basdat
+            ['kodemk' => 'PAIK6702', 'ruang_id' => 20, 'kelas' => 'A', 'hari' => 'Rabu', 'waktu_mulai' => '09:40:00', 'waktu_selesai' => '12:10:00'], //tbo
+            ['kodemk' => 'PAIK6702', 'ruang_id' => 13, 'kelas' => 'B', 'hari' => 'Kamis', 'waktu_mulai' => '07:00:00', 'waktu_selesai' => '09:30:00'], //tbo
+            ['kodemk' => 'PAIK6702', 'ruang_id' => 4, 'kelas' => 'C', 'hari' => 'Kamis', 'waktu_mulai' => '09:40:00', 'waktu_selesai' => '12:10:00'], //tbo
+            ['kodemk' => 'PAIK6702', 'ruang_id' => 2, 'kelas' => 'D', 'hari' => 'Selasa', 'waktu_mulai' => '15:40:00', 'waktu_selesai' => '18:10:00'], //tbo
+
+
         ];
 
         foreach($jadwalKuliah as $jadwal){

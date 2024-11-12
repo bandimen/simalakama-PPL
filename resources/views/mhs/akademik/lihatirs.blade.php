@@ -42,52 +42,71 @@
         <div class="no-print">
           <h1 class="text-2xl font-bold tracking-tight text-gray-900 text-center">IRS Mahasiswa</h1>
           <p class="text-center mt-2 text-gray-700">Status IRS: <span class="font-semibold">{{ $irs->status ?? 'Belum ada data' }}</span></p>
+          <p class="text-xl font-semibold">TA {{ $currentPeriod->tahun_ajaran }}</p>
         </div> 
+
+        <!-- Menu Semester IRS -->
+        <div class="flex justify-center space-x-4 mb-6 no-print">
+            @for ($i = 1; $i <= $currentSemester; $i++)
+                <button onclick="redirectToSemester({{ $i }})" 
+                        class="px-4 py-2 rounded {{ $selectedSemester == $i ? 'bg-[#0056b3] text-white px-6 py-3' : 'bg-[#00337c] text-white' }}">
+                    SMT {{ $i }}
+                </button>
+            @endfor
+        </div>
+
+        <!-- JavaScript untuk mengubah semester -->
+        <script>
+            function redirectToSemester(semester) {
+                // Redirect ke halaman dengan parameter semester yang dipilih
+                window.location.href = `{{ url('/mhs/akademik/lihatirs') }}?semester=${semester}`;
+            }
+        </script>
 
         <!-- Tabel IRS -->
         <table class="min-w-full bg-white border border-gray-300 text-center mt-4">
-          <thead class="bg-gray-700 text-white">
-            <tr>
-              <th class="px-2 py-2 border border-gray-300 w-12">No</th>
-              <th class="px-2 py-2 border border-gray-300 w-20">Kode</th>
-              <th class="px-2 py-2 border border-gray-300 w-40">Mata Kuliah</th>
-              <th class="px-2 py-2 border border-gray-300 w-16">Kelas</th>
-              <th class="px-2 py-2 border border-gray-300 w-12">SKS</th>
-              <th class="px-2 py-2 border border-gray-300 w-32">Ruang</th>
-              <th class="px-2 py-2 border border-gray-300 w-20">Hari</th>
-              <th class="px-2 py-2 border border-gray-300 w-32 whitespace-nowrap">Jam</th>
-              <th class="px-2 py-2 border border-gray-300 w-20">Status</th>
-              <th class="px-2 py-2 border border-gray-300 w-32">Nama Dosen</th>
-            </tr>
-          </thead>
-          <tbody>
-            @php $counterDetail = 0; @endphp
-
-            @if ($irsDetails && count($irsDetails) > 0)
-              @foreach ($irsDetails as $detail)
-                <tr class="{{ $counterDetail % 2 == 0 ? 'bg-white' : 'bg-gray-100' }}">
-                  <td class="px-2 py-4 border border-gray-300">{{ ++$counterDetail }}</td>
-                  <td class="px-2 py-4 border border-gray-300">{{ $detail->kodemk }}</td>
-                  <td class="px-2 py-4 border border-gray-300">{{ $detail->mataKuliah->nama ?? '-' }}</td>
-                  <td class="px-2 py-4 border border-gray-300">{{ $detail->jadwalKuliah->kelas ?? '-' }}</td>
-                  <td class="px-2 py-4 border border-gray-300">{{ $detail->mataKuliah->sks ?? '-' }}</td>
-                  <td class="px-2 py-4 border border-gray-300">{{ $detail->jadwalKuliah->ruang->nama ?? '-' }}</td>
-                  <td class="px-2 py-4 border border-gray-300">{{ $detail->jadwalKuliah->hari ?? '-' }}</td>
-                  <td class="px-2 py-4 border border-gray-300 whitespace-nowrap">
-                    {{ $detail->jadwalKuliah->waktu_mulai ?? '-' }} - {{ $detail->jadwalKuliah->waktu_selesai ?? '-' }}
-                  </td>
-                  <td class="px-2 py-4 border border-gray-300">{{ $detail->status ?? '-' }}</td>
-                  <td class="px-2 py-4 border border-gray-300">Dosen Pengampu</td>
+            <thead class="bg-gray-700 text-white">
+                <tr>
+                    <th class="px-2 py-2 border border-gray-300 w-12">No</th>
+                    <th class="px-2 py-2 border border-gray-300 w-20">Kode</th>
+                    <th class="px-2 py-2 border border-gray-300 w-40">Mata Kuliah</th>
+                    <th class="px-2 py-2 border border-gray-300 w-16">Kelas</th>
+                    <th class="px-2 py-2 border border-gray-300 w-12">SKS</th>
+                    <th class="px-2 py-2 border border-gray-300 w-32">Ruang</th>
+                    <th class="px-2 py-2 border border-gray-300 w-20">Hari</th>
+                    <th class="px-2 py-2 border border-gray-300 w-32 whitespace-nowrap">Jam</th>
+                    <th class="px-2 py-2 border border-gray-300 w-20">Status</th>
+                    <th class="px-2 py-2 border border-gray-300 w-32">Nama Dosen</th>
                 </tr>
-              @endforeach
-            @else
-              <tr>
-                <td colspan="10" class="px-6 py-4 text-center border border-gray-300">
-                  Tidak ada mata kuliah.
-                </td>
-              </tr>
-            @endif
-          </tbody>
+            </thead>
+            <tbody>
+                @php $counterDetail = 0; @endphp
+
+                @if ($irsDetails && count($irsDetails) > 0)
+                    @foreach ($irsDetails as $detail)
+                        <tr class="{{ $counterDetail % 2 == 0 ? 'bg-white' : 'bg-gray-100' }}">
+                            <td class="px-2 py-4 border border-gray-300">{{ ++$counterDetail }}</td>
+                            <td class="px-2 py-4 border border-gray-300">{{ $detail->kodemk }}</td>
+                            <td class="px-2 py-4 border border-gray-300">{{ $detail->mataKuliah->nama ?? '-' }}</td>
+                            <td class="px-2 py-4 border border-gray-300">{{ $detail->jadwalKuliah->kelas ?? '-' }}</td>
+                            <td class="px-2 py-4 border border-gray-300">{{ $detail->mataKuliah->sks ?? '-' }}</td>
+                            <td class="px-2 py-4 border border-gray-300">{{ $detail->jadwalKuliah->ruang->nama ?? '-' }}</td>
+                            <td class="px-2 py-4 border border-gray-300">{{ $detail->jadwalKuliah->hari ?? '-' }}</td>
+                            <td class="px-2 py-4 border border-gray-300 whitespace-nowrap">
+                                {{ $detail->jadwalKuliah->waktu_mulai ?? '-' }} - {{ $detail->jadwalKuliah->waktu_selesai ?? '-' }}
+                            </td>
+                            <td class="px-2 py-4 border border-gray-300">{{ $detail->status ?? '-' }}</td>
+                            <td class="px-2 py-4 border border-gray-300">Dosen Pengampu</td>
+                        </tr>
+                    @endforeach
+                @else
+                    <tr>
+                        <td colspan="10" class="px-6 py-4 text-center border border-gray-300">
+                            Tidak ada mata kuliah.
+                        </td>
+                    </tr>
+                @endif
+            </tbody>
         </table>
 
         <!-- Tombol Cetak IRS -->

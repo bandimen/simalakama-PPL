@@ -45,7 +45,7 @@
                     <!-- Semester Studi -->
                     <div class="px-4">
                         <p class="text-sm font-medium text-gray-500">Semester Studi</p>
-                        <p class="text-lg font-bold text-gray-900">5</p>
+                        <p class="text-lg font-bold text-gray-900">{{ $semester }}</p>
                     </div>
 
                     <!-- Status Mahasiswa -->

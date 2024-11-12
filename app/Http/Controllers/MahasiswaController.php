@@ -21,14 +21,16 @@ class MahasiswaController extends Controller
 
         $irsPeriodsController = new IrsPeriodsController();
         $currentPeriod = $irsPeriodsController->getCurrentPeriod();
-            
+        $semesterMahasiswa = $this->getSemester($mahasiswa->angkatan, $currentPeriod);
 
+        
         return view('mhs.dashboard', 
         [
             'title' => 'Dashboard Mahasiswa', 
             'mahasiswa' => $mahasiswa, 
             'currentPeriod' => $currentPeriod,
             'pa' => $pa,
+            'semester' => $semesterMahasiswa,
         ]);
     }
 
@@ -45,6 +47,30 @@ class MahasiswaController extends Controller
                     ->where('kodemk', $kodemk)
                     ->get();
         return response()->json($jadwals);
+    }
+
+    public function getSemester($angkatan, $currentPeriod)
+    {
+        // Pisahkan tahun akademik menjadi tahun awal dan akhir
+        $currentTahunAjaran = explode('/', $currentPeriod->tahun_ajaran);
+        $currentTahunAwal = (int)$currentTahunAjaran[0];
+    
+        // Tentukan tahun angkatan mahasiswa
+        $tahunAngkatan = (int)$angkatan;
+    
+        // Hitung selisih tahun antara tahun angkatan mahasiswa dan tahun ajaran saat ini
+        $selisihTahun = $currentTahunAwal - $tahunAngkatan;
+    
+        // Setiap tahun memiliki 2 semester (ganjil dan genap), lakukan perhitungan berdasarkan semester aktif
+        if ($currentPeriod->semester == 'Gasal') {
+            // Jika semester Gasal (ganjil), tambahkan 1 untuk semester ganjil
+            $semester = ($selisihTahun * 2) + 1;
+        } elseif ($currentPeriod->semester == 'Genap') {
+            // Jika semester Genap, tambahkan 2 untuk semester genap
+            $semester = ($selisihTahun * 2) + 2;
+        }
+        
+        return $semester;
     }
 
 }
