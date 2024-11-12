@@ -17,7 +17,6 @@ class PembimbingAkademikController extends Controller
         $irsController = new IrsController();
         $irs = $irsController->getIRSforPA($pa);
 
-
         return view('pa.perwalian', ['title' => 'Perwalian - PA', 'irs' => $irs]);
     }
     public function rekapmhs() {

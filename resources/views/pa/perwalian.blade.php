@@ -127,10 +127,22 @@
                         {{ ++$counter  }}
                     </th>
                     <td class="px-6 py-4">
-                        <a href="#" class="font-medium hover:underline" data-modal-target="default-modal" data-modal-toggle="default-modal">{{ $i->nim }}</a>
+                        <a class="font-medium hover:underline" data-modal-target="default-modal" data-modal-toggle="default-modal" >{{ $i->nim }} </a>
                     </td>
                     <td class="px-6 py-4">
-                        <a href="#" class="font-medium hover:underline" data-modal-target="default-modal" data-modal-toggle="default-modal">{{ $i->nama }}</a>
+                        <a class="font-medium hover:underline" data-modal-target="default-modal" data-modal-toggle="default-modal"
+                        {{-- data-nama="{{ $i->nama }}"
+                        data-nim="{{ $i->nim }}"
+                        data-statusirs="{{ $i->status }}"
+                        data-kodemk="{{ $i->irsDetails->kodemk }}"
+                        data-namamk="{{ $i->irsDetails->mataKuliah->nama }}"
+                        data-kelas="{{ $i->irsDetails->jadwalKuliah->kelas }}"
+                        data-sks="{{ $i->irsDetails->mataKuliah->sks }}"
+                        data-namaruang="{{ $i->irsDetails->jadwalKuliah->ruang->nama }}"
+                        data-statusmatkul="{{ $i->irsDetails->status }}"
+                        data-dosenpengampu="{{ $i->irsDetails->dosenPengampuList }}" --}}
+                        >
+                        {{ $i->nama }}</a>
                     </td>
                     <td class="px-6 py-4">
                         Informatika S1
@@ -162,6 +174,8 @@
             </tbody>
         </table>
     </div>
+
+
     <!-- Main modal -->
     <div id="default-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
         <div class="relative p-4 w-full max-w-6xl max-h-full">
