@@ -30,6 +30,9 @@ class DatabaseSeeder extends Seeder
             DekanTableSeeder::class,
             IrsTableSeeder::class,
             IrsDetailsTableSeeder::class,
+            KhsTableSeeder::class,
+            KhsDetailsTableSeeder::class,
+            AkademikTableSeeder::class,
         ]);
     }
 }

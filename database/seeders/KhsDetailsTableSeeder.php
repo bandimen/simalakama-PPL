@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class AkademikSeeder extends Seeder
+class KhsDetailsTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
