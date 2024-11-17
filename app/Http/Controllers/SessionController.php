@@ -25,13 +25,11 @@ class SessionController extends Controller
             'email' => $request->email,
             'password' => $request->password
         ];
-
         if (Auth::attempt($infoLogin)) {
             $user = Auth::user();
             
             // Ambil semua role user
             $userRoles = $user->roles;
-
         
             // ni kalo punya banyak role
             if ($userRoles->count() > 1) {
