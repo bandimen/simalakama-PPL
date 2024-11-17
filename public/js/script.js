@@ -194,35 +194,4 @@ function saveSelectedSchedule(jadwal) {
   .catch(error => console.error('Error saving schedule:', error));
 }
 
-function showModal(id) {
-  // Dapatkan data dari API atau set data IRS dari server
-  fetch(`/api/irs/${id}`)
-      .then(response => response.json())
-      .then(data => {
-          // Update konten modal
-          document.getElementById('modal-title').textContent = `IRS ${data.nama} - ${data.nim} (${data.status})`;
-          
-          // Contoh mengisi tabel dalam modal
-          let tableBody = document.getElementById('modal-table-body');
-          tableBody.innerHTML = '';
-          data.matakuliah.forEach((mk, index) => {
-              let row = `<tr>
-                  <td>${index + 1}</td>
-                  <td>${mk.kode}</td>
-                  <td>${mk.nama}</td>
-                  <td>${mk.kelas}</td>
-                  <td>${mk.sks}</td>
-                  <td>${mk.ruang}</td>
-                  <td>${mk.status}</td>
-                  <td>${mk.dosen}</td>
-                  <td><a href="#">Aksi</a></td>
-              </tr>`;
-              tableBody.insertAdjacentHTML('beforeend', row);
-          });
-
-          // Tampilkan modal
-          document.getElementById('default-modal').classList.remove('hidden');
-      })
-      .catch(error => console.error('Error fetching IRS data:', error));
-}
 
