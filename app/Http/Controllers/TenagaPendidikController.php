@@ -14,7 +14,7 @@ class TenagaPendidikController extends Controller
      */
     public function index()
     {
-        // data mahasiswa yg diambil di proses sessionController pas login dibawa ke view
+            // data mahasiswa yg diambil di proses sessionController pas login dibawa ke view
         $user = Auth::user();
         $tenagaPendidik = $user->tenagaPendidik;
         return view('akademik.dashboard', ['title' => 'Dashboard Akademik', 'tenagaPendidik' => $tenagaPendidik]);
