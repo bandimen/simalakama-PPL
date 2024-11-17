@@ -15,7 +15,7 @@ class UsersTableSeeder extends Seeder
     public function run(): void
     { 
 
-    $userRoles = [
+    $users = [
         [
             'name' => 'Fendi Ardianto',
             'email' => 'fendiardianto@simalakama.com',
@@ -57,17 +57,23 @@ class UsersTableSeeder extends Seeder
             'email' => 'kusworoadi@simalakama.com',
             'password' => bcrypt('123456'),
             'roles' => ['dekan']
-        ]
+        ],
+        [
+            'name' => 'Izzudin Ardianto Jatiwibowo',
+            'email' => 'izu@simalakama.com',
+            'password' => bcrypt('123456'),
+            'roles' => ['bagianakademik']
+        ],
     ];
 
-    foreach ($userRoles as $userData) {
+    foreach ($users as $user) {
         $user = User::create([
-            'name' => $userData['name'],
-            'email' => $userData['email'],
-            'password' => $userData['password']
+            'name' => $user['name'],
+            'email' => $user['email'],
+            'password' => $user['password']
         ]);
 
-        foreach ($userData['roles'] as $roleName) {
+        foreach ($user['roles'] as $roleName) {
             $role = Role::where('name', $roleName)->first();
             if ($role) {
                 $user->roles()->attach($role->id);

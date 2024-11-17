@@ -20,7 +20,8 @@ return new class extends Migration
             $table->enum('status', ['Aktif', 'Cuti'])->default('Aktif');
             $table->string('foto')->nullable();
             
-            $table->foreignId('pembimbing_akademik_id')->nullable()->constrained('pembimbing_akademik')->onDelete('set null'); // Make it nullable
+            $table->foreignId('prodi_id')->constrained()->onDelete('cascade');
+            $table->foreignId('pembimbing_akademik_id')->constrained('pembimbing_akademik')->onDelete('cascade'); 
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); 
             $table->timestamps();
         });    

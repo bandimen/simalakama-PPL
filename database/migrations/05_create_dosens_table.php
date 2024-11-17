@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ruangs', function (Blueprint $table) {
-            $table->id();
-            $table->string('nama')->unique();
-            $table->integer('kapasitas');
-            $table->enum('status', ['Disetujui', 'Belum disetujui'])->default('Belum disetujui');
+        Schema::create('dosen', function (Blueprint $table) {
+            $table->string('nidn')->primary();
+            $table->string('nama');
+            $table->string('alamat')->nullable();
+            $table->string('foto')->nullable();
+            $table->foreignId('prodi_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ruangs');
+        Schema::dropIfExists('dosen');
     }
 };

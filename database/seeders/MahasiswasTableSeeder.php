@@ -22,6 +22,7 @@ class MahasiswasTableSeeder extends Seeder
                 'no_hp' => '081234567890',
                 'status' => 'Aktif',
                 'foto' => 'fendi.jpg',
+                'prodi_id' => 1,
                 'pembimbing_akademik_id' => 1, // ID pembimbing akademik yang sesuai
                 'user_id' => 1 // ID user yang sesuai
             ],
@@ -33,6 +34,7 @@ class MahasiswasTableSeeder extends Seeder
                 'no_hp' => '081234567891',
                 'status' => 'Aktif',
                 'foto' => 'farrel.jpg',
+                'prodi_id' => 1,
                 'pembimbing_akademik_id' => 1, // ID pembimbing akademik yang sesuai
                 'user_id' => 2 // ID user yang sesuai
             ],
@@ -44,6 +46,7 @@ class MahasiswasTableSeeder extends Seeder
                 'no_hp' => '081234567892',
                 'status' => 'Aktif',
                 'foto' => 'naufal.jpg',
+                'prodi_id' => 1,
                 'pembimbing_akademik_id' => 2, // ID pembimbing akademik yang sesuai
                 'user_id' => 3 // ID user yang sesuai
             ],
@@ -55,6 +58,7 @@ class MahasiswasTableSeeder extends Seeder
                 'no_hp' => '081234567893',
                 'status' => 'Aktif',
                 'foto' => 'tiara.jpg',
+                'prodi_id' => 1,
                 'pembimbing_akademik_id' => 2, // ID pembimbing akademik yang sesuai
                 'user_id' => 4 // ID user yang sesuai
             ]

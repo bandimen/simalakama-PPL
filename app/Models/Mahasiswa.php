@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\PembimbingAkademik;
 use Illuminate\Database\Eloquent\Model;
 
 class Mahasiswa extends Model
@@ -30,5 +31,10 @@ class Mahasiswa extends Model
     public function irs()
     {
         return $this->hasMany(Irs::class, 'nim', 'nim');
+    }
+
+    public function prodi()
+    {
+        return $this->belongsTo(Prodi::class);
     }
 }

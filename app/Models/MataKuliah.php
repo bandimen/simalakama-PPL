@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+use App\Models\Dosen;
+use App\Models\Prodi;
 use App\Models\IrsDetail;
 use App\Models\JadwalKuliah;
+use App\Models\PengampuMataKuliah;
 use Illuminate\Database\Eloquent\Model;
 
 class MataKuliah extends Model
@@ -46,5 +49,10 @@ class MataKuliah extends Model
     public function pengampuMataKuliah()
     {
         return $this->hasMany(PengampuMataKuliah::class, 'kodemk', 'kodemk');
+    }
+
+    public function prodi()
+    {
+        return $this->belongsTo(Prodi::class);
     }
 }

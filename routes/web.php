@@ -48,8 +48,6 @@ Route::middleware(['auth'])->group(function () {
   Route::get('/pa/perwalian/setujui-irs/{id}', [IrsController::class, 'setujuiIrs'])->name('setujuiIrs'); //name ini  digunakan sbg alias
   Route::get('/pa/perwalian/batalkan-irs/{id}', [IrsController::class, 'batalkanIrs'])->name('batalkanIrs');
 
-  Route::get('/ba', [BagianAkademikController::class, 'index']);
-
   Route::get('/dekan', [DekanController::class, 'index']);
   Route::get('/dekan/matkul', [DekanController::class, 'matkul']);
   Route::get('/dekan/ruangacc', [DekanController::class, 'ruangacc']);

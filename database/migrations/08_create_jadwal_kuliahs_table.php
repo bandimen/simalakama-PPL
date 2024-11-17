@@ -19,6 +19,8 @@ return new class extends Migration
             $table->foreign('ruang_id')->references('id')->on('ruangs')->onDelete('cascade');
             $table->string('kelas');
             $table->string('hari');
+            $table->string('tahun_ajaran');
+            $table->integer('kuota_kelas');
             $table->time('waktu_mulai');
             $table->time('waktu_selesai');
             $table->timestamps();

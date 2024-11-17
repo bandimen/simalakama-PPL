@@ -73,4 +73,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(PembimbingAkademik::class);
     }
+
+    public function tenagaPendidik()
+    {
+        return $this->hasOne(TenagaPendidik::class);
+    }
 }

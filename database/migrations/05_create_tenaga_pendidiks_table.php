@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('mata_kuliahs', function (Blueprint $table) {
-            $table->string('kodemk')->primary();
+        Schema::create('tenaga_pendidiks', function (Blueprint $table) {
+            $table->string('nip')->primary();
             $table->string('nama');
-            $table->integer('sks');
-            $table->integer('semester');
-            $table->enum('sifat', ['Wajib', 'Pilihan']);
+            $table->string('alamat')->nullable();
+            $table->string('foto')->nullable();
+            $table->string('bagian');
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade'); 
             $table->timestamps();
         });
     }
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('mata_kuliahs');
+        Schema::dropIfExists('tenaga_pendidiks');
     }
 };
