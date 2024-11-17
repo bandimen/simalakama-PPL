@@ -12,6 +12,7 @@ use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\MataKuliahController;
 use App\Http\Controllers\BagianAkademikController;
 use App\Http\Controllers\PembimbingAkademikController;
+use App\Models\TenagaPendidik;
 
 // kalo belum login
 Route::middleware(['guest'])->group(function () {
@@ -52,6 +53,11 @@ Route::middleware(['auth'])->group(function () {
   Route::get('/dekan/matkul', [DekanController::class, 'matkul']);
   Route::get('/dekan/ruangacc', [DekanController::class, 'ruangacc']);
   Route::resource('mataKuliah', MataKuliahController::class);
+
+  //TENDIK
+  Route::get('/akademik',[TenagaPendidik::class,'index']);
+  Route::get('/akademik/tambahruang',[TenagaPendidik::class,'tambahruang']);
+
 
 
   Route::get('/kaprodi', [KaprodiController::class, 'index']);
