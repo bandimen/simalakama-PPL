@@ -197,9 +197,11 @@ class IrsController extends Controller
         // select semua irs sesuai id
         $irs = DB::table('irs')
         ->join('mahasiswas', 'irs.nim', '=', 'mahasiswas.nim')
-        ->select('irs.*', 'mahasiswas.nama', 'mahasiswas.angkatan', 'mahasiswas.pembimbing_akademik_id')
+        ->join('prodis', 'mahasiswas.prodi_id', '=', 'prodis.id') 
+        ->select('irs.*', 'mahasiswas.nama', 'mahasiswas.angkatan', 'mahasiswas.pembimbing_akademik_id', 'mahasiswas.prodi_id', 'prodis.nama as nama_prodi')
         ->where('mahasiswas.pembimbing_akademik_id', '=', $pa->id)
         ->get();
+
 
         //hubungkan tabel irs dengan tabel irs_details satu satu 
         $irs->each(function ($item) {
