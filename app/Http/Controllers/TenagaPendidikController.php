@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Prodi;
 use App\Models\TenagaPendidik;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreTenagaPendidikRequest;
@@ -22,7 +23,8 @@ class TenagaPendidikController extends Controller
     public function tambahruang() {
         $user = Auth::user();
         $tenagaPendidik= $user->tenagaPendidik;
-        return view('akademik.tambahruang', ['title' => 'Tambah Ruang', 'tenagaPendidik' => $tenagaPendidik]);
+        $prodi = Prodi::all(); // Ambil data prodi
+        return view('akademik.tambahruang', ['title' => 'Tambah Ruang', 'tenagaPendidik' => $tenagaPendidik, 'prodi' => $prodi]);
     }
 
     /**

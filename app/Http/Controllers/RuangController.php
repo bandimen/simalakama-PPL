@@ -8,8 +8,6 @@ use Illuminate\Http\Request;
 
 class RuangController extends Controller
 {
-    protected $table = 'ruangs';
-    protected $fillable = ['nama', 'kapasitas'];
 
     // Relasi ke JadwalKuliah
     public function jadwalKuliah()
@@ -36,9 +34,24 @@ class RuangController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        //
-    }
+{
+    $request->validate([
+        'nama' => 'required|unique:ruangs|max:255',
+        'gedung' => 'required|max:1',
+        'kapasitas' => 'required|integer|min:1',
+        'prodi_id' => 'required|exists:prodis,id',
+    ]);
+
+    Ruang::create([
+        'nama' => $request->nama,
+        'gedung' => $request->gedung,
+        'kapasitas' => $request->kapasitas,
+        'prodi_id' => $request->prodi_id,
+    ]);
+
+    return redirect()->back()->with('success', 'Ruangan berhasil ditambahkan.');
+}
+
 
     /**
      * Display the specified resource.
