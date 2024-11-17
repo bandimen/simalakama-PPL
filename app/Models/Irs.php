@@ -28,5 +28,4 @@ class Irs extends Model
     {
         return $this->hasMany(IrsDetail::class, 'irs_id', 'id');
     }
-
 }

@@ -29,11 +29,38 @@ async function addCourse() {
     removeBtn.className = "text-white bg-red-700 rounded-full text-xs px-2 py-1 ml-2";
     removeBtn.textContent = "X";
     removeBtn.onclick = function () {
-      courseList.removeChild(listItem); // Hapus dari daftar
+      // Cek apakah mata kuliah sudah diambil (dengan warna hijau)
+      const selectedCourseBox = document.querySelector(`.courseBox-${kodemk}[style*="background-color: rgb(40, 167, 69)"]`); // Warna hijau
 
-      // Hapus semua kotak jadwal dari tabel yang terkait dengan kodemk
-      const courseBoxes = document.querySelectorAll(`.courseBox-${kodemk}`);
-      courseBoxes.forEach(box => box.remove());
+      if (selectedCourseBox) {
+        // Jika mata kuliah sudah dipilih, tampilkan modal konfirmasi
+        showCancelModal(kodemk, selectedCourseBox);
+        const confirmCancelButton = document.getElementById("confirmCancelButton");
+        const cancelCancelButton = document.getElementById("cancelCancelButton");
+        const cancelModal = document.getElementById("cancelConfirmationModal");
+
+        confirmCancelButton.onclick = () => {
+          // Hapus dari daftar kursus
+          courseList.removeChild(listItem);
+
+          removeFromSidebarTable(kodemk);
+    
+          // Hapus semua kotak jadwal dari tabel yang terkait dengan kodemk
+          const courseBoxes = document.querySelectorAll(`.courseBox-${kodemk}`);
+          courseBoxes.forEach(box => box.remove());
+    
+          // Tutup modal
+          cancelModal.classList.add("hidden");
+        };
+      } else {
+        // Jika belum dipilih, langsung hapus dari daftar
+        const courseList = document.getElementById("courseList");
+        courseList.removeChild(listItem);
+
+        // Hapus semua kotak jadwal dari tabel yang terkait dengan kodemk
+        const courseBoxes = document.querySelectorAll(`.courseBox-${kodemk}`);
+        courseBoxes.forEach(box => box.remove());
+      }
     };
 
     listItem.appendChild(removeBtn);
@@ -51,26 +78,36 @@ async function fetchAndDisplaySchedule(kodemk) {
   try {
     const response = await fetch(`/jadwal/${kodemk}`, { cache: "no-store" });
     const jadwalList = await response.json();
-
-    console.log("Jadwal yang diterima untuk", kodemk, ":", jadwalList);
+    
+    // Fungsi untuk merapikan waktu ke format HH:00
+    function normalizeTimeToHour(waktu) {
+      const [jam] = waktu.split(':').map(Number); // Ambil bagian jam
+      return `${String(jam).padStart(2, '0')}:00`; // Kembalikan waktu dengan menit diatur ke 00
+    }
 
     jadwalList.forEach(jadwal => {
       const { hari, waktu_mulai, waktu_selesai, kelas, ruang_id } = jadwal;
 
-      const dayColumn = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat"].indexOf(hari);
-      const startTime = waktu_mulai.slice(0, 5);
+      // Cari kolom hari berdasarkan nama hari
+      const normalizedDay = hari.charAt(0).toUpperCase() + hari.slice(1).toLowerCase();
+      const dayColumn = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat"].indexOf(normalizedDay);
+
+      // Normalisasi waktu mulai
+      const startTime = normalizeTimeToHour(waktu_mulai); // Normalisasi waktu ke format HH:00
       const row = document.querySelector(`#scheduleDisplay tbody tr[data-time="${startTime}"]`);
 
       if (row && dayColumn >= 0) {
-        const cell = row.children[dayColumn + 1];
+        const cell = row.children[dayColumn + 1]; // Ambil sel yang sesuai dengan kolom hari
 
+        // Bungkus courseBox di dalam wrapper div untuk menambahkan ke cell
         const wrapper = document.createElement("div");
-        wrapper.className = "mb-2";
+        wrapper.className = "mb-2"; // Tambahkan margin bawah antar elemen jika dibutuhkan
 
         const courseBox = document.createElement("button");
         courseBox.className = `bg-gray-100 text-black border border-black shadow-md rounded-md p-1 text-[8px] font-medium text-center w-[50px] courseBox-${kodemk}`;
         courseBox.style.cursor = "pointer";
 
+        // Isi informasi jadwal mata kuliah
         courseBox.innerHTML = `
           <div>${kodemk}</div>
           <div>Kelas: ${kelas}</div>
@@ -78,9 +115,10 @@ async function fetchAndDisplaySchedule(kodemk) {
           <div>${waktu_mulai} - ${waktu_selesai}</div>
         `;
 
-        // Tambahkan event klik untuk membuka modal
-        courseBox.onclick = () => showModal(kodemk, courseBox);
+        // Tambahkan event klik untuk membuka modal konfirmasi
+        courseBox.onclick = () => showConfirmationModal(kodemk, courseBox);
 
+        // Tambahkan courseBox ke dalam wrapper dan masukkan wrapper ke dalam sel tabel
         wrapper.appendChild(courseBox);
         cell.appendChild(wrapper);
 
@@ -101,8 +139,9 @@ async function fetchAndDisplaySchedule(kodemk) {
   }
 }
 
-// Fungsi untuk menampilkan modal konfirmasi pengambilan mata kuliah
-function showModal(kodemk, selectedCourseBox) {
+
+// Fungsi untuk menampilkan modal konfirmasi pemilihan IRS
+function showConfirmationModal(kodemk, selectedCourseBox) {
   const modal = document.getElementById("confirmationModal");
   modal.classList.remove("hidden");
 
@@ -123,6 +162,8 @@ function showModal(kodemk, selectedCourseBox) {
           box.classList.replace("text-black", "text-black");
         }
       });
+
+      addToSidebarTable(kodemk, selectedCourseBox);
 
       // Tambahkan event klik untuk membatalkan pilihan
       selectedCourseBox.onclick = () => showCancelModal(kodemk, selectedCourseBox);
@@ -156,15 +197,80 @@ function showCancelModal(kodemk, selectedCourseBox) {
     similarCourseBoxes.forEach(box => {
       box.style.backgroundColor = ""; // Kembalikan ke warna semula
       box.classList.replace("text-white", "text-black");
-      box.onclick = () => showModal(kodemk, box); // Aktifkan kembali klik
+      box.onclick = () => showConfirmationModal(kodemk, box); // Aktifkan kembali klik
     });
 
+    // Hapus baris dari tabel sidebar
+    removeFromSidebarTable(kodemk);
+
+    // Tutup modal
     cancelModal.classList.add("hidden");
   };
 
   cancelCancelButton.onclick = () => {
     cancelModal.classList.add("hidden");
   };
+}
+
+function addToSidebarTable(kodemk, selectedCourseBox) {
+  const sidebarTableBody = document.querySelector("#sidebarTable tbody");
+
+  // Hapus pesan "Tidak ada jadwal yang dipilih" jika ada
+  const emptyMessageRow = document.getElementById("emptyMessage");
+  if (emptyMessageRow) {
+    sidebarTableBody.removeChild(emptyMessageRow);
+  }
+
+  // Pastikan tidak ada duplikasi
+  const existingRows = Array.from(sidebarTableBody.children).map(row => row.dataset.kodemk);
+  if (existingRows.includes(kodemk)) {
+    console.warn(`Mata kuliah ${kodemk} sudah ada di tabel sidebar.`);
+    return;
+  }
+
+  // Ambil informasi mata kuliah dari courseBox
+  const [kodeMK, kelas, ruang, waktu] = selectedCourseBox.innerText.split("\n").map(text => text.trim());
+  const matakuliah = kodeMK.split(" - ")[1] || "Mata Kuliah Tidak Diketahui"; // Nama mata kuliah diambil dari teks kodeMK jika ada
+
+  // Tambahkan baris baru ke tabel
+  const newRow = document.createElement("tr");
+  newRow.dataset.kodemk = kodemk; // Tandai baris dengan kodemk
+  newRow.innerHTML = `
+    <td class="border px-4 py-2">${sidebarTableBody.children.length + 1}</td>
+    <td class="border px-4 py-2">${kodeMK.split(" - ")[0]}</td>
+    <td class="border px-4 py-2">${matakuliah}</td>
+    <td class="border px-4 py-2">${kelas.replace("Kelas: ", "")}</td>
+    <td class="border px-4 py-2">${ruang.replace("Ruang: ", "")}</td>
+    <td class="border px-4 py-2">${waktu}</td>
+  `;
+  sidebarTableBody.appendChild(newRow);
+}
+
+function removeFromSidebarTable(kodemk) {
+  const sidebarTableBody = document.querySelector("#sidebarTable tbody");
+  const rows = Array.from(sidebarTableBody.children);
+
+  // Cari baris dengan kodemk yang sesuai dan hapus
+  const rowToRemove = rows.find(row => row.dataset.kodemk === kodemk);
+  if (rowToRemove) {
+    sidebarTableBody.removeChild(rowToRemove);
+  }
+
+  // Perbarui nomor urut hanya untuk baris yang memiliki atribut dataset.kodemk
+  const remainingRows = Array.from(sidebarTableBody.children).filter(row => row.dataset.kodemk);
+  remainingRows.forEach((row, index) => {
+    row.children[0].textContent = index + 1; // Update nomor urut sesuai index
+  });
+
+  // Jika tabel kosong, tambahkan pesan "Tidak ada jadwal yang dipilih"
+  if (remainingRows.length === 0) {
+    const emptyMessageRow = document.createElement("tr");
+    emptyMessageRow.id = "emptyMessage";
+    emptyMessageRow.innerHTML = `
+      <td colspan="6" class="text-center text-gray-500">Tidak ada jadwal yang dipilih</td>
+    `;
+    sidebarTableBody.appendChild(emptyMessageRow);
+  }
 }
 
 function saveSelectedSchedule(jadwal) {
@@ -225,4 +331,6 @@ function showModal(id) {
       })
       .catch(error => console.error('Error fetching IRS data:', error));
 }
+
+
 
