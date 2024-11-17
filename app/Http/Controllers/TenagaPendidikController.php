@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Prodi;
 use App\Models\TenagaPendidik;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreTenagaPendidikRequest;
 use App\Http\Requests\UpdateTenagaPendidikRequest;
 
@@ -13,7 +15,16 @@ class TenagaPendidikController extends Controller
      */
     public function index()
     {
-        //
+            // data mahasiswa yg diambil di proses sessionController pas login dibawa ke view
+        $user = Auth::user();
+        $tenagaPendidik = $user->tenagaPendidik;
+        return view('akademik.dashboard', ['title' => 'Dashboard Akademik', 'tenagaPendidik' => $tenagaPendidik]);
+    }
+    public function tambahruang() {
+        $user = Auth::user();
+        $tenagaPendidik= $user->tenagaPendidik;
+        $prodi = Prodi::all(); // Ambil data prodi
+        return view('akademik.tambahruang', ['title' => 'Tambah Ruang', 'tenagaPendidik' => $tenagaPendidik, 'prodi' => $prodi]);
     }
 
     /**
