@@ -98,7 +98,7 @@
                                       {{ $m->nim }}
                                   </td>
                                   <td class="px-6 py-4">
-                                      S1 Informatika
+                                      {{ $m->prodi->nama }}
                                   </td>
                                   <td class="px-6 py-4">
                                       {{ $m->angkatan }}
