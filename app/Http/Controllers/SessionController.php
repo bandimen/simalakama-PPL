@@ -75,7 +75,7 @@ class SessionController extends Controller
         } elseif ($selectedRole == 'dekan') {
             return redirect('dekan');
         } elseif ($selectedRole == 'bagianakademik') {
-            return redirect('akdemik');
+            return redirect('ba');
         }
     }
 
