@@ -165,11 +165,11 @@
                                             {{ ++$counter }}
                                         </th>
                                         <td class="px-6 py-4">
-                                            <a class="font-medium hover:underline" data-modal-target="default-modal"
+                                            <a href="#" class="font-medium hover:underline" data-modal-target="default-modal"
                                                 data-modal-toggle="default-modal">{{ $i->nim }} </a>
                                         </td>
                                         <td class="px-6 py-4">
-                                            <a class="font-medium hover:underline" data-modal-target="default-modal"
+                                            <a href="#" class="font-medium hover:underline" data-modal-target="default-modal"
                                                 data-modal-toggle="default-modal">
                                                 {{ $i->nama }}</a>
                                             <!-- Main modal -->
@@ -201,7 +201,6 @@
                                                         </div>
                                                         <!-- Modal body -->
                                                         <div class="p-4 md:p-5 space-y-4">
-
                                                             <div class="relative overflow-x-auto">
                                                                 <table
                                                                     class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -322,7 +321,7 @@
                                             {{-- End Modal --}}
                                         </td>
                                         <td class="px-6 py-4">
-                                            Informatika S1
+                                            {{ $i->nama_prodi }}
                                         </td>
                                         <td class="px-6 py-4">
                                             {{ $i->angkatan }}
@@ -353,11 +352,6 @@
                     </table>
                 </div>
             </div>
-
-
-
-
-
         </main>
     </div>
 
