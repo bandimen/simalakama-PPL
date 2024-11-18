@@ -11,6 +11,7 @@ use App\Http\Controllers\SessionController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\MataKuliahController;
 use App\Http\Controllers\BagianAkademikController;
+use App\Http\Controllers\JadwalKuliahController;
 use App\Http\Controllers\PembimbingAkademikController;
 use App\Http\Controllers\RuangController;
 use App\Http\Controllers\TenagaPendidikController;
@@ -41,7 +42,7 @@ Route::middleware(['auth'])->group(function () {
   Route::get('/irs/selected-schedules', [IrsController::class, 'getSelectedSchedules']);
   Route::post('/irs/store', [IrsController::class, 'store']);
 
-  
+
 
 
   Route::get('/pa', [PembimbingAkademikController::class, 'index']);
@@ -64,6 +65,9 @@ Route::middleware(['auth'])->group(function () {
 
 
   Route::get('/kaprodi', [KaprodiController::class, 'index']);
+  Route::get('/kaprodi/jadwalKuliah', [JadwalKuliahController::class, 'index']);
+  Route::get('/kaprodi/tambah-jadwal', [JadwalKuliahController::class, 'create'])->name('tambahJadwal');
+  Route::post('/kaprodi/tambah-jadwal', [JadwalKuliahController::class, 'store'])->name('simpanJadwal');
 
   Route::get('/logout', [SessionController::class, 'logout']);
   Route::get('/select-role', [SessionController::class, 'showSelectRolePage'])->name('selectRole');

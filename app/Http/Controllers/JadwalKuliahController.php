@@ -11,11 +11,11 @@ class JadwalKuliahController extends Controller
 {
     protected $table = 'jadwal_kuliah';
     protected $fillable = [
-        'kodemk', 
-        'ruang_id', 
-        'kelas', 
-        'hari', 
-        'waktu_mulai', 
+        'kodemk',
+        'ruang_id',
+        'kelas',
+        'hari',
+        'waktu_mulai',
         'waktu_selesai'
     ];
 
@@ -35,7 +35,8 @@ class JadwalKuliahController extends Controller
      */
     public function index()
     {
-        //
+        $jadwalKuliah = JadwalKuliah::with(['mataKuliah', 'ruang'])->get();
+        return view('kaprodi.jadwalKuliah', compact('jadwalKuliah'));
     }
 
     /**
@@ -43,7 +44,10 @@ class JadwalKuliahController extends Controller
      */
     public function create()
     {
-        //
+        $mataKuliah = MataKuliah::all();
+        $ruang = Ruang::all();
+
+        return view('kaprodi.tambahJadwal', compact('mataKuliah', 'ruang'));
     }
 
     /**
@@ -51,7 +55,17 @@ class JadwalKuliahController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'kodemk' => 'required',
+            'ruang_id' => 'required',
+            'kelas' => 'required',
+            'hari' => 'required',
+            'waktu_mulai' => 'required',
+            'waktu_selesai' => 'required|after:waktu_mulai',
+        ]);
+
+        JadwalKuliah::create($request->all());
+        return redirect()->route('kaprodi.jadwalKuliah')->with('success', 'Jadwal kuliah berhasil ditambahkan!');
     }
 
     /**
