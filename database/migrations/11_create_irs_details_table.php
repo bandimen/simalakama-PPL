@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('irs_details', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('irs_id')->constrained()->onDelete('cascade');
-            $table->string('kodemk');
-            $table->foreign('kodemk')->references('kodemk')->on('mata_kuliahs')->onDelete('cascade');
-            $table->foreignId('jadwal_kuliah_id')->constrained()->onDelete('cascade');
-            $table->enum('status', ['Baru', 'Perbaikan', 'Ulang']);
-            $table->timestamps();
-        });
+            Schema::create('irs_details', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('irs_id')->constrained()->onDelete('cascade');
+                $table->string('kodemk');
+                $table->foreign('kodemk')->references('kodemk')->on('mata_kuliahs')->onDelete('cascade');
+                $table->foreignId('jadwal_kuliah_id')->constrained()->onDelete('cascade');
+                $table->enum('status', ['Baru', 'Perbaikan', 'Ulang']);
+                $table->timestamps();
+            });
     }
 
     /**

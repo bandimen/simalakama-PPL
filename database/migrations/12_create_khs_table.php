@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('khs', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('irs_id')->constrained()->onDelete('cascade'); 
             $table->timestamps();
         });
     }

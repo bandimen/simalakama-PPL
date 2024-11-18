@@ -64,6 +64,12 @@ class UsersTableSeeder extends Seeder
             'password' => bcrypt('123456'),
             'roles' => ['bagianakademik']
         ],
+        [
+            'name' => 'Clara Zita Nabilla',
+            'email' => 'clara@simalakama.com',
+            'password' => bcrypt('123456'),
+            'roles' => ['dekan']
+        ],
     ];
 
     foreach ($userRoles as $userData) {

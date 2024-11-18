@@ -30,6 +30,7 @@ Route::get('/home', function() {
 
 // ini routing yang bisa dijalankan apabila dlm kondisi login
 Route::middleware(['auth'])->group(function () {
+  // MAHASISWA
   Route::get('/mhs', [MahasiswaController::class, 'index'])->name('mhs');
   Route::get('/mhs/akademik', [IrsController::class, 'buatirs']);
   Route::get('/mhs/akademik/lihatkhs', [KhsController::class, 'lihatkhs']);
@@ -43,26 +44,30 @@ Route::middleware(['auth'])->group(function () {
 
   
 
-
+  // PEMBIMBING AKADEMIK
   Route::get('/pa', [PembimbingAkademikController::class, 'index']);
   Route::get('/pa/perwalian', [PembimbingAkademikController::class, 'perwalian']);
   Route::get('/pa/rekapmhs', [PembimbingAkademikController::class, 'rekapmhs']);
   // setujui n batalkan irs
   Route::get('/pa/perwalian/setujui-irs/{id}', [IrsController::class, 'setujuiIrs'])->name('setujuiIrs'); //name ini  digunakan sbg alias
   Route::get('/pa/perwalian/batalkan-irs/{id}', [IrsController::class, 'batalkanIrs'])->name('batalkanIrs');
+  // show irs dan khs mhs
+  Route::get('pa/rekapmhs/irs/{nim}', [IrsController::class, 'showIrsByNim'])->name('showIrsByNim');
+  Route::get('pa/rekapmhs/khs/{nim}', [KhsController::class, 'showKhsByNim'])->name('showKhsByNim');
 
+  // DEKAN
   Route::get('/dekan', [DekanController::class, 'index']);
   Route::get('/dekan/matkul', [DekanController::class, 'matkul']);
   Route::get('/dekan/ruangacc', [DekanController::class, 'ruangacc']);
   Route::resource('mataKuliah', MataKuliahController::class);
 
-  //TENDIK
+  //TENAGA PENDIDIK alias BAGIAN AKADEMIK
   Route::get('/akademik',[TenagaPendidikController::class,'index']);
   Route::get('/akademik/tambahruang',[TenagaPendidikController::class,'tambahruang']);
   Route::post('/ruang', [RuangController::class, 'store'])->name('ruang.store');
 
 
-
+  // KAPRODI
   Route::get('/kaprodi', [KaprodiController::class, 'index']);
 
   Route::get('/logout', [SessionController::class, 'logout']);
