@@ -4,10 +4,13 @@ namespace App\Models;
 
 use App\Models\IrsDetail;
 use App\Models\Mahasiswa;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Irs extends Model
 {
+    use HasFactory;
+
     protected $table = 'irs';
     protected $guarded = [];
     protected $fillable = [
@@ -27,5 +30,11 @@ class Irs extends Model
     public function irsDetails()
     {
         return $this->hasMany(IrsDetail::class, 'irs_id', 'id');
+    }
+
+    // relasi dgn khs
+    public function khs()
+    {
+        return $this->hasMany(Khs::class, 'irs_id');
     }
 }

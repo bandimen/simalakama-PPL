@@ -98,7 +98,7 @@
                                       {{ $m->nim }}
                                   </td>
                                   <td class="px-6 py-4">
-                                      S1 Informatika
+                                      {{ $m->prodi->nama }}
                                   </td>
                                   <td class="px-6 py-4">
                                       {{ $m->angkatan }}
@@ -110,12 +110,12 @@
                                       SKSK
                                   </td>
                                   <td class="px-6 py-4">
-                                      <a href="#">
+                                      <a href="{{ route('showIrsByNim', $m->nim) }}">
                                         <img src="/images/irs.png" class="h-6 w-6" alt="irs">
                                       </a>
                                   </td>
                                   <td class="px-6 py-4">
-                                    <a href="#">
+                                    <a href="{{ route('showKhsByNim', $m->nim) }}">
                                       <img src="/images/khs.png" class="h-6 w-6" alt="irs">
                                     </a>
                                   </td>

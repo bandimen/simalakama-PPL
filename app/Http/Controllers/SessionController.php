@@ -48,7 +48,6 @@ class SessionController extends Controller
                 } elseif ($roleName == 'bagianakademik') {
                     return redirect('akademik');
                 }
-
             }
         
         }else{

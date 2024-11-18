@@ -45,7 +45,8 @@ class DosensTableSeeder extends Seeder
             ['nidn' => '0981237645', 'nama' => 'Dhena Kamalia Fu\'adi, S.Kom., M.Kom.', 'alamat' => 'Jl. Dummy No. 28', 'foto' => 'dummy28.jpg', 'prodi_id' => 1],
             ['nidn' => '1230984756', 'nama' => 'Henri Tantyoko, S.Kom., M.Kom.', 'alamat' => 'Jl. Dummy No. 29', 'foto' => 'dummy29.jpg', 'prodi_id' => 1],
             ['nidn' => '1100229876', 'nama' => 'Satriawan Rasyid Purnama, S.Kom., M.Cs.', 'alamat' => 'Jl. Dummy No. 30', 'foto' => 'dummy30.jpg', 'prodi_id' => 1],
-            ['nidn' => '0017037201', 'nama' => 'Prof. Dr. Kusworo Adi, S.Si., M.T.', 'alamat' => 'Jl. Dummy No. 31', 'foto' => 'dummy31.jpg', 'prodi_id' => 3]
+            ['nidn' => '0017037201', 'nama' => 'Prof. Dr. Kusworo Adi, S.Si., M.T.', 'alamat' => 'Jl. Dummy No. 31', 'foto' => 'dummy31.jpg', 'prodi_id' => 3],
+            ['nidn' => '1002293845', 'nama' => 'Prof. Clara Zita Nabilla, S.Kom., M.T., Ph.D', 'alamat' => 'Jl. Dummy No. 32', 'foto' => 'dummy31.jpg', 'prodi_id' => 5]
         ];
 
         foreach($dosenData as $dosen){

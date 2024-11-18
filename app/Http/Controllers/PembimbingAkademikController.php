@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -37,9 +38,9 @@ class PembimbingAkademikController extends Controller
 
     public function getMahasiswaPerwalian($id)
     {
-        $mhs = DB::table('mahasiswas')
-            ->where('pembimbing_akademik_id', $id)
-            ->get();
+        $mhs = Mahasiswa::with('prodi')
+        ->where('pembimbing_akademik_id', $id)
+        ->get();
         return $mhs;
     }
 

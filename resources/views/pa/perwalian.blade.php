@@ -165,15 +165,15 @@
                                             {{ ++$counter }}
                                         </th>
                                         <td class="px-6 py-4">
-                                            <a href="#" class="font-medium hover:underline" data-modal-target="default-modal"
-                                                data-modal-toggle="default-modal">{{ $i->nim }} </a>
+                                            <a href="#" class="font-medium hover:underline" data-modal-target="modal-{{ $i->id }}"
+                                                data-modal-toggle="modal-{{ $i->id }}">{{ $i->nim }} </a>
                                         </td>
                                         <td class="px-6 py-4">
-                                            <a href="#" class="font-medium hover:underline" data-modal-target="default-modal"
-                                                data-modal-toggle="default-modal">
+                                            <a href="#" class="font-medium hover:underline" data-modal-target="modal-{{ $i->id }}"
+                                                data-modal-toggle="modal-{{ $i->id }}">
                                                 {{ $i->nama }}</a>
                                             <!-- Main modal -->
-                                            <div id="default-modal" tabindex="-1" aria-hidden="true"
+                                            <div id="modal-{{ $i->id }}" tabindex="-1" aria-hidden="true"
                                                 class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
                                                 <div class="relative p-4 w-full max-w-6xl max-h-full">
                                                     <!-- Modal content -->
@@ -188,7 +188,7 @@
                                                             </h3>
                                                             <button type="button"
                                                                 class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                                                                data-modal-hide="default-modal">
+                                                                data-modal-hide="modal-{{ $i->id }}">
                                                                 <svg class="w-3 h-3" aria-hidden="true"
                                                                     xmlns="http://www.w3.org/2000/svg" fill="none"
                                                                     viewBox="0 0 14 14">
@@ -240,6 +240,7 @@
                                                                         @php
                                                                             $counterDetail = 0;
                                                                             $details = $i->irsDetails;
+                                                                            echo $counter;
                                                                         @endphp
                                                                         @if ($details)
                                                                             @foreach ($details as $detail)
@@ -303,13 +304,13 @@
                                                             class="flex justify-center items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
                                                             @if ($i->status == 'Belum disetujui')
                                                                 <a href="{{ route('setujuiIrs', $i->id) }}">
-                                                                    <button data-modal-hide="default-modal"
+                                                                    <button data-modal-hide="modal-{{ $i->id }}"
                                                                         type="button"
                                                                         class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Setujui</button>
                                                                 </a>
                                                             @elseif ($i->status == 'Disetujui')
                                                                 <a href="{{ route('batalkanIrs', $i->id) }}">
-                                                                    <button data-modal-hide="default-modal"
+                                                                    <button data-modal-hide="modal-{{ $i->id }}"
                                                                         type="button"
                                                                         class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Batalkan</button>
                                                                 </a>
