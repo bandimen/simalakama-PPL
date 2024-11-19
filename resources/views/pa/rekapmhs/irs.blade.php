@@ -8,6 +8,7 @@
 
   <main>
     <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+      <section class="block max-w p-6 bg-white border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700">
 
       
 
@@ -34,6 +35,7 @@
   @endforeach
 @endif
 </div>
+</section>
 
     </div>
   </main>
