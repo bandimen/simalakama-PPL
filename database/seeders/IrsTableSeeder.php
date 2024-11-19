@@ -41,7 +41,22 @@ class IrsTableSeeder extends Seeder
                 'total_sks' => 24,
                 'status' => 'Belum disetujui'
             ], 
-
+            [
+                'nim' => '24060122140165',
+                'semester' => 3,
+                'jenis_semester' => 'Gasal',
+                'tahun_ajaran' => '2024/2025',
+                'total_sks' => 24,
+                'status' => 'Belum disetujui'
+            ], 
+            [
+                'nim' => '24060122120018',
+                'semester' => 5,
+                'jenis_semester' => 'Gasal',
+                'tahun_ajaran' => '2024/2025',
+                'total_sks' => 24,
+                'status' => 'Belum disetujui'
+            ], 
         ];
 
         foreach($irs as $i){

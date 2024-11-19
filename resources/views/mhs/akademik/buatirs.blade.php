@@ -3,12 +3,19 @@
 
   <x-slot:title>{{ $title }}</x-slot:title> {{-- masukkan ke slot yg keynya title --}}
   <!-- Your content -->
+
+  <head>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <!-- Tambahkan tag lainnya jika diperlukan -->
+  </head>
   
   <div class="min-h-full">
     <x-navbar-mhs></x-navbar-mhs>
 
    <x-header-irs-mhs></x-header-irs-mhs> 
   <main>
+
+    
     <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
       <h1 class="text-2xl font-bold tracking-tight text-gray-900">Buat IRS</h1>
       <br>
@@ -103,78 +110,39 @@
           </div>
         </section>
 
-        <div x-data="{ open: false }" class="relative min-h-screen">
-          <!-- Overlay Background -->
-          <div x-show="open" class="fixed inset-0 z-50">
-            <div 
-              x-show="open" 
-              x-transition:enter="transition-opacity ease-out duration-300" 
-              x-transition:enter-start="opacity-0" 
-              x-transition:enter-end="opacity-100" 
-              x-transition:leave="transition-opacity ease-in duration-300" 
-              x-transition:leave-start="opacity-100" 
-              x-transition:leave-end="opacity-0" 
-              class="absolute inset-0 bg-gray-500 bg-opacity-75">
-            </div>
-
-            <!-- Konten Modal (Sidebar yang menjadi kotak di tengah) -->
-            <section 
-              x-show="open" 
-              x-transition:enter="transition-transform ease-out duration-300" 
-              x-transition:enter-start="scale-75 opacity-0" 
-              x-transition:enter-end="scale-100 opacity-100" 
-              x-transition:leave="transition-transform ease-in duration-300" 
-              x-transition:leave-start="scale-100 opacity-100" 
-              x-transition:leave-end="scale-75 opacity-0" 
-              class="fixed inset-0 flex items-center justify-center z-50">
-              
-              <!-- Kotak Konten -->
-              <div class="bg-white w-[80%] max-w-4xl h-[70%] rounded-lg shadow-lg p-6 overflow-auto">
-                <!-- Header -->
-                <div class="flex justify-between items-center border-b pb-4 mb-4">
-                  <h3 class="text-lg font-bold">Mata Kuliah yang Diambil</h3>
-                  <button x-on:click="open = false" class="text-gray-500 hover:text-gray-700">
-                    <span class="sr-only">Close</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                </div>
-
-                <div id="sidebar">
-                  <table id="sidebarTable" class="min-w-full border-collapse border border-gray-300">
-                    <thead class="bg-gray-100">
-                      <tr>
-                        <th class="border px-4 py-2 text-center">No</th>
-                        <th class="border px-4 py-2 text-center">Kode MK</th>
-                        <th class="border px-4 py-2 text-center">Matakuliah</th>
-                        <th class="border px-4 py-2 text-center">Kelas</th>
-                        <th class="border px-4 py-2 text-center">Ruang</th>
-                        <th class="border px-4 py-2 text-center">Jam</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <!-- Pesan default ketika tabel kosong -->
-                      <tr id="emptyMessage">
-                        <td colspan="6" class="text-center text-gray-500">Tidak ada jadwal yang dipilih</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </section>
+        <!-- Bottom Sheet -->
+        <div id="bottomSheet" class="relative bg-white rounded-lg shadow-lg mt-6 transform translate-y-full transition-transform duration-300">
+          <!-- Tombol Toggle -->
+          <div 
+            id="toggleButton" 
+            class="flex justify-center items-center py-5 cursor-pointer bg-gray-200 rounded-t-lg relative"
+          >
+            <div id="toggleIcon" class="absolute top-2 text-lg font-bold text-gray-500">&#x25B2;</div> <!-- Panah -->
           </div>
 
-          <!-- Button .. SKS -->
-          <div 
-            class="fixed right-0 top-1/2 transform -translate-y-1/2 z-50" 
-            x-show="!open" 
-            x-transition>
-            <button 
-              x-on:click="open = true" 
-              class="px-4 py-2 bg-black text-white rounded-md">
-              .. SKS
-            </button>
+          <!-- Konten Bottom Sheet -->
+          <div class="p-4 hidden" id="content">
+            <h2 class="text-lg font-bold text-gray-800 mb-4 text-center">Jadwal Mata Kuliah</h2>
+
+            <!-- Tabel Bottom Sheet -->
+            <table id="bottomSheetTable" class="w-full border-collapse border border-gray-300">
+              <thead class="bg-gray-100">
+                <tr>
+                  <th class="border border-gray-300 px-4 py-2 text-left">No</th>
+                  <th class="border border-gray-300 px-4 py-2 text-left">Kode MK</th>
+                  <th class="border border-gray-300 px-4 py-2 text-left">Mata Kuliah</th>
+                  <th class="border border-gray-300 px-4 py-2 text-left">Kelas</th>
+                  <th class="border border-gray-300 px-4 py-2 text-left">Hari</th>
+                  <th class="border border-gray-300 px-4 py-2 text-left">Jam</th>
+                </tr>
+              </thead>
+              <tbody>
+              <tbody>
+                  <tr id="emptyMessage">
+                  </tr>
+              </tbody>
+              </tbody>
+            </table>
           </div>
         </div>
 
@@ -203,6 +171,7 @@
         </div>
 
         @elseif ($activePeriodType == 'perubahan')
+        @include('components.perubahan')
         <div id="alert-additional-content-1" class="p-4 mb-4 text-blue-800 border border-blue-300 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400 dark:border-blue-800" role="alert">
           <div class="flex items-center">
             <svg class="flex-shrink-0 w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -254,8 +223,8 @@
         @endif
 
       @endif
-
-    </div>
+   
+      <br>
 
   </main>
 </div>

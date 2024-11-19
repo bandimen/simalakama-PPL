@@ -114,6 +114,7 @@ class IrsController extends Controller
         //
     }
 
+    
     public function buatirs() {
         // Mendapatkan data mahasiswa dari user yang login
         $mahasiswa = Auth::user()->mahasiswa;
@@ -151,7 +152,7 @@ class IrsController extends Controller
             'mahasiswa' => $mahasiswa
         ]);
     }
-    
+
     public function lihatirs(Request $request) {
         // Ambil data mahasiswa dari user yang login
         $user = Auth::user();
@@ -281,3 +282,4 @@ class IrsController extends Controller
         ]);
     }
 }
+

@@ -55,8 +55,26 @@ class JadwalKuliahTableSeeder extends Seeder
             ['kodemk' => 'PAIK6702', 'ruang_id' => 13, 'kelas' => 'B', 'hari' => 'Kamis', 'tahun_ajaran' => '2024/2025', 'kuota_kelas' => 30, 'waktu_mulai' => '07:00:00', 'waktu_selesai' => '09:30:00'], //tbo
             ['kodemk' => 'PAIK6702', 'ruang_id' => 4, 'kelas' => 'C', 'hari' => 'Kamis', 'tahun_ajaran' => '2024/2025', 'kuota_kelas' => 30, 'waktu_mulai' => '09:40:00', 'waktu_selesai' => '12:10:00'], //tbo
             ['kodemk' => 'PAIK6702', 'ruang_id' => 2, 'kelas' => 'D', 'hari' => 'Selasa', 'tahun_ajaran' => '2024/2025', 'kuota_kelas' => 30, 'waktu_mulai' => '15:40:00', 'waktu_selesai' => '18:10:00'], //tbo
-
-
+            ['kodemk' => 'PAIK6202', 'ruang_id' => 2, 'kelas' => 'A', 'hari' => 'Senin', 'tahun_ajaran' => '2024/2025', 'kuota_kelas' => 30, 'waktu_mulai' => '07:00:00', 'waktu_selesai' => '10:20:00'], //alpro
+            ['kodemk' => 'PAIK6202', 'ruang_id' => 3, 'kelas' => 'B', 'hari' => 'Senin', 'tahun_ajaran' => '2024/2025', 'kuota_kelas' => 30, 'waktu_mulai' => '10:30:00', 'waktu_selesai' => '13:50:00'], //alpro
+            ['kodemk' => 'PAIK6202', 'ruang_id' => 4, 'kelas' => 'C', 'hari' => 'Rabu', 'tahun_ajaran' => '2024/2025', 'kuota_kelas' => 30, 'waktu_mulai' => '07:00:00', 'waktu_selesai' => '10:20:00'], //alpro
+            ['kodemk' => 'PAIK6202', 'ruang_id' => 12, 'kelas' => 'D', 'hari' => 'Selasa', 'tahun_ajaran' => '2024/2025', 'kuota_kelas' => 30, 'waktu_mulai' => '13:00:00', 'waktu_selesai' => '16:20:00'], //alpro
+            ['kodemk' => 'PAIK6401', 'ruang_id' => 20, 'kelas' => 'A', 'hari' => 'Senin', 'tahun_ajaran' => '2024/2025', 'kuota_kelas' => 30, 'waktu_mulai' => '07:00:00', 'waktu_selesai' => '09:30:00'], //pbo
+            ['kodemk' => 'PAIK6401', 'ruang_id' => 13, 'kelas' => 'B', 'hari' => 'Selasa', 'tahun_ajaran' => '2024/2025', 'kuota_kelas' => 30, 'waktu_mulai' => '09:30:00', 'waktu_selesai' => '12:00:00'], //pbo
+            ['kodemk' => 'PAIK6401', 'ruang_id' => 5, 'kelas' => 'C', 'hari' => 'Jumat', 'tahun_ajaran' => '2024/2025', 'kuota_kelas' => 30, 'waktu_mulai' => '07:30:00', 'waktu_selesai' => '10:00:00'], //pbo
+            ['kodemk' => 'PAIK6401', 'ruang_id' => 1, 'kelas' => 'D', 'hari' => 'Rabu', 'tahun_ajaran' => '2024/2025', 'kuota_kelas' => 30, 'waktu_mulai' => '14:00:00', 'waktu_selesai' => '16:30:00'], //pbo
+            ['kodemk' => 'PAIK6601', 'ruang_id' => 10, 'kelas' => 'A', 'hari' => 'Senin', 'tahun_ajaran' => '2024/2025', 'kuota_kelas' => 30, 'waktu_mulai' => '07:00:00', 'waktu_selesai' => '09:30:00'], //asa
+            ['kodemk' => 'PAIK6601', 'ruang_id' => 19, 'kelas' => 'B', 'hari' => 'Senin', 'tahun_ajaran' => '2024/2025', 'kuota_kelas' => 30, 'waktu_mulai' => '09:40:00', 'waktu_selesai' => '12:10:00'], //asa
+            ['kodemk' => 'PAIK6601', 'ruang_id' => 22, 'kelas' => 'C', 'hari' => 'Jumat', 'tahun_ajaran' => '2024/2025', 'kuota_kelas' => 30, 'waktu_mulai' => '07:00:00', 'waktu_selesai' => '09:30:00'], //asa
+            ['kodemk' => 'PAIK6601', 'ruang_id' => 25, 'kelas' => 'D', 'hari' => 'Rabu', 'tahun_ajaran' => '2024/2025', 'kuota_kelas' => 30, 'waktu_mulai' => '13:00:00', 'waktu_selesai' => '15:30:00'], //asa
+            ['kodemk' => 'PAIK6803', 'ruang_id' => 1, 'kelas' => 'A', 'hari' => 'Selasa', 'tahun_ajaran' => '2024/2025', 'kuota_kelas' => 30, 'waktu_mulai' => '08:00:00', 'waktu_selesai' => '10:30:00'], //epl
+            ['kodemk' => 'PAIK6803', 'ruang_id' => 14, 'kelas' => 'B', 'hari' => 'Rabu', 'tahun_ajaran' => '2024/2025', 'kuota_kelas' => 30, 'waktu_mulai' => '10:30:00', 'waktu_selesai' => '13:00:00'], //epl
+            ['kodemk' => 'PAIK6803', 'ruang_id' => 3, 'kelas' => 'C', 'hari' => 'Kamis', 'tahun_ajaran' => '2024/2025', 'kuota_kelas' => 30, 'waktu_mulai' => '14:00:00', 'waktu_selesai' => '16:30:00'], //epl
+            ['kodemk' => 'PAIK6803', 'ruang_id' => 5, 'kelas' => 'D', 'hari' => 'Senin', 'tahun_ajaran' => '2024/2025', 'kuota_kelas' => 30, 'waktu_mulai' => '13:00:00', 'waktu_selesai' => '15:30:00'], //epl
+            ['kodemk' => 'PAIK6701', 'ruang_id' => 11, 'kelas' => 'A', 'hari' => 'Rabu', 'tahun_ajaran' => '2024/2025', 'kuota_kelas' => 30, 'waktu_mulai' => '11:00:00', 'waktu_selesai' => '12:40:00'], //epl
+            ['kodemk' => 'PAIK6701', 'ruang_id' => 1, 'kelas' => 'B', 'hari' => 'Kamis', 'tahun_ajaran' => '2024/2025', 'kuota_kelas' => 30, 'waktu_mulai' => '12:20:00', 'waktu_selesai' => '14:00:00'], //epl
+            ['kodemk' => 'PAIK6701', 'ruang_id' => 23, 'kelas' => 'C', 'hari' => 'Jumat', 'tahun_ajaran' => '2024/2025', 'kuota_kelas' => 30, 'waktu_mulai' => '14:50:00', 'waktu_selesai' => '16:30:00'], //epl
+            ['kodemk' => 'PAIK6701', 'ruang_id' => 10, 'kelas' => 'D', 'hari' => 'Rabu', 'tahun_ajaran' => '2024/2025', 'kuota_kelas' => 30, 'waktu_mulai' => '07:30:00', 'waktu_selesai' => '09:10:00'], //epl
         ];
 
         foreach($jadwalKuliah as $jadwal){

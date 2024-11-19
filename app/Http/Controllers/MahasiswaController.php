@@ -6,9 +6,11 @@ use Log;
 use App\Models\Mahasiswa;
 use App\Models\MataKuliah;
 use App\Models\JadwalKuliah;
+use App\Models\Irs;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+
 
 class MahasiswaController extends Controller
 {
@@ -33,6 +35,8 @@ class MahasiswaController extends Controller
             'semester' => $semesterMahasiswa,
         ]);
     }
+    
+
 
     // public function akademik() {
     //     return view('mhs.akademik.buatirs', ['title' => 'Akademik']);

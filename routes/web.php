@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\IrsController;
+use App\Http\Controllers\IrsDetailController;
 use App\Http\Controllers\KhsController;
 use App\Http\Controllers\DekanController;
 use Illuminate\Contracts\Session\Session;
@@ -42,8 +43,8 @@ Route::middleware(['auth'])->group(function () {
   Route::post('/irs/details', [IrsController::class, 'storeDetail']);
   Route::get('/irs/selected-schedules', [IrsController::class, 'getSelectedSchedules']);
   Route::post('/irs/store', [IrsController::class, 'store']);
-
-
+  Route::post('/irs-detail/store', [IrsDetailController::class, 'store'])->name('irs-detail.store');
+  Route::post('/save-selected-course', [IrsDetailController::class, 'saveSelectedCourse']);
 
   // PEMBIMBING AKADEMIK
   Route::get('/pa', [PembimbingAkademikController::class, 'index']);
