@@ -9,7 +9,8 @@ export default {
         './resources/**/*.js',
         './resources/**/*.vue',
         'node_modules/preline/dist/*.js',
-        "./node_modules/flowbite/**/*.js"
+        "./node_modules/flowbite/**/*.js",
+
     ],
     darkMode: 'class',
     theme: {
@@ -59,7 +60,6 @@ export default {
     plugins: [
         require('flowbite/plugin'),
         require('preline/plugin'),
-
     ],
 };
 

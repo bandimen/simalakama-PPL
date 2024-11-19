@@ -7,7 +7,8 @@
 import './bootstrap';
 import { createApp } from 'vue';
 import 'preline'
-
+import { Tooltip, initTWE } from "tw-elements";
+initTWE({ Tooltip });
 
 /**
  * Next, we will create a fresh Vue application instance. You may then begin
