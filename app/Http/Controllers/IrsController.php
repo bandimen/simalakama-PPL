@@ -266,20 +266,6 @@ class IrsController extends Controller
         return $semester;
     }    
 
-    public function showIrsByNim($nim)
-    {
-        $irsByNim = DB::table('irs')
-                    ->where('nim', '=', $nim)
-                    ->get();
-        $mhsByNim = DB::table('mahasiswas')
-                    ->where('nim', '=', $nim)
-                    ->get();
 
-        return view('pa.rekapmhs.irs', [
-            'title' => 'IRS Mhs',
-            'irs' => $irsByNim,
-            'mhs' => $mhsByNim,
-        ]);
-    }
 }
 

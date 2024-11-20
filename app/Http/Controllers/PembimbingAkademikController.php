@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\IrsDetail;
 use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -44,5 +45,43 @@ class PembimbingAkademikController extends Controller
         return $mhs;
     }
 
+    public function showIrsByNim($nim)
+    {
+        $irsByNim = DB::table('irs')
+                    ->where('nim', '=', $nim)
+                    ->get();
+        $irsByNim->each(function ($item) {
+            $item->irsDetails = IrsDetail::where('irs_id', $item->id)
+                                    ->get()->each(function($detail) {
+                                        $detail->dosenPengampuList = $detail->mataKuliah->dosenPengampu;
+                                    });
+        });
+        $mhsByNim = DB::table('mahasiswas')
+                    ->where('nim', '=', $nim)
+                    ->first();
+        return view('pa.rekapmhs.irs', [
+            'title' => 'IRS Mhs',
+            'irs' => $irsByNim,
+            'mhs' => $mhsByNim,
+        ]);
+    }
+
+    public function showKhsByNim($nim)
+    {
+        $khsByNim = DB::table('khs')
+                    ->join('irs', 'khs.irs_id', '=', 'irs.id')
+                    ->where('irs.nim', '=', $nim)
+                    ->select('khs.*', 'irs.*')
+                    ->get();
+        $mhsByNim = DB::table('mahasiswas')
+                    ->where('nim', '=', $nim)
+                    ->get();
+
+        return view('pa.rekapmhs.khs', [
+            'title' => 'KHS Mhs',
+            'khs' => $khsByNim,
+            'mhs' => $mhsByNim,
+        ]);
+    }
 
 }
