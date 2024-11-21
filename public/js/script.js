@@ -68,62 +68,71 @@ async function addCourse() {
 
     courseSelect.value = "";
 
-    await fetchAndDisplaySchedule(kodemk);
+    await fetchAndDisplaySchedule(kodemk, nama);
   } catch (error) {
     console.error("Error parsing course data:", error);
   }
 }
 
-async function fetchAndDisplaySchedule(kodemk) {
+async function fetchAndDisplaySchedule(kodemk, nama) {
   try {
     const response = await fetch(`/jadwal/${kodemk}`, { cache: "no-store" });
     const jadwalList = await response.json();
-    
-    // Fungsi untuk merapikan waktu ke format HH:00
+
     function normalizeTimeToHour(waktu) {
-      const [jam] = waktu.split(':').map(Number); // Ambil bagian jam
-      return `${String(jam).padStart(2, '0')}:00`; // Kembalikan waktu dengan menit diatur ke 00
+      const [jam] = waktu.split(':').map(Number);
+      return `${String(jam).padStart(2, '0')}:00`;
     }
 
     jadwalList.forEach(jadwal => {
       const { hari, waktu_mulai, waktu_selesai, kelas, ruang_id } = jadwal;
 
-      // Cari kolom hari berdasarkan nama hari
       const normalizedDay = hari.charAt(0).toUpperCase() + hari.slice(1).toLowerCase();
       const dayColumn = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat"].indexOf(normalizedDay);
 
-      // Normalisasi waktu mulai
-      const startTime = normalizeTimeToHour(waktu_mulai); // Normalisasi waktu ke format HH:00
+      const startTime = normalizeTimeToHour(waktu_mulai);
       const row = document.querySelector(`#scheduleDisplay tbody tr[data-time="${startTime}"]`);
 
       if (row && dayColumn >= 0) {
-        const cell = row.children[dayColumn + 1]; // Ambil sel yang sesuai dengan kolom hari
+        const cell = row.children[dayColumn + 1];
 
-        // Bungkus courseBox di dalam wrapper div untuk menambahkan ke cell
+        // Bungkus elemen dengan div tambahan
         const wrapper = document.createElement("div");
-        wrapper.className = "mb-2"; // Tambahkan margin bawah antar elemen jika dibutuhkan
+        wrapper.className = "mb-2";
 
-        const courseBox = document.createElement("button");
-        courseBox.className = `bg-gray-100 text-black border border-black shadow-md rounded-md p-1 text-[8px] font-medium text-center w-[50px] courseBox-${kodemk}`;
+        const courseBox = document.createElement("div");
+        courseBox.className = `
+          bg-gray-100 text-black border border-gray-300 shadow-lg rounded-md p-2
+          text-sm font-medium w-[180px] h-[120px] flex flex-col justify-between
+          courseBox-${kodemk}
+        `;
         courseBox.style.cursor = "pointer";
 
-        // Isi informasi jadwal mata kuliah
+        // Tambahkan atribut data
+        courseBox.setAttribute("data-mataKuliah", nama);
+        courseBox.setAttribute("data-kelas", kelas);
+        courseBox.setAttribute("data-hari", hari);
+        courseBox.setAttribute("data-jam", `${waktu_mulai} - ${waktu_selesai}`);
+
+        // Tambahkan konten ke dalam courseBox
         courseBox.innerHTML = `
-          <div>${kodemk}</div>
-          <div>Kelas: ${kelas}</div>
-          <div>Ruang: ${ruang_id}</div>
-          <div>${waktu_mulai} - ${waktu_selesai}</div>
+          <div class="font-bold text-sm text-gray-900">${nama}</div>
+          <div class="text-xs text-gray-600">Kode: ${kodemk}</div>
+          <div class="text-xs text-gray-600">Kelas: ${kelas}</div>
+          <div class="text-xs text-gray-600">Ruang: ${ruang_id}</div>
+          <div class="text-xs text-gray-600">${waktu_mulai} - ${waktu_selesai}</div>
         `;
 
-        // Tambahkan event klik untuk membuka modal konfirmasi
+        // Tambahkan event klik
         courseBox.onclick = () => showConfirmationModal(kodemk, courseBox);
 
-        // Tambahkan courseBox ke dalam wrapper dan masukkan wrapper ke dalam sel tabel
+        // Masukkan courseBox ke dalam wrapper, lalu ke sel tabel
         wrapper.appendChild(courseBox);
         cell.appendChild(wrapper);
 
         console.log("Menambahkan courseBox:", {
           kodemk,
+          nama,
           kelas,
           hari,
           ruang_id,
@@ -139,51 +148,60 @@ async function fetchAndDisplaySchedule(kodemk) {
   }
 }
 
+// Tempat penyimpanan sementara untuk jadwal yang dipilih
+let selectedCourses = [];
 
 function showConfirmationModal(kodemk, selectedCourseBox) {
   const modal = document.getElementById("confirmationModal");
-  modal.classList.remove("hidden"); // Tampilkan modal
+  modal.classList.remove("hidden");
 
   const confirmButton = document.getElementById("confirmButton");
   const cancelButton = document.getElementById("cancelButton");
 
-  // Reset event listener sebelumnya
   confirmButton.onclick = null;
   cancelButton.onclick = null;
 
-  // Event ketika konfirmasi ditekan
   confirmButton.onclick = () => {
     if (selectedCourseBox.classList.contains("bg-gray-100")) {
-      // Ubah warna menjadi hijau
       selectedCourseBox.style.backgroundColor = "#28a745";
       selectedCourseBox.classList.replace("text-black", "text-white");
 
-      // Nonaktifkan klik untuk kotak jadwal lainnya
+      const courseInfo = {
+        kodemk,
+        mataKuliah: selectedCourseBox.getAttribute("data-mataKuliah"),
+        kelas: selectedCourseBox.getAttribute("data-kelas"),
+        hari: selectedCourseBox.getAttribute("data-hari"),
+        jam: selectedCourseBox.getAttribute("data-jam"),
+      };
+
+      if (!courseInfo.mataKuliah || !courseInfo.kelas || !courseInfo.hari || !courseInfo.jam) {
+        alert("Data jadwal tidak lengkap. Periksa elemen.");
+        return;
+      }
+
+      selectedCourses.push(courseInfo);
+      updateBottomSheet();
+
       const similarCourseBoxes = document.querySelectorAll(`.courseBox-${kodemk}`);
       similarCourseBoxes.forEach(box => {
-        box.onclick = null; // Matikan klik untuk semua kotak serupa
+        box.onclick = null;
         if (box !== selectedCourseBox) {
-          box.style.backgroundColor = "#D1D5DB"; // Warna abu-abu
+          box.style.backgroundColor = "#D1D5DB";
           box.classList.replace("text-black", "text-black");
         }
       });
 
-      addToSheet(kodemk, selectedCourseBox);
-
-      // Tambahkan event klik untuk membatalkan pilihan
       selectedCourseBox.onclick = () => showCancelModal(kodemk, selectedCourseBox);
-
       console.log(`Mata kuliah ${kodemk} dipilih.`);
     } else {
       alert("Mata kuliah ini sudah dipilih.");
     }
 
-    modal.classList.add("hidden"); // Tutup modal setelah konfirmasi
+    modal.classList.add("hidden");
   };
 
-  // Event ketika pembatalan ditekan
   cancelButton.onclick = () => {
-    modal.classList.add("hidden"); // Tutup modal
+    modal.classList.add("hidden");
   };
 }
 
@@ -196,6 +214,10 @@ function showCancelModal(kodemk, selectedCourseBox) {
   const cancelCancelButton = document.getElementById("cancelCancelButton");
 
   confirmCancelButton.onclick = () => {
+    // Hapus dari array
+    selectedCourses = selectedCourses.filter(course => course.kodemk !== kodemk);
+    updateBottomSheet();
+
     // Mata kuliah dibatalkan, kembalikan warna dan aktifkan kembali klik
     selectedCourseBox.style.backgroundColor = ""; // Kembalikan ke warna semula
     selectedCourseBox.classList.replace("text-white", "text-black");
@@ -207,9 +229,6 @@ function showCancelModal(kodemk, selectedCourseBox) {
       box.onclick = () => showConfirmationModal(kodemk, box); // Aktifkan kembali klik
     });
 
-    // Hapus baris dari tabel bottomSheet
-    removeFromSheet(kodemk);
-
     // Tutup modal
     cancelModal.classList.add("hidden");
   };
@@ -219,133 +238,232 @@ function showCancelModal(kodemk, selectedCourseBox) {
   };
 }
 
-function addToSheet(kodemk, selectedCourseBox) {
-  const bottomSheetTableBody = document.querySelector("#bottomSheetTable tbody");
+let bottomSheetData = []; // Variabel untuk menyimpan data bottomSheet
 
-  // Hapus pesan "Tidak ada jadwal yang dipilih" jika ada
-  const emptyMessageRow = document.getElementById("emptyMessage");
-  if (emptyMessageRow) {
-    bottomSheetTableBody.removeChild(emptyMessageRow);
-  }
+// Fungsi untuk memperbarui konten bottom sheet
+function updateBottomSheet() {
+  const bottomSheetTable = document.getElementById("bottomSheetTable").querySelector("tbody");
+  bottomSheetTable.innerHTML = ""; // Hapus konten sebelumnya
 
-  // Pastikan tidak ada duplikasi
-  const existingRows = Array.from(bottomSheetTableBody.children).map(row => row.dataset.kodemk);
-  if (existingRows.includes(kodemk)) {
-    console.warn(`Mata kuliah ${kodemk} sudah ada di tabel bottomSheet.`);
+  if (selectedCourses.length === 0) {
+    // Tampilkan pesan kosong jika tidak ada jadwal yang dipilih
+    bottomSheetTable.innerHTML = `
+      <tr>
+        <td colspan="6" class="text-center text-gray-500">Belum ada jadwal yang dipilih.</td>
+      </tr>
+    `;
     return;
   }
 
-  // Ambil informasi mata kuliah dari courseBox
-  const [kodeMK, kelas, ruang, waktu] = selectedCourseBox.innerText.split("\n").map(text => text.trim());
-  const matakuliah = kodeMK.split(" - ")[1] || "Mata Kuliah Tidak Diketahui"; // Nama mata kuliah diambil dari teks kodeMK jika ada
+  // Kosongkan bottomSheetData sebelum diperbarui
+  bottomSheetData = [];
 
-  // Tambahkan baris baru ke tabel
-  const newRow = document.createElement("tr");
-  newRow.dataset.kodemk = kodemk; // Tandai baris dengan kodemk
-  newRow.innerHTML = `
-    <td class="border px-4 py-2">${bottomSheetTableBody.children.length + 1}</td>
-    <td class="border px-4 py-2">${kodeMK.split(" - ")[0]}</td>
-    <td class="border px-4 py-2">${matakuliah}</td>
-    <td class="border px-4 py-2">${kelas.replace("Kelas: ", "")}</td>
-    <td class="border px-4 py-2">${ruang.replace("Ruang: ", "")}</td>
-    <td class="border px-4 py-2">${waktu}</td>
-  `;
-  bottomSheetTableBody.appendChild(newRow);
-  
-  // saveSelectedCourse(kodemk, selectedCourseBox.dataset.kelas);
-}
+  // Tambahkan jadwal yang dipilih ke tabel dan update bottomSheetData
+  selectedCourses.forEach((course, index) => {
+    bottomSheetTable.innerHTML += `
+      <tr>
+        <td class="border border-gray-300 px-4 py-2">${index + 1}</td>
+        <td class="border border-gray-300 px-4 py-2">${course.kodemk}</td>
+        <td class="border border-gray-300 px-4 py-2">${course.mataKuliah}</td>
+        <td class="border border-gray-300 px-4 py-2">${course.kelas}</td>
+        <td class="border border-gray-300 px-4 py-2">${course.hari}</td>
+        <td class="border border-gray-300 px-4 py-2">${course.jam}</td>
+      </tr>
+    `;
 
-function removeFromSheet(kodemk) {
-  const bottomSheetTableBody = document.querySelector("#bottomSheetTable tbody");
-  const rows = Array.from(bottomSheetTableBody.children);
-
-  const rowToRemove = rows.find(row => row.dataset.kodemk === kodemk);
-  if (rowToRemove) {
-      bottomSheetTableBody.removeChild(rowToRemove);
-  }
-
-  const remainingRows = Array.from(bottomSheetTableBody.children).filter(row => row.dataset.kodemk);
-  remainingRows.forEach((row, index) => {
-      row.children[0].textContent = index + 1; // Update nomor urut
+    // Update data array
+    bottomSheetData.push({
+      kodemk: course.kodemk,
+      kelas: course.kelas,
+    });
   });
 
-  if (remainingRows.length === 0) {
-      const emptyMessageRow = document.createElement("tr");
-      emptyMessageRow.id = "emptyMessage";
-      emptyMessageRow.innerHTML = `
-          <td colspan="6" class="text-center text-gray-500">Tidak ada jadwal yang dipilih</td>
-      `;
-      bottomSheetTableBody.appendChild(emptyMessageRow);
+  // Debug isi bottomSheetData
+  console.log("Data yang terkumpul di bottomSheetData:", bottomSheetData);
+
+  // Kirim data terbaru secara otomatis
+  sendBottomSheetData();
+}
+
+// Fungsi untuk mengirim data ke backend
+function sendBottomSheetData() {
+  if (bottomSheetData.length === 0) {
+    console.log("Tidak ada data untuk dikirim.");
+    return;
   }
 
-  // Kirim data terbaru ke backend
-  saveBottomSheetData();
-}
-
-
-function getBottomSheetData() {
-  const bottomSheetTableBody = document.querySelector("#bottomSheetTable tbody");
-
-  // Ambil semua baris data yang ada di tabel
-  const rows = Array.from(bottomSheetTableBody.children);
-
-  // Ekstrak data dari setiap baris
-  const data = rows
-    .filter(row => row.dataset.kodemk) // Hanya ambil baris yang memiliki atribut dataset.kodemk
-    .map(row => {
-      const cells = row.querySelectorAll("td");
-      return {
-        kodemk: row.dataset.kodemk, // Ambil kode MK dari dataset
-        kelas: cells[3].textContent.trim(), // Kolom kelas
-      };
-    });
-
-  return data;
-}
-
-// Fungsi untuk menyimpan data secara real-time
-function saveBottomSheetData() {
-  const bottomSheetData = getBottomSheetData();
+  console.log("Mengirim data ke backend:", bottomSheetData);
 
   fetch("/irs-detail/store", {
-      method: "POST",
-      headers: {
-          "Content-Type": "application/json",
-          "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
-      },
-      body: JSON.stringify({ bottomSheetData }),
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+    },
+    body: JSON.stringify({ bottomSheetData }),
   })
-      .then(response => {
-          if (response.ok) {
-              return response.json();
-          } else {
-              return Promise.reject(response.json());
-          }
-      })
-      .then(result => {
-          console.log("Data berhasil disimpan:", result);
-      })
-      .catch(error => {
-          console.error("Kesalahan saat menyimpan data:", error);
-      });
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Respon dari server:", data);
+      alert(data.message || "Data berhasil dikirim.");
+    })
+    .catch((error) => {
+      console.error("Terjadi kesalahan saat mengirim data:", error);
+      alert("Terjadi kesalahan saat mengirim data.");
+    });
 }
 
-// Fungsi untuk memantau perubahan pada tabel
-function monitorBottomSheetTable() {
-  const bottomSheetTable = document.querySelector("#bottomSheetTable tbody");
+// Event untuk toggle bottom sheet
+document.getElementById("toggleButton").onclick = () => {
+  const bottomSheet = document.getElementById("bottomSheet");
+  const content = document.getElementById("content");
 
-  // Tambahkan event listener untuk memantau perubahan pada tabel
-  const observer = new MutationObserver(() => {
-    console.log("Perubahan terdeteksi pada tabel.");
-    saveBottomSheetData(); // Simpan data setiap ada perubahan
-  });
+  if (bottomSheet.classList.contains("translate-y-full")) {
+    bottomSheet.classList.remove("translate-y-full");
+    bottomSheet.classList.add("translate-y-0");
+    content.classList.remove("hidden");
+  } else {
+    bottomSheet.classList.add("translate-y-full");
+    bottomSheet.classList.remove("translate-y-0");
+    content.classList.add("hidden");
+  }
+};
 
-  // Konfigurasikan observer untuk memantau perubahan pada child nodes
-  observer.observe(bottomSheetTable, { childList: true, subtree: false });
-}
+// function addToSheet(kodemk, selectedCourseBox) {
+//   const bottomSheetTableBody = document.querySelector("#bottomSheetTable tbody");
 
-// Panggil fungsi monitor saat halaman dimuat
-document.addEventListener("DOMContentLoaded", monitorBottomSheetTable);
+//   // Hapus pesan "Tidak ada jadwal yang dipilih" jika ada
+//   const emptyMessageRow = document.getElementById("emptyMessage");
+//   if (emptyMessageRow) {
+//     bottomSheetTableBody.removeChild(emptyMessageRow);
+//   }
+
+//   // Pastikan tidak ada duplikasi
+//   const existingRows = Array.from(bottomSheetTableBody.children).map(row => row.dataset.kodemk);
+//   if (existingRows.includes(kodemk)) {
+//     console.warn(`Mata kuliah ${kodemk} sudah ada di tabel bottomSheet.`);
+//     return;
+//   }
+
+//   // Ambil informasi mata kuliah dari courseBox
+//   const [kodeMK, kelas, ruang, waktu] = selectedCourseBox.innerText.split("\n").map(text => text.trim());
+//   const matakuliah = kodeMK.split(" - ")[1] || "Mata Kuliah Tidak Diketahui"; // Nama mata kuliah diambil dari teks kodeMK jika ada
+
+//   // Tambahkan baris baru ke tabel
+//   const newRow = document.createElement("tr");
+//   newRow.dataset.kodemk = kodemk; // Tandai baris dengan kodemk
+//   newRow.innerHTML = `
+//     <td class="border px-4 py-2">${bottomSheetTableBody.children.length + 1}</td>
+//     <td class="border px-4 py-2">${kodeMK.split(" - ")[0]}</td>
+//     <td class="border px-4 py-2">${matakuliah}</td>
+//     <td class="border px-4 py-2">${kelas.replace("Kelas: ", "")}</td>
+//     <td class="border px-4 py-2">${ruang.replace("Ruang: ", "")}</td>
+//     <td class="border px-4 py-2">${waktu}</td>
+//   `;
+//   bottomSheetTableBody.appendChild(newRow);
+  
+//   // saveSelectedCourse(kodemk, selectedCourseBox.dataset.kelas);
+// }
+
+// function removeFromSheet(kodemk) {
+//   const bottomSheetTableBody = document.querySelector("#bottomSheetTable tbody");
+//   const rows = Array.from(bottomSheetTableBody.children);
+
+//   const rowToRemove = rows.find(row => row.dataset.kodemk === kodemk);
+//   if (rowToRemove) {
+//       bottomSheetTableBody.removeChild(rowToRemove);
+//   }
+
+//   const remainingRows = Array.from(bottomSheetTableBody.children).filter(row => row.dataset.kodemk);
+//   remainingRows.forEach((row, index) => {
+//       row.children[0].textContent = index + 1; // Update nomor urut
+//   });
+
+//   if (remainingRows.length === 0) {
+//       const emptyMessageRow = document.createElement("tr");
+//       emptyMessageRow.id = "emptyMessage";
+//       emptyMessageRow.innerHTML = `
+//           <td colspan="6" class="text-center text-gray-500">Tidak ada jadwal yang dipilih</td>
+//       `;
+//       bottomSheetTableBody.appendChild(emptyMessageRow);
+//   }
+
+//   // Kirim data terbaru ke backend
+//   saveBottomSheetData();
+// }
+
+// function getBottomSheetData() {
+//   const bottomSheetTableBody = document.querySelector("#bottomSheetTable tbody");
+
+//   // Ambil semua baris data yang ada di tabel
+//   const rows = Array.from(bottomSheetTableBody.children);
+
+//   // Ekstrak data dari setiap baris
+//   const data = rows
+//     .filter(row => row.dataset.kodemk) // Hanya ambil baris yang memiliki atribut dataset.kodemk
+//     .map(row => {
+//       const cells = row.querySelectorAll("td");
+//       return {
+//         kodemk: row.dataset.kodemk, // Ambil kode MK dari dataset
+//         kelas: cells[3].textContent.trim(), // Kolom kelas
+//       };
+//     });
+
+//   return data;
+// }
+
+// // Fungsi untuk menyimpan data secara real-time
+// function saveBottomSheetData() {
+//   const bottomSheetData = getBottomSheetData();
+
+//   fetch("/irs-detail/store", {
+//       method: "POST",
+//       headers: {
+//           "Content-Type": "application/json",
+//           "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
+//       },
+//       body: JSON.stringify({ bottomSheetData }),
+//   })
+//       .then(response => {
+//           if (response.ok) {
+//               return response.json();
+//           } else {
+//               return Promise.reject(response.json());
+//           }
+//       })
+//       .then(result => {
+//           console.log("Data berhasil disimpan:", result);
+//       })
+//       .catch(error => {
+//           console.error("Kesalahan saat menyimpan data:", error);
+//       });
+// }
+
+
+// // Panggil fungsi monitor saat halaman dimuat
+// document.addEventListener("DOMContentLoaded", monitorBottomSheetTable);
+
+// const bottomSheet = document.getElementById('bottomSheet');
+// const toggleButton = document.getElementById('toggleButton');
+// const content = document.getElementById('content');
+// const toggleIcon = document.getElementById('toggleIcon');
+// let isExpanded = false;
+
+// // Toggle Expand/Minimize
+// toggleButton.addEventListener('click', () => {
+//   isExpanded = !isExpanded;
+
+//   if (isExpanded) {
+//     bottomSheet.style.transform = 'translateY(0)'; // Expand
+//     content.classList.remove('hidden');
+//     toggleIcon.innerHTML = `&#x25BC;`; // Panah ke bawah
+//   } else {
+//     bottomSheet.style.transform = 'translateY(90%)'; // Minimize
+//     content.classList.add('hidden');
+//     toggleIcon.innerHTML = `&#x25B2;`; // Panah ke atas
+//   }
+// });
+
 
 // function saveSelectedCourse(kodemk, kelas) {
 //   const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -395,27 +513,6 @@ document.addEventListener("DOMContentLoaded", monitorBottomSheetTable);
 //   })
 //   .catch(error => console.error('Error saving schedule:', error));
 // }
-
-const bottomSheet = document.getElementById('bottomSheet');
-const toggleButton = document.getElementById('toggleButton');
-const content = document.getElementById('content');
-const toggleIcon = document.getElementById('toggleIcon');
-let isExpanded = false;
-
-// Toggle Expand/Minimize
-toggleButton.addEventListener('click', () => {
-  isExpanded = !isExpanded;
-
-  if (isExpanded) {
-    bottomSheet.style.transform = 'translateY(0)'; // Expand
-    content.classList.remove('hidden');
-    toggleIcon.innerHTML = `&#x25BC;`; // Panah ke bawah
-  } else {
-    bottomSheet.style.transform = 'translateY(90%)'; // Minimize
-    content.classList.add('hidden');
-    toggleIcon.innerHTML = `&#x25B2;`; // Panah ke atas
-  }
-});
 
 // // Fungsi untuk menambahkan jadwal yang dipilih ke server
 // function addScheduleToIrs(kodemk, jadwalKuliahId) {

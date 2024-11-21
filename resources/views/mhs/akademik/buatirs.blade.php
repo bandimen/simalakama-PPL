@@ -3,12 +3,10 @@
 
   <x-slot:title>{{ $title }}</x-slot:title> {{-- masukkan ke slot yg keynya title --}}
   <!-- Your content -->
-
   <head>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <!-- Tambahkan tag lainnya jika diperlukan -->
   </head>
-  
+
   <div class="min-h-full">
     <x-navbar-mhs></x-navbar-mhs>
 
