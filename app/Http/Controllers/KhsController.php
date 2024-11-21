@@ -66,22 +66,6 @@ class KhsController extends Controller
         //
     }
 
-    public function showKhsByNim($nim)
-    {
-        $khsByNim = DB::table('khs')
-                    ->join('irs', 'khs.irs_id', '=', 'irs.id')
-                    ->where('irs.nim', '=', $nim)
-                    ->select('khs.*', 'irs.*')
-                    ->get();
-        $mhsByNim = DB::table('mahasiswas')
-                    ->where('nim', '=', $nim)
-                    ->get();
 
-        return view('pa.rekapmhs.khs', [
-            'title' => 'KHS Mhs',
-            'khs' => $khsByNim,
-            'mhs' => $mhsByNim,
-        ]);
-    }
 
 }

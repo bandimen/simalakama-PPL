@@ -240,7 +240,6 @@
                                                                         @php
                                                                             $counterDetail = 0;
                                                                             $details = $i->irsDetails;
-                                                                            echo $counter;
                                                                         @endphp
                                                                         @if ($details)
                                                                             @foreach ($details as $detail)
