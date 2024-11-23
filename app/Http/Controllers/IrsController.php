@@ -271,13 +271,13 @@ class IrsController extends Controller
     {
         $irsPeriodsController = new IrsPeriodsController();
         $currentPeriod = $irsPeriodsController->getCurrentPeriod();
-        $mhs = Mahasiswa::with(['irs', 'irs.irsDetails', 'irs.irsDetails.mataKuliah', 'prodi'])
-                ->where('pembimbing_akademik_id', '=', $pa->id)
-                ->whereHas('irs', function ($query) use ($currentPeriod) {
-                    $query->where('jenis_semester', $currentPeriod->semester)
-                    ->where('tahun_ajaran', $currentPeriod->tahun_ajaran);
-                })
-                ->get();
+        $mhs = Mahasiswa::with(['irs' => function ($query) use ($currentPeriod) {
+            $query->where('jenis_semester', $currentPeriod->semester)
+                  ->where('tahun_ajaran', $currentPeriod->tahun_ajaran);
+        }, 'irs.irsDetails', 'irs.irsDetails.mataKuliah', 'prodi'])
+            ->where('pembimbing_akademik_id', '=', $pa->id)
+            ->get();
+        
 
         return $mhs;
     }
