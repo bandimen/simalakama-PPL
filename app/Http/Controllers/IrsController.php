@@ -274,7 +274,8 @@ class IrsController extends Controller
         $mhs = Mahasiswa::with(['irs', 'irs.irsDetails', 'irs.irsDetails.mataKuliah', 'prodi'])
                 ->where('pembimbing_akademik_id', '=', $pa->id)
                 ->whereHas('irs', function ($query) use ($currentPeriod) {
-                    $query->where('jenis_semester', $currentPeriod->semester);
+                    $query->where('jenis_semester', $currentPeriod->semester)
+                    ->where('tahun_ajaran', $currentPeriod->tahun_ajaran);
                 })
                 ->get();
 

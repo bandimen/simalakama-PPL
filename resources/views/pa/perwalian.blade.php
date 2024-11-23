@@ -156,6 +156,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {{ dd($mhs); }}
                             @if ($mhs)
                                 @php $counter = 0 @endphp
                                 @foreach ($mhs as $m)
