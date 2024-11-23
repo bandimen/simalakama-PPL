@@ -12,6 +12,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\IrsPeriodsController;
+use App\Models\Mahasiswa;
 
 class IrsController extends Controller
 {
@@ -266,6 +267,19 @@ class IrsController extends Controller
         return $semester;
     }    
 
+    public function getAllMhsPerwalianWithIrsCurrentPeriod($pa)
+    {
+        $irsPeriodsController = new IrsPeriodsController();
+        $currentPeriod = $irsPeriodsController->getCurrentPeriod();
+        $mhs = Mahasiswa::with(['irs', 'irs.irsDetails', 'irs.irsDetails.mataKuliah', 'prodi'])
+                ->where('pembimbing_akademik_id', '=', $pa->id)
+                ->whereHas('irs', function ($query) use ($currentPeriod) {
+                    $query->where('jenis_semester', $currentPeriod->semester);
+                })
+                ->get();
+
+        return $mhs;
+    }
 
 }
 
