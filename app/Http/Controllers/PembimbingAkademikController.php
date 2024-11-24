@@ -17,16 +17,16 @@ class PembimbingAkademikController extends Controller
         $pa = Auth::user()->pembimbingAkademik;
 
         $irsController = new IrsController();
-        $irsPeriodController = new IrsPeriodsController();
+        // $irsPeriodController = new IrsPeriodsController();
 
-        $irs = $irsController->getIRSforPA($pa);
-        $currentPeriod = $irsPeriodController->getCurrentPeriod();
+        // $irs = $irsController->getIRSforPA($pa);
+        // $currentPeriod = $irsPeriodController->getCurrentPeriod();
 
-        // data irs yg sesuai dgn periode skrg
-        $irs = $irs->where('jenis_semester', $currentPeriod->semester)
-                    ->where('tahun_ajaran', $currentPeriod->tahun_ajaran);
-        
-        return view('pa.perwalian', ['title' => 'Perwalian - PA', 'irs' => $irs]);
+        // // data irs yg sesuai dgn periode skrg
+        // $irs = $irs->where('jenis_semester', $currentPeriod->semester)
+        //             ->where('tahun_ajaran', $currentPeriod->tahun_ajaran);
+        $mhs = $irsController->getAllMhsPerwalianWithIrsCurrentPeriod($pa);
+        return view('pa.perwalian', ['title' => 'Perwalian - PA', 'mhs' => $mhs]);
     }
 
 

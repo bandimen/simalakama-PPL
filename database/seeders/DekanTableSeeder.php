@@ -18,10 +18,6 @@ class DekanTableSeeder extends Seeder
                 'nidn' => '0017037201', // NIDN Pak Kusworo Adi
                 'user_id' => 7,
             ],
-            [
-                'nidn' => '1002293845', 
-                'user_id' => 9,
-            ]
         ];
 
         foreach ($dekans as $dekan) {
