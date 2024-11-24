@@ -45,7 +45,11 @@ Route::middleware(['auth'])->group(function () {
   Route::post('/irs/store', [IrsController::class, 'store']);
   Route::post('/irs-detail/store', [IrsDetailController::class, 'store']);
   // Route::post('/save-selected-course', [IrsDetailController::class, 'saveSelectedCourse']);
-
+  Route::post('/irs-detail/store', [IrsDetailController::class, 'save'])->middleware('auth');
+  Route::get('/irs-detail/load', [IrsDetailController::class, 'load'])->middleware('auth');
+  // hapus irs detail
+  Route::get('mhs/buatirs/delete/{id}', [IrsDetailController::class, 'delete'])->name('deleteIrsDetail');
+  
   // PEMBIMBING AKADEMIK
   Route::get('/pa', [PembimbingAkademikController::class, 'index']);
   Route::get('/pa/perwalian', [PembimbingAkademikController::class, 'perwalian']);

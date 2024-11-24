@@ -117,11 +117,23 @@ class IrsController extends Controller
     
     public function buatirs() {
         // Mendapatkan data mahasiswa dari user yang login
-        $mahasiswa = Auth::user()->mahasiswa;
-
         $irsPeriodsController = new IrsPeriodsController();
         $currentPeriod = $irsPeriodsController->getCurrentPeriod();
         $currentDateTime = now();
+
+        $mahasiswa = Auth::user()->mahasiswa;
+
+        if ($mahasiswa) {
+            $mahasiswa->load([
+                'irs' => function ($query) use ($currentPeriod) {
+                    $query->where('jenis_semester', $currentPeriod->semester)
+                          ->where('tahun_ajaran', $currentPeriod->tahun_ajaran);
+                },
+                'irs.irsDetails',
+                'irs.irsDetails.mataKuliah',
+                'prodi',
+            ]);
+        }
 
         $activePeriodType = null;
         $matkuls = null;
@@ -143,7 +155,6 @@ class IrsController extends Controller
                 $activePeriodType = 'pembatalan';
             }
         }
-    
         return view('mhs.akademik.buatirs', [
             'title' => 'Akademik', 
             'matkuls' => $matkuls, 
@@ -265,7 +276,6 @@ class IrsController extends Controller
         
         return $semester;
     }    
-
 
 }
 
