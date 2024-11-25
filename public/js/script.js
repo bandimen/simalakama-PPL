@@ -460,67 +460,66 @@ document.getElementById("toggleButton").onclick = () => {
   }
 };
 
-async function saveProgress() {
-  try {
-    const progressData = {
-      bottomSheetData, // Data yang akan disimpan ke backend
-    };
+// async function saveProgress() {
+//   try {
+//     const progressData = {
+//       bottomSheetData, // Data yang akan disimpan ke backend
+//     };
 
-    await fetch("/irs-detail/store", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
-      },
-      body: JSON.stringify(progressData),
-    });
+//     await fetch("/irs-detail/store", {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//         "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+//       },
+//       body: JSON.stringify(progressData),
+//     });
 
-    console.log("Progress saved successfully");
-  } catch (error) {
-    console.error("Failed to save progress:", error);
-  }
-}
+//     console.log("Progress saved successfully");
+//   } catch (error) {
+//     console.error("Failed to save progress:", error);
+//   }
+// }
 
-async function loadProgress() {
-  try {
-    const response = await fetch("/irs-detail/load", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
-      },
-    });
+// async function loadProgress() {
+//   try {
+//     const response = await fetch("/irs-detail/load", {
+//       method: "GET",
+//       headers: {
+//         "Content-Type": "application/json",
+//         "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+//       },
+//     });
 
-    if (response.ok) {
-      const progressData = await response.json();
-      bottomSheetData = progressData.bottomSheetData || [];
+//     if (response.ok) {
+//       const progressData = await response.json();
+//       bottomSheetData = progressData.bottomSheetData || [];
 
-      // Render ulang data ke tampilan
-      bottomSheetData.forEach((data) => {
-        selectedCourses.push({
-          kodemk: data.kodemk,
-          mataKuliah: data.mataKuliah,
-          kelas: data.kelas,
-          hari: data.hari,
-          jam: data.jam,
-        });
+//       // Render ulang data ke tampilan
+//       bottomSheetData.forEach((data) => {
+//         selectedCourses.push({
+//           kodemk: data.kodemk,
+//           mataKuliah: data.mataKuliah,
+//           kelas: data.kelas,
+//           hari: data.hari,
+//           jam: data.jam,
+//         });
 
-        // Tambahkan ke bottom sheet dan jadwal
-        updateBottomSheet();
-        fetchAndDisplaySchedule(data.kodemk, data.mataKuliah);
-      });
-    } else {
-      console.warn("No progress found for the current student.");
-    }
-  } catch (error) {
-    console.error("Failed to load progress:", error);
-  }
-}
+//         // Tambahkan ke bottom sheet dan jadwal
+//         updateBottomSheet();
+//         fetchAndDisplaySchedule(data.kodemk, data.mataKuliah);
+//       });
+//     } else {
+//       console.warn("No progress found for the current student.");
+//     }
+//   } catch (error) {
+//     console.error("Failed to load progress:", error);
+//   }
+// }
 
-document.addEventListener("DOMContentLoaded", () => {
-  loadProgress();
-});
-
+// document.addEventListener("DOMContentLoaded", () => {
+//   loadProgress();
+// });
 
 // async function saveProgress() {
 //   try {

@@ -29,4 +29,9 @@ class IrsDetail extends Model
     public function jadwalKuliah()
     {
         return $this->belongsTo(JadwalKuliah::class, 'jadwal_kuliah_id', 'id');    }
+
+    public function khsDetails()
+    {
+        return $this->hasMany(KhsDetails::class, 'irs_details_id');
+    }    
 }
