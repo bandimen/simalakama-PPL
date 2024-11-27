@@ -86,37 +86,37 @@ class KhsDetailsTableSeeder extends Seeder
                 'irs_details_id' => 14,
                 'nilai' => 'A',
             ], 
-            // khs id = 3 ( farrel smt 3 th 2024/2025 ganjil)
-            [
-                'khs_id' => 3,
-                'irs_details_id' => 15,
-                'nilai' => 'A',
-            ], 
-            [
-                'khs_id' => 3,
-                'irs_details_id' => 16,
-                'nilai' => 'A',
-            ], 
-            [
-                'khs_id' => 3,
-                'irs_details_id' => 17,
-                'nilai' => 'A',
-            ], 
-            [
-                'khs_id' => 3,
-                'irs_details_id' => 18,
-                'nilai' => 'B',
-            ], 
-            [
-                'khs_id' => 3,
-                'irs_details_id' => 19,
-                'nilai' => 'A',
-            ], 
-            [
-                'khs_id' => 3,
-                'irs_details_id' => 20,
-                'nilai' => 'C',
-            ], 
+            // // khs id = 3 ( farrel smt 3 th 2024/2025 ganjil)
+            // [
+            //     'khs_id' => 3,
+            //     'irs_details_id' => 15,
+            //     'nilai' => 'A',
+            // ], 
+            // [
+            //     'khs_id' => 3,
+            //     'irs_details_id' => 16,
+            //     'nilai' => 'A',
+            // ], 
+            // [
+            //     'khs_id' => 3,
+            //     'irs_details_id' => 17,
+            //     'nilai' => 'A',
+            // ], 
+            // [
+            //     'khs_id' => 3,
+            //     'irs_details_id' => 18,
+            //     'nilai' => 'B',
+            // ], 
+            // [
+            //     'khs_id' => 3,
+            //     'irs_details_id' => 19,
+            //     'nilai' => 'A',
+            // ], 
+            // [
+            //     'khs_id' => 3,
+            //     'irs_details_id' => 20,
+            //     'nilai' => 'C',
+            // ], 
 
 
         ];

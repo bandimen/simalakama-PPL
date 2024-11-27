@@ -39,7 +39,7 @@
                                     <button type="button"
                                         class="flex items-center justify-between w-full py-5 font-medium rtl:text-right text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400 gap-3"
                                         data-accordion-target="#accordion-flush-body-{{ $i->id }}"
-                                        aria-expanded="true" aria-controls="accordion-flush-body-{{ $i->id }}">
+                                        aria-expanded="false" aria-controls="accordion-flush-body-{{ $i->id }}">
                                         <span>Semester X | Tahun Akademik {{ $i->tahun_ajaran }} {{ $i->jenis_semester }}</span>
                                         <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true"
                                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
@@ -148,6 +148,8 @@
                                     </div>
                                 </div>
                             @endforeach
+                        @else
+                        <p>Mahasiswa belum memiliki riwayat IRS.</p>
                         @endif
                     </div>
                 </section>

@@ -21,7 +21,7 @@ class IrsTableSeeder extends Seeder
                 'jenis_semester' => 'Gasal',
                 'tahun_ajaran' => '2023/2024',
                 'total_sks' => 19,
-                'status' => 'Belum disetujui'
+                'status' => 'Disetujui'
             ], 
             [
                 'nim' => '24060122140165',
@@ -29,7 +29,7 @@ class IrsTableSeeder extends Seeder
                 'jenis_semester' => 'Genap',
                 'tahun_ajaran' => '2023/2024',
                 'total_sks' => 18,
-                'status' => 'Belum disetujui'
+                'status' => 'Disetujui'
             ], 
             [
                 'nim' => '24060122140165',
