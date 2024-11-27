@@ -74,13 +74,13 @@
                     <!-- IPK -->
                     <div class="px-4">
                         <p class="text-sm font-medium text-gray-500">IPK</p>
-                        <p class="text-lg font-bold text-gray-900">4.00</p>
+                        <p class="text-lg font-bold text-gray-900"> {{ $mahasiswa->getIPK() }} </p>
                     </div>
 
                     <!-- SKS -->
                     <div class="px-4">
                         <p class="text-sm font-medium text-gray-500">SKSk</p>
-                        <p class="text-lg font-bold text-gray-900">84</p>
+                        <p class="text-lg font-bold text-gray-900"> {{ $mahasiswa->getSKSK() }} </p>
                     </div>
                 </div>
             </div>
@@ -91,7 +91,7 @@
             <!-- Card Keempat -->
             <div class="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow p-4 dark:border-gray-700 dark:bg-gray-800">
                 <!-- Judul -->
-                <h5 class="mb-2 text-xl font-bold text-center text-gray-900 dark:text-white">Wali Dosen</h5>
+                <h5 class="mb-2 text-xl font-bold text-center text-gray-900 dark:text-white">Dosen Wali</h5>
                     <!-- Nama dan NIDN PA -->
                     <div class="px-4">
                         <p class="text-sm font-medium text-gray-500">{{ $pa->nama }}</p>
