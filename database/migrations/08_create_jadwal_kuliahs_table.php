@@ -15,14 +15,15 @@ return new class extends Migration
             $table->id();
             $table->string('kodemk');
             $table->foreign('kodemk')->references('kodemk')->on('mata_kuliahs')->onDelete('cascade');
-            $table->unsignedBigInteger('ruang_id'); 
+            $table->unsignedBigInteger('ruang_id')->nullable(); 
             $table->foreign('ruang_id')->references('id')->on('ruangs')->onDelete('cascade');
             $table->string('kelas');
             $table->string('hari');
             $table->string('tahun_ajaran');
             $table->integer('kuota_kelas');
-            $table->time('waktu_mulai');
-            $table->time('waktu_selesai');
+            $table->time('waktu_mulai')->nullable();
+            $table->time('waktu_selesai')->nullable();
+            $table->enum('status', ['Disetujui', 'Belum disetujui']);
             $table->timestamps();
         });
     }

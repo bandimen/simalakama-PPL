@@ -14,26 +14,19 @@ class KhsTableSeeder extends Seeder
     public function run(): void
     {
         $khs = [
-            // khs fendi 
+            // khs farrel dgn id irs 1, smt 1 th ajaran 2023/2024 ganjil
             [
                 'irs_id' => 1,
             ], 
-
+            // khs farrel dgn id irs 2, smt 2 th ajaran 2023/2024 genap
             [
                 'irs_id' => 2,
             ], 
-
+            // khs farrel dgn id irs 3, smt 3 th ajaran 2024/2025 ganjil
             [
                 'irs_id' => 3,
             ], 
 
-            [
-                'irs_id' => 4,
-            ], 
-
-            [
-                'irs_id' => 5,
-            ], 
         ];
 
         foreach($khs as $k){

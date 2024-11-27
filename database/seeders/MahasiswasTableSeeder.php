@@ -61,7 +61,8 @@ class MahasiswasTableSeeder extends Seeder
                 'prodi_id' => 1,
                 'pembimbing_akademik_id' => 2, // ID pembimbing akademik yang sesuai
                 'user_id' => 4 // ID user yang sesuai
-            ]
+            ],
+
         ];
 
         foreach ($mahasiswas as $mahasiswaData) {
