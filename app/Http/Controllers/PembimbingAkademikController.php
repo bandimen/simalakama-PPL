@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Khs;
 use App\Models\IrsDetail;
 use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
@@ -68,20 +69,20 @@ class PembimbingAkademikController extends Controller
 
     public function showKhsByNim($nim)
     {
-        $khsByNim = DB::table('khs')
-                    ->join('irs', 'khs.irs_id', '=', 'irs.id')
-                    ->where('irs.nim', '=', $nim)
-                    ->select('khs.*', 'irs.*')
-                    ->get();
-        $mhsByNim = DB::table('mahasiswas')
-                    ->where('nim', '=', $nim)
-                    ->get();
-
+        $mhs = Mahasiswa::with([
+            'irs',                      
+            'irs.irsDetails',                      
+            'irs.irsDetails.mataKuliah',                      
+            'irs.khs',     
+            'irs.khs.khsDetails.irsDetail',
+            'irs.khs.khsDetails.irsDetail.mataKuliah',
+            'prodi', 
+        ])
+        ->where('nim', '=', $nim)
+        ->first(); 
         return view('pa.rekapmhs.khs', [
             'title' => 'KHS Mhs',
-            'khs' => $khsByNim,
-            'mhs' => $mhsByNim,
+            'mhs' => $mhs,
         ]);
     }
-
 }

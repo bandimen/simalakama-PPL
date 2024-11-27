@@ -15,8 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('khs_id')->constrained()->onDelete('cascade'); 
             $table->foreignId('irs_details_id')->constrained()->onDelete('cascade'); 
-            $table->enum('nilai', ['A', 'B', 'C', 'D', 'E']); 
-            //$table->enum('status', ['Lulus', 'Tidak Lulus']); // Status kelulusan
+            $table->enum('nilai', ['A', 'B', 'C', 'D', 'E'])->nullable(); 
             $table->timestamps();
         });
     }

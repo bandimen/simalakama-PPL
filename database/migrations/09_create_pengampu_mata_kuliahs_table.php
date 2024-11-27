@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreign('nidn')->references('nidn')->on('dosen')->onDelete('cascade');
             $table->string('kodemk');
             $table->foreign('kodemk')->references('kodemk')->on('mata_kuliahs')->onDelete('cascade');
+            // $table->string('tahun_ajaran');
             $table->timestamps();
         });
     }

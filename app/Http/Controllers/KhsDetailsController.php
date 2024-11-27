@@ -67,7 +67,7 @@ class KhsDetailsController extends Controller
     public function konfersi($id)
     {
         // Cari data KhsDetail berdasarkan ID
-        $khsDetail = KhsDetail::find($id);
+        $khsDetail = KhsDetails::find($id);
     
         if ($khsDetail) {
             // Lakukan konversi nilai

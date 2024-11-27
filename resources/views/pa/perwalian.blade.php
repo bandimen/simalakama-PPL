@@ -89,6 +89,9 @@
                                     </div>
                                 </th>
                                 <th scope="col" class="px-6 py-3">
+                                    Chat
+                                </th>
+                                <th scope="col" class="px-6 py-3">
                                     <div class="flex items-center">
                                         NIM
                                         <a href="#"><svg class="w-3 h-3 ms-1.5" aria-hidden="true"
@@ -155,7 +158,7 @@
                                     </div>
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    <span class="sr-only">Aksi</span>
+                                    Aksi
                                 </th>
                             </tr>
                         </thead>
@@ -169,6 +172,11 @@
                                             class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                             {{ ++$counter }}
                                         </th>
+                                        <td class="px-6 py-4">
+                                            <a href="https://wa.me/{{ $m->no_hp }}?text=Halo,%20{{ $m->nama }}" target="_blank">
+                                                <img src="/images/icons/whatsapp.png" alt="WA" class="max-w-10 max-h-10">
+                                            </a>
+                                        </td>
                                         <td class="px-6 py-4">
                                             <a href="#" class="font-medium hover:underline"
                                                 data-modal-target="modal-{{ $m->irs->first()->id }}"
@@ -357,6 +365,11 @@
                                             class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                             {{ ++$counter }}
                                         </th>
+                                        <td class="px-6 py-4">
+                                            <a href="https://wa.me/{{ $m->no_hp }}?text=Halo,%20{{ $m->nama }}" target="_blank">
+                                                <img src="/images/icons/whatsapp.png" alt="WA" class="max-w-10 max-h-10">
+                                            </a>
+                                        </td>
                                         <td class="px-6 py-4">
                                             <a href="#" class="font-medium hover:underline"
                                                 data-modal-target="modal-{{ $m->nim }}"

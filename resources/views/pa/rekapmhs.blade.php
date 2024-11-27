@@ -104,10 +104,10 @@
                                       {{ $m->angkatan }}
                                   </td>
                                   <td class="px-6 py-4">
-                                      IPK
+                                      {{ $m->getIPK() }}
                                   </td>
                                   <td class="px-6 py-4">
-                                      SKSK
+                                      {{ $m->getSKSK() }}
                                   </td>
                                   <td class="px-6 py-4">
                                       <a href="{{ route('showIrsByNim', $m->nim) }}">

@@ -16,6 +16,7 @@ class Irs extends Model
     protected $fillable = [
         'nim',
         'semester',
+        'jenis_semester',
         'tahun_ajaran',
         'status',
         'total_sks',
@@ -32,9 +33,8 @@ class Irs extends Model
         return $this->hasMany(IrsDetail::class, 'irs_id', 'id');
     }
 
-    // relasi dgn khs
     public function khs()
     {
-        return $this->hasMany(Khs::class, 'irs_id');
+        return $this->hasOne(Khs::class);
     }
 }

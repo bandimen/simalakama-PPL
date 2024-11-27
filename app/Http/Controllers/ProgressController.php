@@ -2,8 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Irs;
+use App\Models\IrsDetail;
+use App\Models\JadwalKuliah;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\MahasiswaController;
+use App\Http\Controllers\IrsPeriodsController;
 
 class ProgressController extends Controller
 {

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('ruang_id')->nullable(); 
             $table->foreign('ruang_id')->references('id')->on('ruangs')->onDelete('cascade');
             $table->string('kelas');
-            $table->string('hari');
+            $table->enum('hari', ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Belum dijadwalkan']);
             $table->string('tahun_ajaran');
             $table->integer('kuota_kelas');
             $table->time('waktu_mulai')->nullable();

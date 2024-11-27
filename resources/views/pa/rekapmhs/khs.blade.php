@@ -1,158 +1,200 @@
 <x-layout>
-  <x-slot:title>{{ $title }}</x-slot:title> {{-- masukkan ke slot yg keynya title --}}
-  <!-- Your content -->
+    <x-slot:title>{{ $title }}</x-slot:title> {{-- masukkan ke slot yg keynya title --}}
+    <!-- Your content -->
 
-  <div class="min-h-full">
-      <x-navbar-pa></x-navbar-pa>
+    <div class="min-h-full">
+        <x-navbar-pa></x-navbar-pa>
 
-      <main>
-          <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-            {{-- Judul --}}
-              <h1 class="text-2xl font-bold tracking-tight text-gray-900">KHS Mahasiswa</h1>
-              <br>
-              {{-- Profil --}}
-              <section
-                  class="block max-w p-6 bg-white border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700">
-                  <h1 class="text-xl font-medium tracking-tight text-gray-900">Profil</h1>
-                  <br>
+        <main>
+            <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+                {{-- Judul --}}
+                <h1 class="text-2xl font-bold tracking-tight text-gray-900">IRS Mahasiswa</h1>
+                <br>
+                {{-- Profil --}}
+                <section
+                    class="block max-w p-6 bg-white border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700">
+                    <h1 class="text-xl font-medium tracking-tight text-gray-900">Profil</h1>
+                    <br>
 
-                  <div id="accordion-flush" data-accordion="collapse"
-                      data-active-classes="bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
-                      data-inactive-classes="text-gray-500 dark:text-gray-400">
-                      ini profil
-                  </div>
-              </section>
+                    <div id="accordion-flush" data-accordion="collapse"
+                        data-active-classes="bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
+                        data-inactive-classes="text-gray-500 dark:text-gray-400">
+                        ini profil
+                    </div>
+                </section>
 
-              <br>
-              {{-- KHS --}}
-              <section
-                  class="block max-w p-6 bg-white border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700">
-                  <h1 class="text-xl font-medium tracking-tight text-gray-900">KHS</h1>
-                  <br>
+                <br>
+                {{-- IRS --}}
+                <section
+                    class="block max-w p-6 bg-white border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700">
+                    <h1 class="text-xl font-medium tracking-tight text-gray-900">Isian Rencana Studi</h1>
+                    <br>
 
-                  <div id="accordion-flush" data-accordion="collapse"
-                      data-active-classes="bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
-                      data-inactive-classes="text-gray-500 dark:text-gray-400">
-                      @if ($khs->isNotEmpty())
-                          @foreach ($khs as $k)
-                              <h2 id="accordion-flush-heading-{{ $k->id }}">
-                                  <button type="button"
-                                      class="flex items-center justify-between w-full py-5 font-medium rtl:text-right text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400 gap-3"
-                                      data-accordion-target="#accordion-flush-body-{{ $k->id }}"
-                                      aria-expanded="true" aria-controls="accordion-flush-body-{{ $k->id }}">
-                                      <span>Semester X | Tahun Akademik {{ $k->tahun_ajaran }} {{ $k->jenis_semester }}</span>
-                                      <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true"
-                                          xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                              stroke-width="2" d="M9 5 5 1 1 5" />
-                                      </svg>
-                                  </button>
-                              </h2>
-                              <div id="accordion-flush-body-{{ $k->id }}" class="hidden"
-                                  aria-labelledby="accordion-flush-heading-{{ $k->id }}">
-                                  <div class="py-5 border-b border-gray-200 dark:border-gray-700">
-                                    <h3
-                                        class="text-xl font-semibold text-gray-900 dark:text-white text-center flex-grow">
-                                        KHS {{ $mhs->nama }} - {{ $mhs->nim }}
-                                        ({{ $k->status }})
-                                    </h3>
-                                    {{-- Tabel --}}
-                                    <div class="p-4 md:p-5 space-y-4">
-                                      <div class="relative overflow-x-auto">
-                                          <table
-                                              class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                                              <thead
-                                                  class="text-xs text-gray-700 uppercase bg-blue-200 dark:bg-blue-700 dark:text-blue-400">
-                                                  <tr>
-                                                      <th scope="col" class="px-6 py-3">
-                                                          No
-                                                      </th>
-                                                      <th scope="col" class="px-6 py-3">
-                                                          Kode
-                                                      </th>
-                                                      <th scope="col" class="px-6 py-3">
-                                                          Mata Kuliah
-                                                      </th>
-                                                      <th scope="col" class="px-6 py-3">
-                                                          Kelas
-                                                      </th>
-                                                      <th scope="col" class="px-6 py-3">
-                                                          SKS
-                                                      </th>
-                                                      <th scope="col" class="px-6 py-3">
-                                                          Ruang
-                                                      </th>
-                                                      <th scope="col" class="px-6 py-3">
-                                                          Status
-                                                      </th>
-                                                      <th scope="col" class="px-6 py-3">
-                                                          Dosen Pengampu
-                                                      </th>
-                                                  </tr>
-                                              </thead>
-                                              <tbody>
-                                                  @php
-                                                      $counterDetail = 0;
-                                                      $details = $k->irsDetails;
-                                                  @endphp
-                                                  @if ($details)
-                                                      @foreach ($details as $detail)
-                                                          <tr
-                                                              class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                                              <td class="px-6 py-4">
-                                                                  {{ ++$counterDetail }}
-                                                              </td>
-                                                              <td class="px-6 py-4">
-                                                                  {{ $detail->kodemk }}
-                                                              </td>
-                                                              <td class="px-6 py-4">
-                                                                  {{ $detail->mataKuliah->nama }}
-                                                              </td>
-                                                              <td class="px-6 py-4">
-                                                                  {{ $detail->jadwalKuliah->kelas }}
-                                                              </td>
-                                                              <td class="px-6 py-4">
-                                                                  {{ $detail->mataKuliah->sks }}
-                                                              </td>
-                                                              <td class="px-6 py-4">
-                                                                  {{ $detail->jadwalKuliah->ruang->nama }}
-                                                              </td>
-                                                              <td class="px-6 py-4">
-                                                                  {{ $detail->status }}
-                                                              </td>
-                                                              <td class="px-6 py-4">
-                                                                  @if ($detail->dosenPengampuList->isNotEmpty())
-                                                                      <ul>
-                                                                          @foreach ($detail->dosenPengampuList as $dosen)
-                                                                              <li>{{ $dosen->nama }}
-                                                                              </li>
-                                                                          @endforeach
-                                                                      </ul>
-                                                                  @else
-                                                                      Tidak ada Dosen Pengampu
-                                                                  @endif
-                                                              </td>
-                                                          </tr>
-                                                      @endforeach
-                                                  @else
-                                                      <td class="px-6 py-4">
-                                                          Tidak ada mata kuliah.
-                                                      </td>
-                                                  @endif
-                                              </tbody>
+                    <div id="accordion-flush" data-accordion="collapse"
+                        data-active-classes="bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
+                        data-inactive-classes="text-gray-500 dark:text-gray-400">
+                        @if ($mhs->irs->isNotEmpty())
+                            @php
+                                $countSemester = 0;
+                            @endphp
+                            @foreach ($mhs->irs as $irs)
+                                <h2 id="accordion-flush-heading-{{ $irs->id }}">
+                                    <button type="button"
+                                        class="flex items-center justify-between w-full py-5 font-medium rtl:text-right text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400 gap-3"
+                                        data-accordion-target="#accordion-flush-body-{{ $irs->id }}"
+                                        aria-expanded="false" aria-controls="accordion-flush-body-{{ $irs->id }}">
+                                        <span>Semester {{ ++$countSemester }} | Tahun Akademik {{ $irs->tahun_ajaran }}
+                                            {{ $irs->jenis_semester }}</span>
+                                        <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                stroke-width="2" d="M9 5 5 1 1 5" />
+                                        </svg>
+                                    </button>
+                                </h2>
+                                <div id="accordion-flush-body-{{ $irs->id }}" class="hidden"
+                                    aria-labelledby="accordion-flush-heading-{{ $irs->id }}">
+                                    <div class="py-5 border-b border-gray-200 dark:border-gray-700">
 
-                                          </table>
-                                      </div>
+                                        {{-- Tabel --}}
+                                        <div class="p-4 md:p-5 space-y-4">
+                                            <div class="relative overflow-x-auto">
+                                                <table
+                                                    class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                                    <thead
+                                                        class="text-xs text-gray-700 uppercase bg-blue-400 dark:bg-blue-700 dark:text-blue-400">
+                                                        <tr>
+                                                            <th scope="col" class="px-6 py-3">
+                                                                No
+                                                            </th>
+                                                            <th scope="col" class="px-6 py-3">
+                                                                Kode
+                                                            </th>
+                                                            <th scope="col" class="px-6 py-3">
+                                                                Mata Kuliah
+                                                            </th>
+                                                            <th scope="col" class="px-6 py-3">
+                                                                Sifat
+                                                            </th>
+                                                            <th scope="col" class="px-6 py-3">
+                                                                Status
+                                                            </th>
+                                                            <th scope="col" class="px-6 py-3">
+                                                                SKS
+                                                            </th>
+                                                            <th scope="col" class="px-6 py-3">
+                                                                Nilai Huruf
+                                                            </th>
+                                                            <th scope="col" class="px-6 py-3">
+                                                                Bobot
+                                                            </th>
+                                                            <th scope="col" class="px-6 py-3">
+                                                                SKS x Bobot
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @php
+                                                            $counterDetail = 0;
+                                                            $details = $irs->khs->khsDetails;
+                                                            $totalSks = 0;
+                                                            $totalBobot = 0;
+                                                            $totalSksXBobot = 0;
+                                                        @endphp
+                                                        @if ($details)
+                                                            @foreach ($details as $detail)
+                                                                @php
+                                                                    $bobot = match ($detail->nilai) {
+                                                                        'A' => 4,
+                                                                        'B' => 3,
+                                                                        'C' => 2,
+                                                                        'D' => 1,
+                                                                        'E' => 0,
+                                                                        default => 0,
+                                                                    };
+                                                                    $sks = $detail->irsDetail->mataKuliah->sks ?? 0;
 
-                                  </div>
-                                  </div>
-                              </div>
-                          @endforeach
-                      @endif
-                  </div>
-              </section>
+                                                                    $totalSks += $sks;
+                                                                    $totalBobot += $bobot;
+                                                                    $totalSksXBobot += $sks * $bobot;
+                                                                @endphp
+                                                                <tr
+                                                                    class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                                                    <td class="px-6 py-4">
+                                                                        {{ ++$counterDetail }}
+                                                                    </td>
+                                                                    <td class="px-6 py-4">
+                                                                        {{ $detail->irsDetail->kodemk }}
+                                                                    </td>
+                                                                    <td class="px-6 py-4">
+                                                                        {{ $detail->irsDetail->mataKuliah->nama }}
+                                                                    </td>
+                                                                    <td class="px-6 py-4">
+                                                                        {{ $detail->irsDetail->mataKuliah->sifat }}
+                                                                    </td>
+                                                                    <td class="px-6 py-4">
+                                                                        {{ $detail->irsDetail->status }}
+                                                                    </td>
+                                                                    <td class="px-6 py-4">
+                                                                        {{ $sks }}
+                                                                    </td>
+                                                                    <td class="px-6 py-4">
+                                                                        {{ $detail->nilai ?? ' ' }}
+                                                                    </td>
+                                                                    <td class="px-6 py-4">
+                                                                        {{ $bobot ?? ' ' }}
+                                                                    </td>
+                                                                    <td class="px-6 py-4">
+                                                                        {{ $sks * $bobot ?? ' ' }}
+                                                                    </td>
+                                                                </tr>
+                                                            @endforeach
+                                                            <tr class="font-bold bg-gray-300 dark:bg-gray-900">
+                                                                <td class="px-6 py-4" colspan="5">Total</td>
+                                                                <td class="px-6 py-4"> {{ $totalSks }} </td>
+                                                                <td class="px-6 py-4"></td>
+                                                                <td class="px-6 py-4"> {{ $totalBobot }} </td>
+                                                                <td class="px-6 py-4"> {{ $totalSksXBobot }} </td>
+                                                            </tr>
+                                                        @else
+                                                            <td class="px-6 py-4">
+                                                                Tidak ada mata kuliah.
+                                                            </td>
+                                                        @endif
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="flex flex-col gap-1">
+                                                <p class="text-m">
+                                                    <strong>IP Semester :
+                                                        {{ $totalSks > 0 ? number_format($totalSksXBobot / $totalSks, 2) : 'N/A' }}
+                                                    </strong>
+                                                </p>
+                                                <p class="text-sm">{{ $totalSksXBobot ?? 0 }} / {{ $totalSks ?? 0 }}
+                                                </p>
+                                                <p class="text-sm">total (SKS x Bobot)/total SKS</p>
 
-          </div>
-      </main>
-  </div>
+                                                <br class="my-1"> <!-- Mengatur jarak antar baris -->
+
+                                                <p class="text-m"><strong>IP Kumulatif :
+                                                        {{ $mhs->getIPK() }}
+                                                    </strong></p>
+                                                <p class="text-sm"> {{ $mhs->getBobotTerbaik() }} /
+                                                    {{ $mhs->getSKSK() }} </p>
+                                                <p class="text-sm">total (SKS x Bobot) terbaik/total SKS terbaik</p>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        @else
+                            <p>Mahasiswa belum memiliki riwayat studi.</p>
+                        @endif
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
 </x-layout>

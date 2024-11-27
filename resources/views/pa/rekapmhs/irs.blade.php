@@ -27,20 +27,23 @@
                 {{-- IRS --}}
                 <section
                     class="block max-w p-6 bg-white border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700">
-                    <h1 class="text-xl font-medium tracking-tight text-gray-900">IRS</h1>
+                    <h1 class="text-xl font-medium tracking-tight text-gray-900">Isian Rencana Studi</h1>
                     <br>
 
                     <div id="accordion-flush" data-accordion="collapse"
                         data-active-classes="bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
                         data-inactive-classes="text-gray-500 dark:text-gray-400">
                         @if ($irs->isNotEmpty())
+                            @php
+                                $countSemester = 0;
+                            @endphp
                             @foreach ($irs as $i)
                                 <h2 id="accordion-flush-heading-{{ $i->id }}">
                                     <button type="button"
                                         class="flex items-center justify-between w-full py-5 font-medium rtl:text-right text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400 gap-3"
                                         data-accordion-target="#accordion-flush-body-{{ $i->id }}"
                                         aria-expanded="false" aria-controls="accordion-flush-body-{{ $i->id }}">
-                                        <span>Semester X | Tahun Akademik {{ $i->tahun_ajaran }} {{ $i->jenis_semester }}</span>
+                                        <span>Semester {{ ++$countSemester }} | Tahun Akademik {{ $i->tahun_ajaran }} {{ $i->jenis_semester }}</span>
                                         <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true"
                                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -149,7 +152,7 @@
                                 </div>
                             @endforeach
                         @else
-                        <p>Mahasiswa belum memiliki riwayat IRS.</p>
+                        <p>Mahasiswa belum memiliki riwayat studi.</p>
                         @endif
                     </div>
                 </section>
