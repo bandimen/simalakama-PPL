@@ -51,12 +51,64 @@
                 </div>
                 <br>
                 {{-- Profil --}}
-                <section
-                    class="block max-w p-6 bg-white border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700">
-                    <h1 class="text-xl font-medium tracking-tight text-gray-900">Profil</h1>
-                    <br>
-
-
+                <section class="block max-w p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                    <h2 class="text-xl font-medium tracking-tight text-gray-900 dark:text-white">Profil Mahasiswa</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-4">
+                        <!-- Foto Mahasiswa -->
+                        <div class="flex justify-center items-center">
+                            <div class="w-36 h-48 bg-gray-200 rounded-md overflow-hidden shadow">
+                                <img src="/images/mhs/{{ $mhs->foto }}" alt="Foto Mahasiswa" class="w-full h-full object-cover">
+                            </div>
+                        </div>
+                        <!-- Informasi Mahasiswa -->
+                        <div class="col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <!-- Nama -->
+                            <div>
+                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Nama</p>
+                                <p class="text-base font-semibold text-gray-900 dark:text-white">{{ $mhs->nama }}</p>
+                            </div>
+                            <!-- NIM -->
+                            <div>
+                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">NIM</p>
+                                <p class="text-base font-semibold text-gray-900 dark:text-white">{{ $mhs->nim }}</p>
+                            </div>
+                            <!-- Program Studi -->
+                            <div>
+                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Program Studi</p>
+                                <p class="text-base font-semibold text-gray-900 dark:text-white">{{ $mhs->prodi->nama }}</p>
+                            </div>
+                            <!-- Fakultas -->
+                            <div>
+                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Fakultas</p>
+                                <p class="text-base font-semibold text-gray-900 dark:text-white">Fakultas Sains dan Matematika</p>
+                            </div>
+                            <!-- Angkatan -->
+                            <div>
+                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Angkatan</p>
+                                <p class="text-base font-semibold text-gray-900 dark:text-white">{{ $mhs->angkatan }}</p>
+                            </div>
+                            <!-- Email -->
+                            <div>
+                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Email</p>
+                                <p class="text-base font-semibold text-gray-900 dark:text-white">{{ $mhs->user->email }}</p>
+                            </div>
+                            <!-- IPK -->
+                            <div>
+                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">IPK</p>
+                                <p class="text-base font-semibold text-gray-900 dark:text-white">{{ $mhs->getIPK() }}</p>
+                            </div>
+                            <!-- SKS Kumulatif -->
+                            <div>
+                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">SKS Kumulatif</p>
+                                <p class="text-base font-semibold text-gray-900 dark:text-white">{{ $mhs->getSKSK() }}</p>
+                            </div>
+                            <!-- Status -->
+                            <div>
+                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Status</p>
+                                <p class="text-base font-semibold text-gray-900 dark:text-white">{{ $mhs->status }}</p>
+                            </div>
+                        </div>
+                    </div>
                 </section>
 
                 <br>

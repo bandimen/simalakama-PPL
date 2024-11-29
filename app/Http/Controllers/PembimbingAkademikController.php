@@ -73,9 +73,11 @@ class PembimbingAkademikController extends Controller
                                         $detail->dosenPengampuList = $detail->mataKuliah->dosenPengampu;
                                     });
         });
-        $mhsByNim = DB::table('mahasiswas')
-                    ->where('nim', '=', $nim)
-                    ->first();
+        $mhsByNim = Mahasiswa::with([
+            'prodi', 
+        ])
+        ->where('nim', '=', $nim)
+        ->first(); 
         return view('pa.rekapmhs.irs', [
             'title' => 'IRS Mhs',
             'irs' => $irsByNim,
