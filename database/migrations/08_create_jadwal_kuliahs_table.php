@@ -23,7 +23,7 @@ return new class extends Migration
             $table->integer('kuota_kelas');
             $table->time('waktu_mulai')->nullable();
             $table->time('waktu_selesai')->nullable();
-            $table->enum('status', ['Disetujui', 'Belum disetujui']);
+            $table->enum('status', ['Disetujui', 'Belum disetujui'])->default('Belum disetujui');
             $table->timestamps();
         });
     }
