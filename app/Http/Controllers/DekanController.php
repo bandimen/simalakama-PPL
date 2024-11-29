@@ -12,7 +12,8 @@ class DekanController extends Controller
         // data mahasiswa yg diambil di proses sessionController pas login dibawa ke view
         $user = Auth::user();
         $dekan = $user->dekan;
-        return view('dekan.dashboard', ['title' => 'Dashboard Dekan', 'dekan' => $dekan]);
+        $infoDekan = $dekan->dosen;
+        return view('dekan.dashboard', ['title' => 'Dashboard Dekan', 'dekan' => $dekan, 'infoDekan' => $infoDekan]);
     }
     public function matkul() {
         $user = Auth::user();

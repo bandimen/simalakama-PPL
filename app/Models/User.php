@@ -78,4 +78,14 @@ class User extends Authenticatable
     {
         return $this->hasOne(TenagaPendidik::class);
     }
+
+    public function dekan()
+    {
+        return $this->hasOne(Dekan::class);
+    }
+
+    public function kaprodi()
+    {
+        return $this->hasOne(Kaprodi::class);
+    }
 }
