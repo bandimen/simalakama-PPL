@@ -9,16 +9,7 @@ use Illuminate\Http\Request;
 
 class JadwalKuliahController extends Controller
 {
-    protected $table = 'jadwal_kuliah';
-    protected $fillable = [
-        'kodemk',
-        'ruang_id',
-        'kelas',
-        'hari',
-        'waktu_mulai',
-        'waktu_selesai'
-    ];
-
+    
     // Relasi ke MataKuliah
     public function mataKuliah()
     {

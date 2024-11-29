@@ -12,7 +12,7 @@
             <div class="ml-10 flex items-baseline space-x-4">
               <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
             <x-nav-link-mhs href="/dekan" :active="request()->is('dekan')" >Home</x-nav-link-mhs>
-            <x-nav-link-mhs href="/dekan/matkul" :active="request()->is('dekan/matkul')" >Mata Kuliah</x-nav-link-mhs>
+            <x-nav-link-mhs href="/dekan/matkul" :active="request()->is('dekan/matkul')" >Jadwal Kuliah</x-nav-link-mhs>
             <x-nav-link-mhs href="/dekan/ruangacc" :active="request()->is('dekan/ruangacc')" >Ruang Kuliah</x-nav-link-mhs>
             {{-- <x-nav-link-mhs href="/contact" :active="request()->is('contact')" >Contact</x-nav-link-mhs> --}}
             </div>

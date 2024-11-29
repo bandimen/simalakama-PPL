@@ -71,6 +71,9 @@ Route::middleware(['auth'])->group(function () {
   Route::resource('mataKuliah', MataKuliahController::class);
   Route::get('/dekan/ruangacc', [RuangController::class, 'verifikasi'])->name('ruangs.verifikasi');
   Route::patch('/ruangs/approve/{id}', [RuangController::class, 'approve'])->name('ruangs.approve');
+  Route::get('/dekan/matkul', [DekanController::class, 'jadwalKuliah'])->name('dekan.matkul');
+  Route::patch('/dekan/matkul/{id}/approve', [DekanController::class, 'approveJadwalKuliah'])->name('dekan.matkul.approve');
+  
 
 
   //TENAGA PENDIDIK alias BAGIAN AKADEMIK
