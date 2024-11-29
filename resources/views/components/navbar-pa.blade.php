@@ -13,7 +13,7 @@
           <div class="hidden md:block">
             <div class="ml-10 flex items-baseline space-x-4">
               <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-            <x-nav-link-mhs href="/pa" :active="request()->is('pa')" >Home</x-nav-link-mhs>
+            <x-nav-link-mhs href="/pa" :active="request()->is('pa')" >Dashboard</x-nav-link-mhs>
             <x-nav-link-mhs href="/pa/perwalian" :active="request()->is('pa/perwalian')" >Perwalian</x-nav-link-mhs>
             <x-nav-link-mhs href="/pa/rekapmhs" :active="request()->is('pa/rekapmhs')" >Rekap Mhs</x-nav-link-mhs>
             {{-- <x-nav-link-mhs href="/contact" :active="request()->is('contact')" >Contact</x-nav-link-mhs> --}}

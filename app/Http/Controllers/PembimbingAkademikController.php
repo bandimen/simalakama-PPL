@@ -12,7 +12,23 @@ use Illuminate\Support\Facades\Auth;
 class PembimbingAkademikController extends Controller
 {
     public function index() {
-        return view('pa.dashboard', ['title' => 'Dashboard - PA']);
+        $pa = Auth::user()->pembimbingAkademik;
+        $infoPA = $pa->dosen;
+        $totalMahasiswaPerwalian = $pa->getTotalMahasiswaPerwalian();
+        $totalIrsDisetujui = $pa->getTotalIrsDisetujui();
+        $totalIrsBelumDisetujui = $pa->getTotalIrsBelumDisetujui();
+        $totalMhsBelumIrs = $pa->getTotalMhsBelumIrs();
+
+
+        return view('pa.dashboard', 
+        [
+            'title' => 'Dashboard - PA', 
+            'pa' => $infoPA, 
+            'totalMahasiswaPerwalian' => $totalMahasiswaPerwalian,
+            'totalIrsDisetujui' => $totalIrsDisetujui,
+            'totalIrsBelumDisetujui' => $totalIrsBelumDisetujui,
+            'totalMhsBelumIrs' => $totalMhsBelumIrs,
+        ]);
     }
     public function perwalian() {
         $pa = Auth::user()->pembimbingAkademik;

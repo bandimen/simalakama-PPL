@@ -22,5 +22,9 @@ class KhsDetails extends Model
     {
         return $this->belongsTo(IrsDetail::class, 'irs_details_id');
     }
+    public function irsDetails()
+    {
+        return $this->belongsTo(IrsDetail::class, 'irs_details_id');
+    }
     
 }
