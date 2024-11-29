@@ -62,11 +62,18 @@ Route::middleware(['auth'])->group(function () {
   Route::get('/dekan/matkul', [DekanController::class, 'matkul']);
   Route::get('/dekan/ruangacc', [DekanController::class, 'ruangacc']);
   Route::resource('mataKuliah', MataKuliahController::class);
+  Route::get('/dekan/ruangacc', [RuangController::class, 'verifikasi'])->name('ruangs.verifikasi');
+  Route::patch('/ruangs/approve/{id}', [RuangController::class, 'approve'])->name('ruangs.approve');
+
 
   //TENAGA PENDIDIK alias BAGIAN AKADEMIK
   Route::get('/akademik',[TenagaPendidikController::class,'index']);
   Route::get('/akademik/tambahruang',[TenagaPendidikController::class,'tambahruang']);
   Route::post('/ruang', [RuangController::class, 'store'])->name('ruang.store');
+  Route::delete('ruang/{ruang}', [RuangController::class, 'destroy'])->name('ruang.destroy');
+  Route::get('ruang/create', [RuangController::class, 'create'])->name('ruang.create');
+  Route::get('/akademik/tambahruang', [RuangController::class, 'index'])->name('ruang.index');
+
 
 
   // KAPRODI

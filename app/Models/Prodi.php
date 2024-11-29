@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Prodi extends Model
 {
+    protected $fillable = ['nama'];
     public function mahasiswa()
     {
         return $this->hasMany(Mahasiswa::class);
@@ -22,7 +23,7 @@ class Prodi extends Model
 
     public function ruang()
     {
-        return $this->hasMany(Ruang::class);
+        return $this->hasMany(Ruang::class,'prodi_id','id');
     }
 
     public function mataKuliah()
