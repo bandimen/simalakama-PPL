@@ -19,7 +19,7 @@ class MahasiswasTableSeeder extends Seeder
                 'nama' => 'Fendi Ardianto',
                 'alamat' => 'Jl. Pendidikan No. 1',
                 'angkatan' => 2024,
-                'no_hp' => '081234567890',
+                'no_hp' => '62895640585900',
                 'status' => 'Aktif',
                 'foto' => 'fendi.jpg',
                 'prodi_id' => 1,
@@ -31,7 +31,7 @@ class MahasiswasTableSeeder extends Seeder
                 'nama' => 'Farrel Ardana Jati',
                 'alamat' => 'Jl. Ilmu No. 2',
                 'angkatan' => 2023,
-                'no_hp' => '081234567891',
+                'no_hp' => '6285227715658',
                 'status' => 'Aktif',
                 'foto' => 'farrel.jpg',
                 'prodi_id' => 1,
@@ -43,7 +43,7 @@ class MahasiswasTableSeeder extends Seeder
                 'nama' => 'Muhammad Naufal Izzudin',
                 'alamat' => 'Jl. Teknologi No. 3',
                 'angkatan' => 2022,
-                'no_hp' => '081234567892',
+                'no_hp' => '6287737978567',
                 'status' => 'Aktif',
                 'foto' => 'naufal.jpg',
                 'prodi_id' => 1,
@@ -55,13 +55,14 @@ class MahasiswasTableSeeder extends Seeder
                 'nama' => 'Tiara Putri Wibowo',
                 'alamat' => 'Jl. Desain No. 4',
                 'angkatan' => 2021,
-                'no_hp' => '081234567893',
+                'no_hp' => '62882005710799',
                 'status' => 'Aktif',
                 'foto' => 'tiara.jpg',
                 'prodi_id' => 1,
                 'pembimbing_akademik_id' => 2, // ID pembimbing akademik yang sesuai
                 'user_id' => 4 // ID user yang sesuai
-            ]
+            ],
+
         ];
 
         foreach ($mahasiswas as $mahasiswaData) {

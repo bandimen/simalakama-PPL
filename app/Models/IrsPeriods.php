@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class IrsPeriods extends Model
 {
@@ -25,4 +27,30 @@ class IrsPeriods extends Model
     ];
 
     public $timestamps = true; //buat make created at dan updated at
+
+    public static function getCurrentPeriod()
+    {
+        $currentDateTime = Carbon::now(); // Sesuaikan dengan waktu yang diperlukan
+
+        $currentPeriod = DB::table('irs_periods')
+            ->where(function($query) use ($currentDateTime) {
+                $query->where('periode_pengisian_start', '<=', $currentDateTime)
+                      ->where('periode_pengisian_end', '>=', $currentDateTime)
+                      ->orWhere(function($query) use ($currentDateTime) {
+                          $query->where('periode_perubahan_start', '<=', $currentDateTime)
+                                ->where('periode_perubahan_end', '>=', $currentDateTime);
+                      })
+                      ->orWhere(function($query) use ($currentDateTime) {
+                          $query->where('periode_pembatalan_start', '<=', $currentDateTime)
+                                ->where('periode_pembatalan_end', '>=', $currentDateTime);
+                      })
+                      ->orWhere(function($query) use ($currentDateTime) {
+                          $query->where('periode_perkuliahan_start', '<=', $currentDateTime)
+                                ->where('periode_perkuliahan_end', '>=', $currentDateTime);
+                      });
+            })
+            ->first();
+
+        return $currentPeriod;
+    }
 }

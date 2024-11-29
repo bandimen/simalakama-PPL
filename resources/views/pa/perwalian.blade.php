@@ -7,7 +7,37 @@
 
         <main>
             <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                <h1 class="text-2xl font-bold tracking-tight text-gray-900">Perwalian</h1>
+                <div class="flex justify-between items-center">
+                    <!-- Judul -->
+                    <h1 class="text-2xl font-bold tracking-tight text-gray-900">Perwalian</h1>
+                    <!-- Breadcrumb -->
+                    <nav class="flex" aria-label="Breadcrumb">
+                        <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+                            <li class="inline-flex items-center">
+                                <a href="/pa"
+                                    class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+                                    <svg class="w-3 h-3 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                        fill="currentColor" viewBox="0 0 20 20">
+                                        <path
+                                            d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z" />
+                                    </svg>
+                                    Home
+                                </a>
+                            </li>
+                            <li aria-current="page">
+                                <div class="flex items-center">
+                                    <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2" d="m1 9 4-4-4-4" />
+                                    </svg>
+                                    <span
+                                        class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">Perwalian</span>
+                                </div>
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
                 <br>
 
                 {{-- Tabel --}}
@@ -50,6 +80,10 @@
                                                     class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Belum
                                                     disetujui</a>
                                             </li>
+                                            <li>
+                                                <a href="#"
+                                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Belum mengisi</a>
+                                            </li>
                                         </ul>
 
                                     </div>
@@ -83,6 +117,9 @@
                                                     d="M8.574 11.024h6.852a2.075 2.075 0 0 0 1.847-1.086 1.9 1.9 0 0 0-.11-1.986L13.736 2.9a2.122 2.122 0 0 0-3.472 0L6.837 7.952a1.9 1.9 0 0 0-.11 1.986 2.074 2.074 0 0 0 1.847 1.086Zm6.852 1.952H8.574a2.072 2.072 0 0 0-1.847 1.087 1.9 1.9 0 0 0 .11 1.985l3.426 5.05a2.123 2.123 0 0 0 3.472 0l3.427-5.05a1.9 1.9 0 0 0 .11-1.985 2.074 2.074 0 0 0-1.846-1.087Z" />
                                             </svg></a>
                                     </div>
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Chat
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                     <div class="flex items-center">
@@ -151,29 +188,39 @@
                                     </div>
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    <span class="sr-only">Action</span>
+                                    Aksi
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
-                            @if ($irs)
-                                @php $counter = 0 @endphp
-                                @foreach ($irs as $i)
+                            @php $counter = 0 @endphp
+                            @foreach ($mhs as $m)
+                                {{-- Jika mahasiswa sudah mengisi IRS --}}
+                                @if ($m->irs->isNotEmpty() && $m->irs->first()->irsDetails->isNotEmpty())
                                     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                         <th scope="row"
                                             class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                             {{ ++$counter }}
                                         </th>
                                         <td class="px-6 py-4">
-                                            <a href="#" class="font-medium hover:underline" data-modal-target="modal-{{ $i->id }}"
-                                                data-modal-toggle="modal-{{ $i->id }}">{{ $i->nim }} </a>
+                                            <a href="https://wa.me/{{ $m->no_hp }}?text=Halo,%20{{ $m->nama }}" target="_blank">
+                                                <img src="/images/icons/whatsapp.png" alt="WA" class="max-w-10 max-h-10">
+                                            </a>
                                         </td>
                                         <td class="px-6 py-4">
-                                            <a href="#" class="font-medium hover:underline" data-modal-target="modal-{{ $i->id }}"
-                                                data-modal-toggle="modal-{{ $i->id }}">
-                                                {{ $i->nama }}</a>
-                                            <!-- Main modal -->
-                                            <div id="modal-{{ $i->id }}" tabindex="-1" aria-hidden="true"
+                                            <a href="#" class="font-medium hover:underline"
+                                                data-modal-target="modal-{{ $m->irs->first()->id }}"
+                                                data-modal-toggle="modal-{{ $m->irs->first()->id }}">{{ $m->nim }}
+                                            </a>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <a href="#" class="font-medium hover:underline"
+                                                data-modal-target="modal-{{ $m->irs->first()->id }}"
+                                                data-modal-toggle="modal-{{ $m->irs->first()->id }}">
+                                                {{ $m->nama }}</a>
+                                            <!-- Main modal jika Mhs sudah mengisi IRS-->
+                                            <div id="modal-{{ $m->irs->first()->id }}" tabindex="-1"
+                                                aria-hidden="true"
                                                 class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
                                                 <div class="relative p-4 w-full max-w-6xl max-h-full">
                                                     <!-- Modal content -->
@@ -183,12 +230,12 @@
                                                             class="flex items-center justify-center p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                                                             <h3
                                                                 class="text-xl font-semibold text-gray-900 dark:text-white text-center flex-grow">
-                                                                IRS {{ $i->nama }} - {{ $i->nim }}
-                                                                ({{ $i->status }})
+                                                                IRS {{ $m->nama }} - {{ $m->nim }}
+                                                                ({{ $m->irs->first()->status }})
                                                             </h3>
                                                             <button type="button"
                                                                 class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                                                                data-modal-hide="modal-{{ $i->id }}">
+                                                                data-modal-hide="modal-{{ $m->irs->first()->id }}">
                                                                 <svg class="w-3 h-3" aria-hidden="true"
                                                                     xmlns="http://www.w3.org/2000/svg" fill="none"
                                                                     viewBox="0 0 14 14">
@@ -231,67 +278,62 @@
                                                                             <th scope="col" class="px-6 py-3">
                                                                                 Dosen Pengampu
                                                                             </th>
-                                                                            <th scope="col" class="px-6 py-3">
-                                                                                Aksi
-                                                                            </th>
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
                                                                         @php
                                                                             $counterDetail = 0;
-                                                                            $details = $i->irsDetails;
                                                                         @endphp
-                                                                        @if ($details)
-                                                                            @foreach ($details as $detail)
+                                                                        @foreach ($m->irs as $irs)
+                                                                            @if ($irs->irsDetails->isNotEmpty())
+                                                                                @foreach ($irs->irsDetails as $detail)
+                                                                                    <tr
+                                                                                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                                                                        <td class="px-6 py-4">
+                                                                                            {{ ++$counterDetail }}
+                                                                                        </td>
+                                                                                        <td class="px-6 py-4">
+                                                                                            {{ $detail->kodemk }}
+                                                                                        </td>
+                                                                                        <td class="px-6 py-4">
+                                                                                            {{ $detail->mataKuliah->nama }}
+                                                                                        </td>
+                                                                                        <td class="px-6 py-4">
+                                                                                            {{ $detail->jadwalKuliah->kelas }}
+                                                                                        </td>
+                                                                                        <td class="px-6 py-4">
+                                                                                            {{ $detail->mataKuliah->sks }}
+                                                                                        </td>
+                                                                                        <td class="px-6 py-4">
+                                                                                            {{ $detail->jadwalKuliah->ruang->nama }}
+                                                                                        </td>
+                                                                                        <td class="px-6 py-4">
+                                                                                            {{ $detail->status }}
+                                                                                        </td>
+                                                                                        <td class="px-6 py-4">
+                                                                                            @if ($detail->mataKuliah->dosenPengampu->isNotEmpty())
+                                                                                                <ul>
+                                                                                                    @foreach ($detail->mataKuliah->dosenPengampu as $dosen)
+                                                                                                        <li>{{ $dosen->nama }}
+                                                                                                        </li>
+                                                                                                    @endforeach
+                                                                                                </ul>
+                                                                                            @else
+                                                                                                Tidak ada Dosen
+                                                                                                Pengampu
+                                                                                            @endif
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                @endforeach
+                                                                            @else
                                                                                 <tr
                                                                                     class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                                                                    <td class="px-6 py-4">
-                                                                                        {{ ++$counterDetail }}
-                                                                                    </td>
-                                                                                    <td class="px-6 py-4">
-                                                                                        {{ $detail->kodemk }}
-                                                                                    </td>
-                                                                                    <td class="px-6 py-4">
-                                                                                        {{ $detail->mataKuliah->nama }}
-                                                                                    </td>
-                                                                                    <td class="px-6 py-4">
-                                                                                        {{ $detail->jadwalKuliah->kelas }}
-                                                                                    </td>
-                                                                                    <td class="px-6 py-4">
-                                                                                        {{ $detail->mataKuliah->sks }}
-                                                                                    </td>
-                                                                                    <td class="px-6 py-4">
-                                                                                        {{ $detail->jadwalKuliah->ruang->nama }}
-                                                                                    </td>
-                                                                                    <td class="px-6 py-4">
-                                                                                        {{ $detail->status }}
-                                                                                    </td>
-                                                                                    <td class="px-6 py-4">
-                                                                                        @if ($detail->dosenPengampuList->isNotEmpty())
-                                                                                            <ul>
-                                                                                                @foreach ($detail->dosenPengampuList as $dosen)
-                                                                                                    <li>{{ $dosen->nama }}
-                                                                                                    </li>
-                                                                                                @endforeach
-                                                                                            </ul>
-                                                                                        @else
-                                                                                            Tidak ada Dosen Pengampu
-                                                                                        @endif
-                                                                                    </td>
-                                                                                    <td class="px-6 py-4">
-                                                                                        <a href="#"
-                                                                                            title="delete"><img
-                                                                                                src="/images/icons/delete.png"
-                                                                                                alt="delete"
-                                                                                                class="h-4 w-4"></a>
-                                                                                    </td>
+                                                                                    <td colspan="8"
+                                                                                        class="px-6 py-4">Tidak ada
+                                                                                        mata kuliah.</td>
                                                                                 </tr>
-                                                                            @endforeach
-                                                                        @else
-                                                                            <td class="px-6 py-4">
-                                                                                Tidak ada mata kuliah.
-                                                                            </td>
-                                                                        @endif
+                                                                            @endif
+                                                                        @endforeach
                                                                     </tbody>
 
                                                                 </table>
@@ -301,15 +343,19 @@
                                                         <!-- Modal footer -->
                                                         <div
                                                             class="flex justify-center items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-                                                            @if ($i->status == 'Belum disetujui')
-                                                                <a href="{{ route('setujuiIrs', $i->id) }}">
-                                                                    <button data-modal-hide="modal-{{ $i->id }}"
+                                                            @if ($m->irs->first()->status == 'Belum disetujui')
+                                                                <a
+                                                                    href="{{ route('setujuiIrs', $m->irs->first()->id) }}">
+                                                                    <button
+                                                                        data-modal-hide="modal-{{ $m->irs->first()->id }}"
                                                                         type="button"
                                                                         class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Setujui</button>
                                                                 </a>
-                                                            @elseif ($i->status == 'Disetujui')
-                                                                <a href="{{ route('batalkanIrs', $i->id) }}">
-                                                                    <button data-modal-hide="modal-{{ $i->id }}"
+                                                            @elseif ($m->irs->first()->status == 'Disetujui')
+                                                                <a
+                                                                    href="{{ route('batalkanIrs', $m->irs->first()->id) }}">
+                                                                    <button
+                                                                        data-modal-hide="modal-{{ $m->irs->first()->id }}"
                                                                         type="button"
                                                                         class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Batalkan</button>
                                                                 </a>
@@ -321,33 +367,155 @@
                                             {{-- End Modal --}}
                                         </td>
                                         <td class="px-6 py-4">
-                                            {{ $i->nama_prodi }}
+                                            {{ $m->prodi->nama }}
                                         </td>
                                         <td class="px-6 py-4">
-                                            {{ $i->angkatan }}
+                                            {{ $m->angkatan }}
                                         </td>
                                         <td class="px-6 py-4">
-                                            {{ $i->total_sks }}
+                                            {{ $m->irs->first()->total_sks }}
                                         </td>
                                         <td class="px-6 py-4">
-                                            {{ $i->status }}
+                                            {{ $m->irs->first()->status }}
                                         </td>
                                         <td class="px-6 py-4 text-right">
-                                            @if ($i->status == 'Belum disetujui')
-                                                <a href="{{ route('setujuiIrs', $i->id) }}"
+                                            @if ($m->irs->first()->status == 'Belum disetujui')
+                                                <a href="{{ route('setujuiIrs', $m->irs->first()->id) }}"
                                                     class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Setujui</a>
-                                            @elseif ($i->status == 'Disetujui')
-                                                <a href="{{ route('batalkanIrs', $i->id) }}"
+                                            @elseif ($m->irs->first()->status == 'Disetujui')
+                                                <a href="{{ route('batalkanIrs', $m->irs->first()->id) }}"
                                                     class="font-medium text-red-500 dark:text-red-500 hover:underline">Batalkan</a>
                                             @endif
                                         </td>
                                     </tr>
-                                @endforeach
-                            @else
-                                <td class="px-6 py-4">
-                                    Tidak ada mahasiswa yang melakukan IRS
-                                </td>
-                            @endif
+                                    {{-- Jika mahasiswa belum mengisi IRS --}}
+                                @else
+                                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                        <th scope="row"
+                                            class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                            {{ ++$counter }}
+                                        </th>
+                                        <td class="px-6 py-4">
+                                            <a href="https://wa.me/{{ $m->no_hp }}?text=Halo,%20{{ $m->nama }}" target="_blank">
+                                                <img src="/images/icons/whatsapp.png" alt="WA" class="max-w-10 max-h-10">
+                                            </a>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <a href="#" class="font-medium hover:underline"
+                                                data-modal-target="modal-{{ $m->nim }}"
+                                                data-modal-toggle="modal-{{ $m->nim }}">{{ $m->nim }}
+                                            </a>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <a href="#" class="font-medium hover:underline"
+                                                data-modal-target="modal-{{ $m->nim }}"
+                                                data-modal-toggle="modal-{{ $m->nim }}">
+                                                {{ $m->nama }}</a>
+                                            <!-- Main modal jika belum mengisi IRS-->
+                                            <div id="modal-{{ $m->nim }}" tabindex="-1"
+                                                aria-hidden="true"
+                                                class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                                                <div class="relative p-4 w-full max-w-6xl max-h-full">
+                                                    <!-- Modal content -->
+                                                    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                                                        <!-- Modal header -->
+                                                        <div
+                                                            class="flex items-center justify-center p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                                                            <h3
+                                                                class="text-xl font-semibold text-gray-900 dark:text-white text-center flex-grow">
+                                                                {{ $m->nama }} - {{ $m->nim }}
+                                                                (Belum mengisi IRS)
+                                                            </h3>
+                                                            <button type="button"
+                                                                class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                                                                data-modal-hide="modal-{{ $m->nim }}">
+                                                                <svg class="w-3 h-3" aria-hidden="true"
+                                                                    xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                    viewBox="0 0 14 14">
+                                                                    <path stroke="currentColor" stroke-linecap="round"
+                                                                        stroke-linejoin="round" stroke-width="2"
+                                                                        d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                                                </svg>
+                                                                <span class="sr-only">Close modal</span>
+                                                            </button>
+                                                        </div>
+                                                        <!-- Modal body -->
+                                                        <div class="p-4 md:p-5 space-y-4">
+                                                            <div class="relative overflow-x-auto">
+                                                                <table
+                                                                    class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                                                    <thead
+                                                                        class="text-xs text-gray-700 uppercase bg-blue-200 dark:bg-blue-700 dark:text-blue-400">
+                                                                        <tr>
+                                                                            <th scope="col" class="px-6 py-3">
+                                                                                No
+                                                                            </th>
+                                                                            <th scope="col" class="px-6 py-3">
+                                                                                Kode
+                                                                            </th>
+                                                                            <th scope="col" class="px-6 py-3">
+                                                                                Mata Kuliah
+                                                                            </th>
+                                                                            <th scope="col" class="px-6 py-3">
+                                                                                Kelas
+                                                                            </th>
+                                                                            <th scope="col" class="px-6 py-3">
+                                                                                SKS
+                                                                            </th>
+                                                                            <th scope="col" class="px-6 py-3">
+                                                                                Ruang
+                                                                            </th>
+                                                                            <th scope="col" class="px-6 py-3">
+                                                                                Status
+                                                                            </th>
+                                                                            <th scope="col" class="px-6 py-3">
+                                                                                Dosen Pengampu
+                                                                            </th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+
+                                                                        <tr
+                                                                            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                                                            <td colspan="8" class="px-6 py-4">
+                                                                                Mahasiswa belum melakukan pengisian IRS.
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Modal footer -->
+                                                        <div
+                                                            class="flex justify-center items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                                                            <button data-modal-hide="modal-{{ $m->nim }}"
+                                                                type="button"
+                                                                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Tutup</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {{-- End Modal --}}
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            {{ $m->prodi->nama }}
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            {{ $m->angkatan }}
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            -
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            Belum mengisi
+                                        </td>
+                                        <td class="px-6 py-4 text-right">
+                                            -
+                                        </td>
+                                    </tr>
+                                @endif
+                            @endforeach
                         </tbody>
                     </table>
                 </div>

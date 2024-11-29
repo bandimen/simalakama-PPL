@@ -63,4 +63,39 @@ class KhsDetailsController extends Controller
     {
         //
     }
+
+    public function konfersi($id)
+    {
+        // Cari data KhsDetail berdasarkan ID
+        $khsDetail = KhsDetails::find($id);
+    
+        if ($khsDetail) {
+            // Lakukan konversi nilai
+            $nilaiHuruf = $khsDetail->nilai; // Ambil nilai huruf
+            $nilaiAngka = $this->konversiNilai($nilaiHuruf); // Konversi ke nilai angka
+            
+            // Simpan nilai angka jika diperlukan, atau gunakan sesuai kebutuhan
+            // Contoh: Menampilkan hasil atau menyimpannya di log
+            // $khsDetail->nilai_angka = $nilaiAngka;
+            // $khsDetail->save();
+    
+            return redirect()->back()->with('success', "Nilai $nilaiHuruf dikonversi menjadi $nilaiAngka.");
+        }
+    
+        return redirect()->back()->with('error', 'Data tidak ditemukan.');
+    }
+    
+    // Fungsi untuk mengonversi nilai huruf ke angka
+    private function konversiNilai($nilaiHuruf)
+    {
+        $konversi = [
+            'A' => 4,
+            'B' => 3,
+            'C' => 2,
+            'D' => 1,
+            'E' => 0,
+        ];
+    
+        return $konversi[$nilaiHuruf] ?? null; // Mengembalikan null jika nilai huruf tidak valid
+    }
 }

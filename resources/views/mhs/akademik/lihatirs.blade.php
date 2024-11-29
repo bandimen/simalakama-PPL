@@ -47,7 +47,7 @@
 
         <!-- Menu Semester IRS -->
         <div class="flex justify-center space-x-4 mb-6 no-print">
-            @for ($i = 1; $i <= $currentSemester; $i++)
+            @for ($i = 1; $i <= min($currentSemester, 14); $i++)
                 <button onclick="redirectToSemester({{ $i }})" 
                         class="px-4 py-2 rounded {{ $selectedSemester == $i ? 'bg-[#0056b3] text-white px-6 py-3' : 'bg-[#00337c] text-white' }}">
                     SMT {{ $i }}

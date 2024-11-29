@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Model;
 class IrsDetail extends Model
 {
     protected $fillable = [
-        'id',
         'irs_id',
         'kodemk',
         'jadwal_kuliah_id',
@@ -29,4 +28,9 @@ class IrsDetail extends Model
     public function jadwalKuliah()
     {
         return $this->belongsTo(JadwalKuliah::class, 'jadwal_kuliah_id', 'id');    }
+
+    public function khsDetails()
+    {
+        return $this->hasOne(KhsDetails::class, 'irs_details_id');
+    }    
 }

@@ -66,16 +66,17 @@ class SessionController extends Controller
         $selectedRole = $request->input('role');
 
         if ($selectedRole == 'mahasiswa') {
-            return redirect('mhs');
+            $page = 'mhs';
         } elseif ($selectedRole == 'pembimbingakademik') {
-            return redirect('pa');
+            $page = 'pa';
         } elseif ($selectedRole == 'kaprodi') {
-            return redirect('kaprodi');
+            $page = 'kaprodi';
         } elseif ($selectedRole == 'dekan') {
-            return redirect('dekan');
+            $page = 'dekan';
         } elseif ($selectedRole == 'bagianakademik') {
-            return redirect('akademik');
+            $page = 'akademik';
         }
+        return redirect($page);
     }
 
     function logout() {

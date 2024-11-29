@@ -1,70 +1,236 @@
-
 <x-layout>
-  <x-slot:title>{{ $title }}</x-slot:title> {{-- masukkan ke slot yg keynya title --}}
-  <!-- Your content -->
-  
-  <div class="min-h-full">
-    <x-navbar-pa></x-navbar-pa>
+    <x-slot:title>{{ $title }}</x-slot:title> {{-- masukkan ke slot yg keynya title --}}
+    <!-- Your content -->
 
-  <main>
-    <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-      <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <div class="min-h-full">
+        <x-navbar-pa></x-navbar-pa>
+
+        <main>
+            <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center">
+                    <!-- Judul -->
+                    <h1 class="text-2xl font-bold tracking-tight text-gray-900">KHS Mahasiswa</h1>
+                    <!-- Breadcrumb -->
+                    <nav class="flex" aria-label="Breadcrumb">
+                        <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+                            <li class="inline-flex items-center">
+                                <a href="/pa"
+                                    class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+                                    <svg class="w-3 h-3 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                        fill="currentColor" viewBox="0 0 20 20">
+                                        <path
+                                            d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z" />
+                                    </svg>
+                                    Home
+                                </a>
+                            </li>
+                            <li>
+                                <div class="flex items-center">
+                                    <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2" d="m1 9 4-4-4-4" />
+                                    </svg>
+                                    <a href="/pa/rekapmhs"
+                                        class="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">Rekap Mhs</a>
+                                </div>
+                            </li>
+                            <li aria-current="page">
+                                <div class="flex items-center">
+                                    <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2" d="m1 9 4-4-4-4" />
+                                    </svg>
+                                    <span
+                                        class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">KHS - {{ $mhs->nim }}</span>
+                                </div>
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+                <br>
+                {{-- Profil --}}
+                <section
+                    class="block max-w p-6 bg-white border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700">
+                    <h1 class="text-xl font-medium tracking-tight text-gray-900">Profil</h1>
+                    <br>
 
 
-      <div id="accordion-color" data-accordion="collapse" data-active-classes="bg-blue-100 dark:bg-gray-800 text-blue-600 dark:text-white">
-        <h2 id="accordion-color-heading-1">
-          <button type="button" class="flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-500 border border-b-0 border-gray-200 rounded-t-xl focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-800 dark:border-gray-700 dark:text-gray-400 hover:bg-blue-100 dark:hover:bg-gray-800 gap-3" data-accordion-target="#accordion-color-body-1" aria-expanded="true" aria-controls="accordion-color-body-1">
-            <span>What is Flowbite?</span>
-            <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5"/>
-            </svg>
-          </button>
-        </h2>
-        <div id="accordion-color-body-1" class="hidden" aria-labelledby="accordion-color-heading-1">
-          <div class="p-5 border border-b-0 border-gray-200 dark:border-gray-700 dark:bg-gray-900">
-            <p class="mb-2 text-gray-500 dark:text-gray-400">Flowbite is an open-source library of interactive components built on top of Tailwind CSS including buttons, dropdowns, modals, navbars, and more.</p>
-            <p class="text-gray-500 dark:text-gray-400">Check out this guide to learn how to <a href="/docs/getting-started/introduction/" class="text-blue-600 dark:text-blue-500 hover:underline">get started</a> and start developing websites even faster with components on top of Tailwind CSS.</p>
-          </div>
-        </div>
-        <h2 id="accordion-color-heading-2">
-          <button type="button" class="flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-500 border border-b-0 border-gray-200 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-800 dark:border-gray-700 dark:text-gray-400 hover:bg-blue-100 dark:hover:bg-gray-800 gap-3" data-accordion-target="#accordion-color-body-2" aria-expanded="false" aria-controls="accordion-color-body-2">
-            <span>Is there a Figma file available?</span>
-            <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5"/>
-            </svg>
-          </button>
-        </h2>
-        <div id="accordion-color-body-2" class="hidden" aria-labelledby="accordion-color-heading-2">
-          <div class="p-5 border border-b-0 border-gray-200 dark:border-gray-700">
-            <p class="mb-2 text-gray-500 dark:text-gray-400">Flowbite is first conceptualized and designed using the Figma software so everything you see in the library has a design equivalent in our Figma file.</p>
-            <p class="text-gray-500 dark:text-gray-400">Check out the <a href="https://flowbite.com/figma/" class="text-blue-600 dark:text-blue-500 hover:underline">Figma design system</a> based on the utility classes from Tailwind CSS and components from Flowbite.</p>
-          </div>
-        </div>
-        <h2 id="accordion-color-heading-3">
-          <button type="button" class="flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-500 border border-gray-200 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-800 dark:border-gray-700 dark:text-gray-400 hover:bg-blue-100 dark:hover:bg-gray-800 gap-3" data-accordion-target="#accordion-color-body-3" aria-expanded="false" aria-controls="accordion-color-body-3">
-            <span>What are the differences between Flowbite and Tailwind UI?</span>
-            <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5"/>
-            </svg>
-          </button>
-        </h2>
-        <div id="accordion-color-body-3" class="hidden" aria-labelledby="accordion-color-heading-3">
-          <div class="p-5 border border-t-0 border-gray-200 dark:border-gray-700">
-            <p class="mb-2 text-gray-500 dark:text-gray-400">The main difference is that the core components from Flowbite are open source under the MIT license, whereas Tailwind UI is a paid product. Another difference is that Flowbite relies on smaller and standalone components, whereas Tailwind UI offers sections of pages.</p>
-            <p class="mb-2 text-gray-500 dark:text-gray-400">However, we actually recommend using both Flowbite, Flowbite Pro, and even Tailwind UI as there is no technical reason stopping you from using the best of two worlds.</p>
-            <p class="mb-2 text-gray-500 dark:text-gray-400">Learn more about these technologies:</p>
-            <ul class="ps-5 text-gray-500 list-disc dark:text-gray-400">
-              <li><a href="https://flowbite.com/pro/" class="text-blue-600 dark:text-blue-500 hover:underline">Flowbite Pro</a></li>
-              <li><a href="https://tailwindui.com/" rel="nofollow" class="text-blue-600 dark:text-blue-500 hover:underline">Tailwind UI</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      
-      
+                </section>
+
+                <br>
+                {{-- IRS --}}
+                <section
+                    class="block max-w p-6 bg-white border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700">
+                    <h1 class="text-xl font-medium tracking-tight text-gray-900">Kartu Hasil Studi</h1>
+                    <br>
+
+                    <div id="accordion-flush" data-accordion="collapse"
+                        data-active-classes="bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
+                        data-inactive-classes="text-gray-500 dark:text-gray-400">
+                        @if ($mhs->irs->isNotEmpty())
+                            @php
+                                $countSemester = 0;
+                            @endphp
+                            @foreach ($mhs->irs as $irs)
+                                <h2 id="accordion-flush-heading-{{ $irs->id }}">
+                                    <button type="button"
+                                        class="flex items-center justify-between w-full py-5 font-medium rtl:text-right text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400 gap-3"
+                                        data-accordion-target="#accordion-flush-body-{{ $irs->id }}"
+                                        aria-expanded="false" aria-controls="accordion-flush-body-{{ $irs->id }}">
+                                        <span>Semester {{ ++$countSemester }} | Tahun Akademik {{ $irs->tahun_ajaran }}
+                                            {{ $irs->jenis_semester }}</span>
+                                        <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                stroke-width="2" d="M9 5 5 1 1 5" />
+                                        </svg>
+                                    </button>
+                                </h2>
+                                <div id="accordion-flush-body-{{ $irs->id }}" class="hidden"
+                                    aria-labelledby="accordion-flush-heading-{{ $irs->id }}">
+                                    <div class="py-5 border-b border-gray-200 dark:border-gray-700">
+
+                                        {{-- Tabel --}}
+                                        <div class="p-4 md:p-5 space-y-4">
+                                            <div class="relative overflow-x-auto">
+                                                <table
+                                                    class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                                    <thead
+                                                        class="text-xs text-gray-700 uppercase bg-blue-400 dark:bg-blue-700 dark:text-blue-400">
+                                                        <tr>
+                                                            <th scope="col" class="px-6 py-3">
+                                                                No
+                                                            </th>
+                                                            <th scope="col" class="px-6 py-3">
+                                                                Kode
+                                                            </th>
+                                                            <th scope="col" class="px-6 py-3">
+                                                                Mata Kuliah
+                                                            </th>
+                                                            <th scope="col" class="px-6 py-3">
+                                                                Sifat
+                                                            </th>
+                                                            <th scope="col" class="px-6 py-3">
+                                                                Status
+                                                            </th>
+                                                            <th scope="col" class="px-6 py-3">
+                                                                SKS
+                                                            </th>
+                                                            <th scope="col" class="px-6 py-3">
+                                                                Nilai Huruf
+                                                            </th>
+                                                            <th scope="col" class="px-6 py-3">
+                                                                Bobot
+                                                            </th>
+                                                            <th scope="col" class="px-6 py-3">
+                                                                SKS x Bobot
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @php
+                                                            $counterDetail = 0;
+                                                            $details = $irs->khs->khsDetails;
+                                                            $totalSks = 0;
+                                                            $totalBobot = 0;
+                                                            $totalSksXBobot = 0;
+                                                        @endphp
+                                                        @if ($details)
+                                                            @foreach ($details as $detail)
+                                                                @php
+                                                                    $bobot = match ($detail->nilai) {
+                                                                        'A' => 4,
+                                                                        'B' => 3,
+                                                                        'C' => 2,
+                                                                        'D' => 1,
+                                                                        'E' => 0,
+                                                                        default => 0,
+                                                                    };
+                                                                    $sks = $detail->irsDetail->mataKuliah->sks ?? 0;
+
+                                                                    $totalSks += $sks;
+                                                                    $totalBobot += $bobot;
+                                                                    $totalSksXBobot += $sks * $bobot;
+                                                                @endphp
+                                                                <tr
+                                                                    class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                                                    <td class="px-6 py-4">
+                                                                        {{ ++$counterDetail }}
+                                                                    </td>
+                                                                    <td class="px-6 py-4">
+                                                                        {{ $detail->irsDetail->kodemk }}
+                                                                    </td>
+                                                                    <td class="px-6 py-4">
+                                                                        {{ $detail->irsDetail->mataKuliah->nama }}
+                                                                    </td>
+                                                                    <td class="px-6 py-4">
+                                                                        {{ $detail->irsDetail->mataKuliah->sifat }}
+                                                                    </td>
+                                                                    <td class="px-6 py-4">
+                                                                        {{ $detail->irsDetail->status }}
+                                                                    </td>
+                                                                    <td class="px-6 py-4">
+                                                                        {{ $sks }}
+                                                                    </td>
+                                                                    <td class="px-6 py-4">
+                                                                        {{ $detail->nilai ?? ' ' }}
+                                                                    </td>
+                                                                    <td class="px-6 py-4">
+                                                                        {{ $bobot ?? ' ' }}
+                                                                    </td>
+                                                                    <td class="px-6 py-4">
+                                                                        {{ $sks * $bobot ?? ' ' }}
+                                                                    </td>
+                                                                </tr>
+                                                            @endforeach
+                                                            <tr class="font-bold bg-gray-300 dark:bg-gray-900">
+                                                                <td class="px-6 py-4" colspan="5">Total</td>
+                                                                <td class="px-6 py-4"> {{ $totalSks }} </td>
+                                                                <td class="px-6 py-4"></td>
+                                                                <td class="px-6 py-4"> {{ $totalBobot }} </td>
+                                                                <td class="px-6 py-4"> {{ $totalSksXBobot }} </td>
+                                                            </tr>
+                                                        @else
+                                                            <td class="px-6 py-4">
+                                                                Tidak ada mata kuliah.
+                                                            </td>
+                                                        @endif
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="flex flex-col gap-1">
+                                                <p class="text-m">
+                                                    <strong>IP Semester :
+                                                        {{ $totalSks > 0 ? number_format($totalSksXBobot / $totalSks, 2) : 'N/A' }}
+                                                    </strong>
+                                                </p>
+                                                <p class="text-sm">{{ $totalSksXBobot ?? 0 }} / {{ $totalSks ?? 0 }}
+                                                </p>
+                                                <p class="text-sm">total (SKS x Bobot)/total SKS</p>
+
+                                                <br class="my-1"> <!-- Mengatur jarak antar baris -->
+
+                                                <p class="text-m"><strong>IP Kumulatif :
+                                                        {{ $mhs->getIPK() }}
+                                                    </strong></p>
+                                                <p class="text-sm"> {{ $mhs->getBobotTerbaik() }} /
+                                                    {{ $mhs->getSKSK() }} </p>
+                                                <p class="text-sm">total (SKS x Bobot) terbaik/total SKS terbaik</p>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        @else
+                            <p>Mahasiswa belum memiliki riwayat studi.</p>
+                        @endif
+                    </div>
+                </section>
+
+            </div>
+        </main>
     </div>
-
-    </div>
-  </main>
-</div>
 </x-layout>

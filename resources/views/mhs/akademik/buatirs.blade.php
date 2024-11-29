@@ -141,6 +141,7 @@
               </tbody>
               </tbody>
             </table>
+            
           </div>
         </div>
 
@@ -169,7 +170,7 @@
         </div>
 
         @elseif ($activePeriodType == 'perubahan')
-        @include('components.perubahan')
+        {{-- @include('components.perubahan') --}}
         <div id="alert-additional-content-1" class="p-4 mb-4 text-blue-800 border border-blue-300 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400 dark:border-blue-800" role="alert">
           <div class="flex items-center">
             <svg class="flex-shrink-0 w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -196,7 +197,41 @@
             Masa pembatalan IRS dimulai pada tanggal {{ $currentPeriod->periode_pembatalan_start }} hingga {{ $currentPeriod->periode_pembatalan_end }}.
           </div>
         </div>
-
+        
+        <table id="cancellationTableBody" class="min-w-full bg-white border border-gray-300 text-center mt-4">
+          <thead class="bg-gray-700 text-white">
+            <tr>
+              <th class="px-2 py-2 border border-gray-300 w-12">No</th>
+              <th class="px-2 py-2 border border-gray-300 w-20">Kode MK</th>
+              <th class="px-2 py-2 border border-gray-300 w-40">Mata Kuliah</th>
+              <th class="px-2 py-2 border border-gray-300 w-16">Kelas</th>
+              <th class="px-2 py-2 border border-gray-300 w-12">Hari</th>
+              <th class="px-2 py-2 border border-gray-300 w-32">Jam</th>
+              <th class="px-2 py-2 border border-gray-300 w-20">Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="cancellationTableBodyContent">
+            <!-- Data akan ditambahkan di sini -->
+            @if($mahasiswa->irs->first()->irsDetails->isNotEmpty())
+            @php
+              $counter = 0;
+            @endphp
+            @foreach ($mahasiswa->irs->first()->irsDetails as $detail)
+                
+            <tr>
+              <td class="px-2 py-2 border border-gray-300 w-12"> {{++$counter}} </td>
+              <td class="px-2 py-2 border border-gray-300 w-20">{{$detail->mataKuliah->kodemk}}</td>
+              <td class="px-2 py-2 border border-gray-300 w-40">{{$detail->mataKuliah->nama}}</td>
+              <td class="px-2 py-2 border border-gray-300 w-16">{{$detail->jadwalKuliah->kelas}}</td>
+              <td class="px-2 py-2 border border-gray-300 w-12">{{$detail->jadwalKuliah->hari}}</td>
+              <td class="px-2 py-2 border border-gray-300 w-32">{{$detail->jadwalKuliah->waktu_mulai}} - {{$detail->jadwalKuliah->waktu_selesai}}</td>
+              <td class="px-2 py-2 border border-gray-300 w-20"><a href="{{route('deleteIrsDetail', $detail->id)}}">X</a></td>
+            </tr>
+            @endforeach
+              
+            @endif
+          </tbody>
+        </table>
 
         @else
         <div id="alert-additional-content-2" class="p-4 mb-4 text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800" role="alert">

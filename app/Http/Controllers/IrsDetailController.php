@@ -101,6 +101,19 @@ class IrsDetailController extends Controller
             \Log::error('Error processing IRS store:', ['error' => $e->getMessage()]);
             return response()->json(['message' => 'Terjadi kesalahan saat memproses data', 'error' => $e->getMessage()], 500);
         }
-    }    
+    }  
+    
+    public function delete($id)
+    {
+        // Pastikan data ada sebelum dihapus
+        $irsDetail = IrsDetail::find($id);
+    
+        if ($irsDetail) {
+            $irsDetail->delete(); // Hapus data
+        }
+    
+        // Redirect kembali ke halaman sebelumnya
+        return redirect()->back();
+    }
 }
 

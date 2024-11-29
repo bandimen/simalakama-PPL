@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('irs_periods', function (Blueprint $table) {
             $table->id();
             $table->enum('semester', ['Gasal', 'Genap']);
-            $table->string('tahun_ajaran')->unique();
+            $table->string('tahun_ajaran');
             $table->datetime('periode_pengisian_start');
             $table->datetime('periode_pengisian_end');
             $table->datetime('periode_perubahan_start');

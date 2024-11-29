@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Khs;
 use App\Models\IrsDetail;
 use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
@@ -11,22 +12,38 @@ use Illuminate\Support\Facades\Auth;
 class PembimbingAkademikController extends Controller
 {
     public function index() {
-        return view('pa.dashboard', ['title' => 'Dashboard - PA']);
+        $pa = Auth::user()->pembimbingAkademik;
+        $infoPA = $pa->dosen;
+        $totalMahasiswaPerwalian = $pa->getTotalMahasiswaPerwalian();
+        $totalIrsDisetujui = $pa->getTotalIrsDisetujui();
+        $totalIrsBelumDisetujui = $pa->getTotalIrsBelumDisetujui();
+        $totalMhsBelumIrs = $pa->getTotalMhsBelumIrs();
+
+
+        return view('pa.dashboard', 
+        [
+            'title' => 'Dashboard - PA', 
+            'pa' => $infoPA, 
+            'totalMahasiswaPerwalian' => $totalMahasiswaPerwalian,
+            'totalIrsDisetujui' => $totalIrsDisetujui,
+            'totalIrsBelumDisetujui' => $totalIrsBelumDisetujui,
+            'totalMhsBelumIrs' => $totalMhsBelumIrs,
+        ]);
     }
     public function perwalian() {
         $pa = Auth::user()->pembimbingAkademik;
 
         $irsController = new IrsController();
-        $irsPeriodController = new IrsPeriodsController();
+        // $irsPeriodController = new IrsPeriodsController();
 
-        $irs = $irsController->getIRSforPA($pa);
-        $currentPeriod = $irsPeriodController->getCurrentPeriod();
+        // $irs = $irsController->getIRSforPA($pa);
+        // $currentPeriod = $irsPeriodController->getCurrentPeriod();
 
-        // data irs yg sesuai dgn periode skrg
-        $irs = $irs->where('jenis_semester', $currentPeriod->semester)
-                    ->where('tahun_ajaran', $currentPeriod->tahun_ajaran);
-        
-        return view('pa.perwalian', ['title' => 'Perwalian - PA', 'irs' => $irs]);
+        // // data irs yg sesuai dgn periode skrg
+        // $irs = $irs->where('jenis_semester', $currentPeriod->semester)
+        //             ->where('tahun_ajaran', $currentPeriod->tahun_ajaran);
+        $mhs = $irsController->getAllMhsPerwalianWithIrsCurrentPeriod($pa);
+        return view('pa.perwalian', ['title' => 'Perwalian - PA', 'mhs' => $mhs]);
     }
 
 
@@ -68,20 +85,20 @@ class PembimbingAkademikController extends Controller
 
     public function showKhsByNim($nim)
     {
-        $khsByNim = DB::table('khs')
-                    ->join('irs', 'khs.irs_id', '=', 'irs.id')
-                    ->where('irs.nim', '=', $nim)
-                    ->select('khs.*', 'irs.*')
-                    ->get();
-        $mhsByNim = DB::table('mahasiswas')
-                    ->where('nim', '=', $nim)
-                    ->get();
-
+        $mhs = Mahasiswa::with([
+            'irs',                      
+            'irs.irsDetails',                      
+            'irs.irsDetails.mataKuliah',                      
+            'irs.khs',     
+            'irs.khs.khsDetails.irsDetail',
+            'irs.khs.khsDetails.irsDetail.mataKuliah',
+            'prodi', 
+        ])
+        ->where('nim', '=', $nim)
+        ->first(); 
         return view('pa.rekapmhs.khs', [
             'title' => 'KHS Mhs',
-            'khs' => $khsByNim,
-            'mhs' => $mhsByNim,
+            'mhs' => $mhs,
         ]);
     }
-
 }

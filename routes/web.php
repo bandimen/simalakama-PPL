@@ -45,7 +45,14 @@ Route::middleware(['auth'])->group(function () {
   Route::post('/irs/store', [IrsController::class, 'store']);
   Route::post('/irs-detail/store', [IrsDetailController::class, 'store']);
   // Route::post('/save-selected-course', [IrsDetailController::class, 'saveSelectedCourse']);
+  // Route::post('/irs-detail/store', [IrsDetailController::class, 'save'])->middleware('auth');
+  // Route::get('/irs-detail/load', [IrsDetailController::class, 'load'])->middleware('auth');
+  // hapus irs detail
+  Route::get('mhs/buatirs/delete/{id}', [IrsDetailController::class, 'delete'])->name('deleteIrsDetail');
 
+  // lihat khs 
+  Route::get('/mhs/akademik/lihatkhs', [KhsController::class, 'lihatkhs']);
+  
   // PEMBIMBING AKADEMIK
   Route::get('/pa', [PembimbingAkademikController::class, 'index']);
   Route::get('/pa/perwalian', [PembimbingAkademikController::class, 'perwalian']);
@@ -83,6 +90,8 @@ Route::middleware(['auth'])->group(function () {
   Route::post('/kaprodi/tambah-jadwal', [JadwalKuliahController::class, 'store'])->name('simpanJadwal');
 
   Route::get('/logout', [SessionController::class, 'logout']);
+  
+  // Select Role
   Route::get('/select-role', [SessionController::class, 'showSelectRolePage'])->name('selectRole');
   Route::post('/select-role', [SessionController::class, 'selectRole']);
 });

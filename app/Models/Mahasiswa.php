@@ -37,4 +37,97 @@ class Mahasiswa extends Model
     {
         return $this->belongsTo(Prodi::class);
     }
+
+    public function khs()
+    {
+        return $this->hasMany(Khs::class);
+    }
+
+    public function getIPK()
+    {
+        $totalSksXBobot = 0;
+        $totalSks = 0;
+        
+        // Menyimpan bobot terbaik per mata kuliah
+        $mataKuliahTerbaik = [];
+
+        foreach ($this->irs as $irs) {
+            foreach ($irs->khs->khsDetails as $detail) {
+                $sks = $detail->irsDetail->mataKuliah->sks ?? 0;
+                $nilai = $detail->nilai;
+
+                // Tentukan bobot berdasarkan nilai
+                $bobot = match ($nilai) {
+                    'A' => 4,
+                    'B' => 3,
+                    'C' => 2,
+                    'D' => 1,
+                    'E' => 0,
+                    default => 0,
+                };
+
+                // Simpan bobot terbaik per mata kuliah
+                $kodeMk = $detail->irsDetail->kodemk;
+                if (!isset($mataKuliahTerbaik[$kodeMk]) || $mataKuliahTerbaik[$kodeMk] < $bobot) {
+                    $mataKuliahTerbaik[$kodeMk] = $bobot;
+                    $totalSks += $sks;
+                    $totalSksXBobot += $sks * $bobot;
+                }
+            }
+        }
+
+        return $totalSks > 0 ? number_format($totalSksXBobot / $totalSks, 2) : 'N/A';
+    }
+
+    public function getSKSK()
+    {
+        $totalSks = 0;
+
+        foreach ($this->irs as $irs) {
+            foreach ($irs->khs->khsDetails as $detail) {
+                $sks =  $detail->irsDetail->status == 'Baru' ? $detail->irsDetail->mataKuliah->sks : 0;
+                $totalSks += $sks;
+            }
+        }
+
+        return $totalSks;
+    }
+
+    public function getBobotTerbaik()
+    {
+        $totalBobot = 0;
+        $mataKuliahTerbaik = []; // Menyimpan bobot terbaik per mata kuliah
+
+        foreach ($this->irs as $irs) {
+            foreach ($irs->khs->khsDetails as $detail) {
+                $nilai = $detail->nilai;
+                $sks = $detail->irsDetail->mataKuliah->sks ?? 0;
+
+                // Tentukan bobot berdasarkan nilai
+                $bobot = match ($nilai) {
+                    'A' => 4,
+                    'B' => 3,
+                    'C' => 2,
+                    'D' => 1,
+                    'E' => 0,
+                    default => 0,
+                };
+
+                // Dapatkan kode mata kuliah untuk memeriksa jika mata kuliah sudah ada
+                $kodeMk = $detail->irsDetail->kodemk;
+
+                // Tentukan apakah bobot baru lebih besar dari bobot yang sudah ada
+                if (!isset($mataKuliahTerbaik[$kodeMk]) || $mataKuliahTerbaik[$kodeMk] < $bobot) {
+                    $mataKuliahTerbaik[$kodeMk] = $bobot * $sks;
+                }
+            }
+        }
+        // Menghitung total bobot terbaik
+        foreach ($mataKuliahTerbaik as $bobotTerbaik) {
+            $totalBobot += $bobotTerbaik;
+        }
+
+        return $totalBobot;
+    }
+
 }
