@@ -83,6 +83,8 @@ Route::middleware(['auth'])->group(function () {
   Route::post('/kaprodi/tambah-jadwal', [JadwalKuliahController::class, 'store'])->name('simpanJadwal');
 
   Route::get('/logout', [SessionController::class, 'logout']);
+  
+  // Select Role
   Route::get('/select-role', [SessionController::class, 'showSelectRolePage'])->name('selectRole');
   Route::post('/select-role', [SessionController::class, 'selectRole']);
 });
