@@ -50,9 +50,9 @@ Route::middleware(['auth'])->group(function () {
   // hapus irs detail
   Route::get('mhs/buatirs/delete/{id}', [IrsDetailController::class, 'delete'])->name('deleteIrsDetail');
 
-  // lihat khs 
+  // lihat khs
   Route::get('/mhs/akademik/lihatkhs', [KhsController::class, 'lihatkhs']);
-  
+
   // PEMBIMBING AKADEMIK
   Route::get('/pa', [PembimbingAkademikController::class, 'index']);
   Route::get('/pa/perwalian', [PembimbingAkademikController::class, 'perwalian']);
@@ -73,7 +73,7 @@ Route::middleware(['auth'])->group(function () {
   Route::patch('/ruangs/approve/{id}', [RuangController::class, 'approve'])->name('ruangs.approve');
   Route::get('/dekan/matkul', [DekanController::class, 'jadwalKuliah'])->name('dekan.matkul');
   Route::patch('/dekan/matkul/{id}/approve', [DekanController::class, 'approveJadwalKuliah'])->name('dekan.matkul.approve');
-  
+
 
 
   //TENAGA PENDIDIK alias BAGIAN AKADEMIK
@@ -88,12 +88,13 @@ Route::middleware(['auth'])->group(function () {
 
   // KAPRODI
   Route::get('/kaprodi', [KaprodiController::class, 'index']);
-  Route::get('/kaprodi/jadwalKuliah', [JadwalKuliahController::class, 'index']);
-  Route::get('/kaprodi/tambah-jadwal', [JadwalKuliahController::class, 'create'])->name('tambahJadwal');
-  Route::post('/kaprodi/tambah-jadwal', [JadwalKuliahController::class, 'store'])->name('simpanJadwal');
+  Route::get('/kaprodi/jadwalKuliah', [JadwalKuliahController::class, 'index'])->name('kaprodi.jadwalKuliah');
+  Route::get('/kaprodi/edit-jadwal/{id}', [JadwalKuliahController::class, 'edit'])->name('kaprodi.editJadwal');
+  Route::put('/kaprodi/update-jadwal/{id}', [JadwalKuliahController::class, 'update'])->name('kaprodi.updateJadwal');
+  Route::delete('/kaprodi/delete-jadwal/{id}', [JadwalKuliahController::class, 'destroy'])->name('kaprodi.deleteJadwal');
 
   Route::get('/logout', [SessionController::class, 'logout']);
-  
+
   // Select Role
   Route::get('/select-role', [SessionController::class, 'showSelectRolePage'])->name('selectRole');
   Route::post('/select-role', [SessionController::class, 'selectRole']);
