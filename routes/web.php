@@ -88,6 +88,9 @@ Route::middleware(['auth'])->group(function () {
   Route::delete('ruang/{ruang}', [RuangController::class, 'destroy'])->name('ruang.destroy');
   Route::get('ruang/create', [RuangController::class, 'create'])->name('ruang.create');
   Route::get('/akademik/tambahruang', [RuangController::class, 'index'])->name('ruang.index');
+  Route::get('/ruang/{id}/edit', [RuangController::class, 'edit'])->name('ruang.edit');
+  Route::put('/ruang/{id}', [RuangController::class, 'update'])->name('ruang.update');
+
 
 
 
