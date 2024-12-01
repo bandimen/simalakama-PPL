@@ -58,7 +58,7 @@ class PembimbingAkademikController extends Controller
     {
         $mhs = Mahasiswa::with('prodi')
         ->where('pembimbing_akademik_id', $id)
-        ->get();
+        ->paginate(10);
         return $mhs;
     }
 

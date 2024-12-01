@@ -73,6 +73,10 @@
                                             aria-labelledby="dropdownActionButton">
                                             <li>
                                                 <a href="#"
+                                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Semua</a>
+                                            </li>
+                                            <li>
+                                                <a href="#"
                                                     class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Disetujui</a>
                                             </li>
                                             <li>
@@ -99,7 +103,7 @@
                                         </svg>
                                     </div>
                                     <input type="text" id="table-search-users"
-                                        class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" autocomplete="off"
                                         placeholder="Cari mahasiswa">
                                 </div>
                             </div>
@@ -376,7 +380,16 @@
                                             {{ $m->irs->first()->total_sks }}
                                         </td>
                                         <td class="px-6 py-4">
-                                            {{ $m->irs->first()->status }}
+                                            @if ($m->irs->first()->status == 'Disetujui')
+                                                <span class="inline-flex items-center bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">
+                                                    {{ $m->irs->first()->status }}
+                                                </span>
+                                            @elseif ($m->irs->first()->status == 'Belum disetujui')
+                                                <span class="inline-flex items-center bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">
+                                                    {{ $m->irs->first()->status }}
+                                                </span>
+                                            @endif
+                                            
                                         </td>
                                         <td class="px-6 py-4 text-right">
                                             @if ($m->irs->first()->status == 'Belum disetujui')
@@ -508,7 +521,10 @@
                                             -
                                         </td>
                                         <td class="px-6 py-4">
-                                            Belum mengisi
+                                            <span class="inline-flex items-center bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-gray-900 dark:text-gray-300">
+                                                Belum mengisi
+                                            </span>
+                                            
                                         </td>
                                         <td class="px-6 py-4 text-right">
                                             -
@@ -519,6 +535,8 @@
                         </tbody>
                     </table>
                 </div>
+                <br>
+                {{ $mhs->links() }}
             </div>
         </main>
     </div>

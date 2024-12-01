@@ -287,7 +287,7 @@ class IrsController extends Controller
                   ->where('tahun_ajaran', $currentPeriod->tahun_ajaran);
         }, 'irs.irsDetails', 'irs.irsDetails.mataKuliah', 'prodi'])
             ->where('pembimbing_akademik_id', '=', $pa->id)
-            ->get();
+            ->paginate(10);
         
 
         return $mhs;
