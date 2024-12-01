@@ -183,18 +183,17 @@ class IrsController extends Controller
         // Ambil semester dari parameter URL, jika tidak ada maka default ke currentSemester
         $selectedSemester = $request->query('semester', $currentSemester);
     
-        // Ambil data IRS yang cocok dengan kode_mk dari mataKuliah dan filter by semester yang dipilih
+        // Ambil data IRS yang cocok dengan nim mahasiswa dan semester yang dipilih
         $irs = Irs::where('nim', $mahasiswa->nim)
-                    ->with(['irsDetails' => function($query) use ($selectedSemester) {
-                        $query->whereHas('mataKuliah', function ($query) use ($selectedSemester) {
-                            $query->where('semester', $selectedSemester); // Filter by semester di mataKuliah
-                        })->with(['mataKuliah', 'jadwalKuliah.ruang']);
+                    ->where('semester', $selectedSemester)
+                    ->with(['irsDetails' => function($query) {
+                        $query->with(['mataKuliah', 'jadwalKuliah.ruang']);
                     }])
                     ->first();
     
         // Kirim variabel `$irs`, `$irsDetails`, `$mahasiswa`, `$pa`, dan `$currentPeriod` ke view
         return view('mhs.akademik.lihatirs', [
-            'title' => 'Akademik',
+            'title' => 'Lihat IRS',
             'irs' => $irs,
             'irsDetails' => $irs ? $irs->irsDetails : [],
             'mahasiswa' => $mahasiswa,
@@ -203,7 +202,7 @@ class IrsController extends Controller
             'currentSemester' => $currentSemester, // Semester aktif
             'selectedSemester' => $selectedSemester, // Semester yang dipilih
         ]);
-    }
+    }    
     
     public function getIRSforPA($pa)
     {

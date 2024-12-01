@@ -14,6 +14,7 @@ class JadwalKuliah extends Model
         'ruang_id',
         'kelas',
         'hari',
+        'tahun_ajaran',
         'waktu_mulai',
         'waktu_selesai',
         'status'
@@ -34,4 +35,8 @@ class JadwalKuliah extends Model
         return $this->hasMany(IrsDetail::class, 'jadwal_kuliah_id', 'id');
     }
 
+    public function irsPeriod()
+    {
+        return $this->belongsTo(IrsPeriods::class, 'tahun_ajaran', 'tahun_ajaran');
+    }
 }

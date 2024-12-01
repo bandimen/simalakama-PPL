@@ -6,6 +6,7 @@ use Log;
 use App\Models\Mahasiswa;
 use App\Models\MataKuliah;
 use App\Models\JadwalKuliah;
+use App\Models\IrsPeriods;
 use App\Models\Irs;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -43,16 +44,31 @@ class MahasiswaController extends Controller
     // }
 
 
-
     public function getJadwal($kodemk)
-    {
-
+    {    
+        // Ambil periode aktif saat ini
+        $currentPeriod = IrsPeriods::getCurrentPeriod();
+    
+        if (!$currentPeriod) {
+            return response()->json(['message' => 'Periode IRS tidak ditemukan'], 404);
+        }
+    
+        // Ambil jadwal berdasarkan kode mata kuliah dan tahun ajaran dari periode aktif
         $jadwals = JadwalKuliah::with(['mataKuliah', 'ruang'])
                     ->where('kodemk', $kodemk)
+                    ->where('tahun_ajaran', $currentPeriod->tahun_ajaran) // Filter berdasarkan tahun ajaran
                     ->get();
+    
+        // Log untuk debugging
+        Log::info('Jadwal diambil', [
+            'kodemk' => $kodemk,
+            'tahun_ajaran' => $currentPeriod->tahun_ajaran,
+            'result_count' => $jadwals->count()
+        ]);
+    
         return response()->json($jadwals);
-    }
-
+    }    
+ 
     public function getSemester($angkatan, $currentPeriod)
     {
         // Pisahkan tahun akademik menjadi tahun awal dan akhir

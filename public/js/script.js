@@ -112,7 +112,11 @@ async function fetchAndDisplaySchedule(kodemk, nama) {
     const response = await fetch(`/jadwal/${kodemk}`, { cache: "no-store" });
     const jadwalList = await response.json();
 
+    // Log seluruh data jadwal dari API
+    console.log(`Jadwal untuk ${kodemk}:`, jadwalList);
+
     // Simpan jadwal ke selectedCourses
+
     selectedCourses = selectedCourses.map(course => {
       if (course.kodemk === kodemk) {
         return { ...course, jadwal: jadwalList }; // Tambahkan jadwal ke dalam course
@@ -132,7 +136,10 @@ async function fetchAndDisplaySchedule(kodemk, nama) {
     }
 
     jadwalList.forEach(jadwal => {
-      const { hari, waktu_mulai, waktu_selesai, kelas, ruang_id } = jadwal;
+      const { hari, waktu_mulai, waktu_selesai, kelas, ruang_id, tahun_ajaran } = jadwal;
+
+      // Log data tahun_ajaran untuk setiap jadwal
+      console.log(`Processing jadwal untuk ${kodemk}, Tahun Ajaran: ${tahun_ajaran}, Hari: ${hari}, Jam: ${waktu_mulai} - ${waktu_selesai}`);
 
       const normalizedDay = hari.charAt(0).toUpperCase() + hari.slice(1).toLowerCase();
       const dayColumn = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat"].indexOf(normalizedDay);
@@ -143,18 +150,20 @@ async function fetchAndDisplaySchedule(kodemk, nama) {
       if (row && dayColumn >= 0) {
         const cell = row.children[dayColumn + 1];
 
-        // Bungkus elemen dengan div tambahan
+        // Bersihkan cell terlebih dahulu untuk menghindari duplikasi
+        cell.innerHTML = "";
+
         const wrapper = document.createElement("div");
         wrapper.className = "mb-2";
 
         const courseBox = document.createElement("div");
         courseBox.className = `
           bg-gray-100 text-black border border-gray-300 shadow-lg rounded-md p-2
-          text-sm font-medium w-[180px] h-[120px] flex flex-col justify-between
+          text-sm font-medium w-[180px] h-[120px] flex flex-col justify-between overflow-hidden
           courseBox-${kodemk}
         `;
         courseBox.style.cursor = "pointer";
-
+        
         // Tambahkan atribut data
         courseBox.setAttribute("data-mataKuliah", nama);
         courseBox.setAttribute("data-kelas", kelas);
@@ -162,15 +171,18 @@ async function fetchAndDisplaySchedule(kodemk, nama) {
         courseBox.setAttribute("data-jam", `${waktu_mulai} - ${waktu_selesai}`);
         courseBox.setAttribute("data-start-time", waktu_mulai);
         courseBox.setAttribute("data-end-time", waktu_selesai);
+        courseBox.setAttribute("data-tahunajaran", tahun_ajaran); // Tambahkan atribut tahun ajaran
 
         // Tambahkan konten ke dalam courseBox
         courseBox.innerHTML = `
-          <div class="font-bold text-sm text-gray-900">${nama}</div>
-          <div class="text-xs text-gray-600">Kode: ${kodemk}</div>
-          <div class="text-xs text-gray-600">Kelas: ${kelas}</div>
-          <div class="text-xs text-gray-600">Ruang: ${ruang_id}</div>
-          <div class="text-xs text-gray-600">${waktu_mulai} - ${waktu_selesai}</div>
+          <div class="font-bold text-gray-900 truncate">${nama}</div>
+          <div class="text-xs text-gray-600 truncate">Kode: ${kodemk}</div>
+          <div class="text-xs text-gray-600 truncate">Kelas: ${kelas}</div>
+          <div class="text-xs text-gray-600 truncate">Ruang: ${ruang_id}</div>
+          <div class="text-xs text-gray-600 truncate">${waktu_mulai} - ${waktu_selesai}</div>
+          <div class="text-xs text-gray-600 truncate">Tahun Ajaran: ${tahun_ajaran}</div> <!-- Tambahkan tahun ajaran di konten -->
         `;
+            
 
         // Tambahkan event klik dengan pengecekan tabrakan jadwal
         courseBox.onclick = () => {
@@ -193,7 +205,8 @@ async function fetchAndDisplaySchedule(kodemk, nama) {
           hari,
           ruang_id,
           waktu_mulai,
-          waktu_selesai
+          waktu_selesai,
+          tahun_ajaran
         });
       } else {
         console.warn(`Tidak dapat menemukan row atau cell untuk waktu: ${startTime} pada hari: ${hari}`);
@@ -203,6 +216,7 @@ async function fetchAndDisplaySchedule(kodemk, nama) {
     console.error("Error fetching schedule for", kodemk, error);
   }
 }
+
 
 function isTimeConflict(newStart, newEnd, existingStart, existingEnd, minGapMinutes = 0) {
   const parseTime = time => {
@@ -293,9 +307,10 @@ function showConfirmationModal(kodemk, selectedCourseBox) {
         kelas: selectedCourseBox.getAttribute("data-kelas"),
         hari: selectedCourseBox.getAttribute("data-hari"),
         jam: selectedCourseBox.getAttribute("data-jam"),
+        tahunajaran: selectedCourseBox.getAttribute("data-tahunajaran"),
       };
   
-      if (!courseInfo.mataKuliah || !courseInfo.kelas || !courseInfo.hari || !courseInfo.jam) {
+      if (!courseInfo.mataKuliah || !courseInfo.kelas || !courseInfo.hari || !courseInfo.jam  ||  !courseInfo.tahunajaran) {
         alert("Data jadwal tidak lengkap. Periksa elemen.");
         return;
       }
@@ -308,7 +323,7 @@ function showConfirmationModal(kodemk, selectedCourseBox) {
         box.onclick = null;
         if (box !== selectedCourseBox) {
           box.style.backgroundColor = "#D1D5DB";
-          box.classList.replace("text-black", "text-black");
+          box.classList.replace("text-black");
         }
       });
   
@@ -322,8 +337,6 @@ function showConfirmationModal(kodemk, selectedCourseBox) {
     }
   
     modal.classList.add("hidden");
-  
-    saveProgress();
   };     
 
   cancelButton.onclick = () => {
@@ -360,8 +373,6 @@ function showCancelModal(kodemk, selectedCourseBox) {
   
     // Tutup modal
     cancelModal.classList.add("hidden");
-  
-    saveProgress();
   };  
 
   cancelCancelButton.onclick = () => {
@@ -391,6 +402,9 @@ function updateBottomSheet() {
 
   // Tambahkan jadwal yang dipilih ke tabel dan update bottomSheetData
   selectedCourses.forEach((course, index) => {
+    // Log tahun ajaran dari setiap entri jadwal
+    console.log(`Tahun Ajaran untuk ${course.kodemk}: ${course.jadwal?.map(j => j.tahun_ajaran).join(", ")}`);
+
     bottomSheetTable.innerHTML += `
       <tr>
         <td class="border border-gray-300 px-4 py-2">${index + 1}</td>
@@ -399,6 +413,7 @@ function updateBottomSheet() {
         <td class="border border-gray-300 px-4 py-2">${course.kelas}</td>
         <td class="border border-gray-300 px-4 py-2">${course.hari}</td>
         <td class="border border-gray-300 px-4 py-2">${course.jam}</td>
+        <td class="border border-gray-300 px-4 py-2">${course.tahunajaran}</td>
       </tr>
     `;
 
@@ -406,6 +421,7 @@ function updateBottomSheet() {
     bottomSheetData.push({
       kodemk: course.kodemk,
       kelas: course.kelas,
+      tahun_ajaran: course.jadwal?.map(j => j.tahun_ajaran), // Tambahkan tahun ajaran ke data
     });
   });
 
@@ -459,6 +475,7 @@ document.getElementById("toggleButton").onclick = () => {
     content.classList.add("hidden");
   }
 };
+
 
 // async function saveProgress() {
 //   try {

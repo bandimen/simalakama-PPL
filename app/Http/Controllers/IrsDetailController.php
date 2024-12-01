@@ -70,12 +70,13 @@ class IrsDetailController extends Controller
                     throw new \Exception("Jadwal tidak ditemukan untuk kodemk: {$data['kodemk']}, kelas: {$data['kelas']}");
                 }
     
-                return [
+                $miaw = [
                     'irs_id' => $irs->id,
                     'kodemk' => $data['kodemk'],
                     'jadwal_kuliah_id' => $jadwalKuliah->id,
                     'status' => 'Baru',
                 ];
+                return $miaw;
             });
     
             // Hapus entri yang tidak ada di bottomSheetData

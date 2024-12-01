@@ -42,7 +42,7 @@
             <!-- Garis Horizontal -->
             <hr class="border-gray-300 w-full mb-4 dark:border-gray-600">
             <p class="mb-2 text-m tracking-tight text-gray-700 dark:text-white">Tahun Ajaran: {{ $currentPeriod->tahun_ajaran }}</p>
-            <p class="mb-2 text-m tracking-tight text-gray-700 dark:text-white">Indeks Prestasi Kumulatif: {{ $mahasiswa->ipk }}</p>
+            <p class="mb-2 text-m tracking-tight text-gray-700 dark:text-white">Indeks Prestasi Kumulatif:  {{ $mahasiswa->getIPK() }} </p>
             <p class="mb-2 text-m tracking-tight text-gray-700 dark:text-white">Indeks Prestasi Semester (lalu): {{ $mahasiswa->ips_lalu }}</p>
             <p class="mb-2 text-m tracking-tight text-gray-700 dark:text-white">Maksimal Beban SKS: {{ $mahasiswa->max_sks }}</p>
         </section>
@@ -132,6 +132,7 @@
                   <th class="border border-gray-300 px-4 py-2 text-left">Kelas</th>
                   <th class="border border-gray-300 px-4 py-2 text-left">Hari</th>
                   <th class="border border-gray-300 px-4 py-2 text-left">Jam</th>
+                  <th class="border border-gray-300 px-4 py-2 text-left">Tahun Ajaran</th>
                 </tr>
               </thead>
               <tbody>

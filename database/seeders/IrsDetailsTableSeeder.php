@@ -138,6 +138,167 @@ class IrsDetailsTableSeeder extends Seeder
                 'status' => 'Baru',
             ],
 
+            // id irs = 5 ( nopal smt 1 th 2022/2023 gasal)
+            [
+                'irs_id' => 5,
+                'kodemk' => 'PAIK6101',
+                'jadwal_kuliah_id' => 121,
+                'status' => 'Baru',
+            ],
+            [
+                'irs_id' => 5,
+                'kodemk' => 'PAIK6102',
+                'jadwal_kuliah_id' => 122,
+                'status' => 'Baru',
+            ],
+            [
+                'irs_id' => 5,
+                'kodemk' => 'PAIK6103',
+                'jadwal_kuliah_id' => 123,
+                'status' => 'Baru',
+            ],
+            [
+                'irs_id' => 5,
+                'kodemk' => 'PAIK6104',
+                'jadwal_kuliah_id' => 124,
+                'status' => 'Baru',
+            ],
+            [
+                'irs_id' => 5,
+                'kodemk' => 'PAIK6105',
+                'jadwal_kuliah_id' => 125,
+                'status' => 'Baru',
+            ], 
+            [
+                'irs_id' => 5,
+                'kodemk' => 'UUW00003',
+                'jadwal_kuliah_id' => 126,
+                'status' => 'Baru',
+            ],
+            [
+                'irs_id' => 5,
+                'kodemk' => 'UUW00005',
+                'jadwal_kuliah_id' => 127,
+                'status' => 'Baru',
+            ],
+            // id irs = 6 ( nopal smt 2 th 2022/2023 genap)
+            [
+                'irs_id' => 6,
+                'kodemk' => 'PAIK6201',
+                'jadwal_kuliah_id' => 162,
+                'status' => 'Baru',
+            ],
+            [
+                'irs_id' => 6,
+                'kodemk' => 'PAIK6202',
+                'jadwal_kuliah_id' => 163,
+                'status' => 'Baru',
+            ],
+            [
+                'irs_id' => 6,
+                'kodemk' => 'PAIK6203',
+                'jadwal_kuliah_id' => 164,
+                'status' => 'Baru',
+            ],
+            [
+                'irs_id' => 6,
+                'kodemk' => 'PAIK6204',
+                'jadwal_kuliah_id' => 165,
+                'status' => 'Baru',
+            ],
+            [
+                'irs_id' => 6,
+                'kodemk' => 'UUW00004',
+                'jadwal_kuliah_id' => 166,
+                'status' => 'Baru',
+            ],
+            [
+                'irs_id' => 6,
+                'kodemk' => 'UUW00006',
+                'jadwal_kuliah_id' => 167,
+                'status' => 'Baru',
+            ],
+            [
+                'irs_id' => 6,
+                'kodemk' => 'UUW00011',
+                'jadwal_kuliah_id' => 168,
+                'status' => 'Baru',
+            ],
+            // id irs = 7 ( nopal smt 3 th 2023/2024 gasal)
+            [
+                'irs_id' => 7,
+                'kodemk' => 'PAIK6301',
+                'jadwal_kuliah_id' => 8,
+                'status' => 'Baru',
+            ],
+            [
+                'irs_id' => 7,
+                'kodemk' => 'PAIK6302',
+                'jadwal_kuliah_id' => 9,
+                'status' => 'Baru',
+            ],
+            [
+                'irs_id' => 7,
+                'kodemk' => 'PAIK6303',
+                'jadwal_kuliah_id' => 10,
+                'status' => 'Baru',
+            ],
+            [
+                'irs_id' => 7,
+                'kodemk' => 'PAIK6304',
+                'jadwal_kuliah_id' => 11,
+                'status' => 'Baru',
+            ],
+            [
+                'irs_id' => 7,
+                'kodemk' => 'PAIK6305',
+                'jadwal_kuliah_id' => 12,
+                'status' => 'Baru',
+            ],
+            [
+                'irs_id' => 7,
+                'kodemk' => 'PAIK6306',
+                'jadwal_kuliah_id' => 13,
+                'status' => 'Baru',
+            ],
+             // id irs = 8 ( nopal smt 4 th 2023/2024 genap)
+             [
+                'irs_id' => 8,
+                'kodemk' => 'PAIK6401',
+                'jadwal_kuliah_id' => 55,
+                'status' => 'Baru',
+            ],
+            [
+                'irs_id' => 8,
+                'kodemk' => 'PAIK6402',
+                'jadwal_kuliah_id' => 56,
+                'status' => 'Baru',
+            ],
+            [
+                'irs_id' => 8,
+                'kodemk' => 'PAIK6403',
+                'jadwal_kuliah_id' => 57,
+                'status' => 'Baru',
+            ],
+            [
+                'irs_id' => 8,
+                'kodemk' => 'PAIK6404',
+                'jadwal_kuliah_id' => 58,
+                'status' => 'Baru',
+            ],
+            [
+                'irs_id' => 8,
+                'kodemk' => 'PAIK6405',
+                'jadwal_kuliah_id' => 59,
+                'status' => 'Baru',
+            ],
+            [
+                'irs_id' => 8,
+                'kodemk' => 'PAIK6406',
+                'jadwal_kuliah_id' => 60,
+                'status' => 'Baru',
+            ],
+
         ];
 
         foreach($irsDetails as $irsDetail){
