@@ -21,7 +21,7 @@ class RuangController extends Controller
     public function index()
     {
     $prodi = Prodi::all(); // Mengambil semua data program studi
-    $ruangs = Ruang::with('prodi')->get(); // Mengambil semua data ruangan dengan relasi prodi
+    $ruangs = Ruang::with('prodi')->paginate(10); // Mengambil semua data ruangan dengan relasi prodi
     return view('akademik.tambahruang', compact('prodi', 'ruangs'));
     }
 
@@ -43,7 +43,7 @@ class RuangController extends Controller
     public function store(Request $request)
 {
     $request->validate([
-        'nama' => 'required|unique:ruangs|max:255',
+        'nama' => 'required|max:255',
         'gedung' => 'required|max:1',
         'kapasitas' => 'required|integer|min:1',
         'prodi_id' => 'required|exists:prodis,id',
@@ -51,23 +51,25 @@ class RuangController extends Controller
 
     // Cek apakah ruangan sudah di-plot untuk prodi tertentu
     $exists = Ruang::where('nama', $request->nama)
-                    ->where('prodi_id', $request->prodi_id)
+                    
                     ->exists();
-
+    
     if ($exists) {
-        return redirect()->back()->with('error', 'Ruangan sudah di-plot untuk program studi ini.');
+        return redirect()->back()->with('error', 'Ruangan sudah di-plot untuk program studi lain.');
     }
+    else {
 
-    // Jika belum ada, tambahkan ruangan baru
-    Ruang::create([
-        'nama' => $request->nama,
-        'gedung' => $request->gedung,
-        'kapasitas' => $request->kapasitas,
-        'prodi_id' => $request->prodi_id,
-        'status' => 'belum disetujui',
-    ]);
-
-    return redirect()->back()->with('success', 'Ruangan berhasil ditambahkan dan menunggu persetujuan.');
+        
+        // Jika belum ada, tambahkan ruangan baru
+        Ruang::create([
+            'nama' => $request->nama,
+            'gedung' => $request->gedung,
+            'kapasitas' => $request->kapasitas,
+            'prodi_id' => $request->prodi_id,
+            'status' => 'belum disetujui',
+        ]);
+        return redirect()->back()->with('success', 'Ruangan berhasil ditambahkan dan menunggu persetujuan.');
+    }
 }
 
 
@@ -83,19 +85,37 @@ class RuangController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Ruang $ruang)
-    {
-        //
-    }
+    public function edit($id)
+{
+    $ruang = Ruang::findOrFail($id);
+    $prodi = Prodi::all(); // Ambil semua data program studi
+    return redirect()->route('ruang.index')->with(['editRuang' => $ruang, 'prodi' => $prodi]);
+}
 
     /**
      * Update the specified resource in storage.
      */
     
-    public function update(Request $request, Ruang $ruang)
-    {
-        //
-    }
+     public function update(Request $request, $id)
+     {
+         $request->validate([
+             'nama' => 'required|max:255',
+             'gedung' => 'required|max:1',
+             'kapasitas' => 'required|integer|min:1',
+             'prodi_id' => 'required|exists:prodis,id',
+         ]);
+     
+         $ruang = Ruang::findOrFail($id);
+         $ruang->update([
+             'nama' => $request->nama,
+             'gedung' => $request->gedung,
+             'kapasitas' => $request->kapasitas,
+             'prodi_id' => $request->prodi_id,
+             'status' => 'belum disetujui',
+         ]);
+     
+         return redirect()->route('ruang.index')->with('success', 'Ruangan berhasil diperbarui.');
+     }
     public function verifikasi()
     {
         // Ambil ruangan yang belum disetujui
@@ -133,5 +153,6 @@ class RuangController extends Controller
 
     return redirect()->back()->with('success', 'Ruangan berhasil dihapus.');
 }
+
 
 }
