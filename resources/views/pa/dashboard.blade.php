@@ -74,7 +74,7 @@
                                     </p>
                                     <div class="flex items-center mt-1 gap-x-2">
                                         <h3 class="text-xl font-medium text-gray-800 sm:text-2xl dark:text-gray-100">
-                                            {{ $totalMahasiswaPerwalian }} 
+                                            {{ $totalMahasiswaPerwalian }}
                                         </h3>
                                     </div>
                                 </div>
@@ -222,4 +222,5 @@
             </div>
         </main>
     </div>
+
 </x-layout>

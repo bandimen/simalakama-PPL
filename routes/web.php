@@ -16,6 +16,7 @@ use App\Http\Controllers\JadwalKuliahController;
 use App\Http\Controllers\PembimbingAkademikController;
 use App\Http\Controllers\RuangController;
 use App\Http\Controllers\TenagaPendidikController;
+use App\Models\PembimbingAkademik;
 use App\Models\TenagaPendidik;
 
 // kalo belum login
@@ -63,6 +64,10 @@ Route::middleware(['auth'])->group(function () {
   // show irs dan khs mhs
   Route::get('pa/rekapmhs/irs/{nim}', [PembimbingAkademikController::class, 'showIrsByNim'])->name('showIrsByNim');
   Route::get('pa/rekapmhs/khs/{nim}', [PembimbingAkademikController::class, 'showKhsByNim'])->name('showKhsByNim');
+  // ajax tabel perwalian
+  Route::get('/pa/perwalian/search', [PembimbingAkademikController::class, 'ajaxTabelPerwalian'])->name('ajaxPerwalian');
+  // ajax tabel rekapmhs
+  Route::get('/pa/rekapmhs/search', [PembimbingAkademikController::class, 'ajaxTabelRekapMhs'])->name('ajaxRekapMhs');
 
   // DEKAN
   Route::get('/dekan', [DekanController::class, 'index']);

@@ -11,7 +11,8 @@ use Illuminate\Support\Facades\Auth;
 
 class PembimbingAkademikController extends Controller
 {
-    public function index() {
+    public function index()
+    {
         $pa = Auth::user()->pembimbingAkademik;
         $infoPA = $pa->dosen;
         $totalMahasiswaPerwalian = $pa->getTotalMahasiswaPerwalian();
@@ -20,64 +21,60 @@ class PembimbingAkademikController extends Controller
         $totalMhsBelumIrs = $pa->getTotalMhsBelumIrs();
 
 
-        return view('pa.dashboard', 
-        [
-            'title' => 'Dashboard - PA', 
-            'pa' => $infoPA, 
-            'totalMahasiswaPerwalian' => $totalMahasiswaPerwalian,
-            'totalIrsDisetujui' => $totalIrsDisetujui,
-            'totalIrsBelumDisetujui' => $totalIrsBelumDisetujui,
-            'totalMhsBelumIrs' => $totalMhsBelumIrs,
-        ]);
+        return view(
+            'pa.dashboard',
+            [
+                'title' => 'Dashboard - PA',
+                'pa' => $infoPA,
+                'totalMahasiswaPerwalian' => $totalMahasiswaPerwalian,
+                'totalIrsDisetujui' => $totalIrsDisetujui,
+                'totalIrsBelumDisetujui' => $totalIrsBelumDisetujui,
+                'totalMhsBelumIrs' => $totalMhsBelumIrs,
+            ]
+        );
     }
-    public function perwalian() {
+    public function perwalian()
+    {
         $pa = Auth::user()->pembimbingAkademik;
 
         $irsController = new IrsController();
-        // $irsPeriodController = new IrsPeriodsController();
 
-        // $irs = $irsController->getIRSforPA($pa);
-        // $currentPeriod = $irsPeriodController->getCurrentPeriod();
-
-        // // data irs yg sesuai dgn periode skrg
-        // $irs = $irs->where('jenis_semester', $currentPeriod->semester)
-        //             ->where('tahun_ajaran', $currentPeriod->tahun_ajaran);
         $mhs = $irsController->getAllMhsPerwalianWithIrsCurrentPeriod($pa);
         return view('pa.perwalian', ['title' => 'Perwalian - PA', 'mhs' => $mhs]);
     }
 
 
-    public function rekapmhs() {
+    public function rekapmhs()
+    {
         $pa = Auth::user()->pembimbingAkademik;
         $mhs = $this->getMahasiswaPerwalian($pa->id);
 
-        return view('pa.rekapmhs', ['title' => 'Rekap Mhs - PA', 'mhs' => $mhs]);
+        return view('pa.rekapmhs', ['title' => 'Rekap Mhs - PA', 'mhs' => $mhs->get()]);
     }
 
     public function getMahasiswaPerwalian($id)
     {
         $mhs = Mahasiswa::with('prodi')
-        ->where('pembimbing_akademik_id', $id)
-        ->paginate(10);
+            ->where('pembimbing_akademik_id', $id);
         return $mhs;
     }
 
     public function showIrsByNim($nim)
     {
         $irsByNim = DB::table('irs')
-                    ->where('nim', '=', $nim)
-                    ->get();
+            ->where('nim', '=', $nim)
+            ->get();
         $irsByNim->each(function ($item) {
             $item->irsDetails = IrsDetail::where('irs_id', $item->id)
-                                    ->get()->each(function($detail) {
-                                        $detail->dosenPengampuList = $detail->mataKuliah->dosenPengampu;
-                                    });
+                ->get()->each(function ($detail) {
+                    $detail->dosenPengampuList = $detail->mataKuliah->dosenPengampu;
+                });
         });
         $mhsByNim = Mahasiswa::with([
-            'prodi', 
+            'prodi',
         ])
-        ->where('nim', '=', $nim)
-        ->first(); 
+            ->where('nim', '=', $nim)
+            ->first();
         return view('pa.rekapmhs.irs', [
             'title' => 'IRS Mhs',
             'irs' => $irsByNim,
@@ -88,19 +85,78 @@ class PembimbingAkademikController extends Controller
     public function showKhsByNim($nim)
     {
         $mhs = Mahasiswa::with([
-            'irs',                      
-            'irs.irsDetails',                      
-            'irs.irsDetails.mataKuliah',                      
-            'irs.khs',     
+            'irs',
+            'irs.irsDetails',
+            'irs.irsDetails.mataKuliah',
+            'irs.khs',
             'irs.khs.khsDetails.irsDetail',
             'irs.khs.khsDetails.irsDetail.mataKuliah',
-            'prodi', 
+            'prodi',
         ])
-        ->where('nim', '=', $nim)
-        ->first(); 
+            ->where('nim', '=', $nim)
+            ->first();
         return view('pa.rekapmhs.khs', [
             'title' => 'KHS Mhs',
             'mhs' => $mhs,
         ]);
+    }
+
+    public function ajaxTabelPerwalian(Request $request)
+    {
+        if ($request->ajax()) {
+            $pa = Auth::user()->pembimbingAkademik;
+            $irsPeriodsController = new IrsPeriodsController();
+            $currentPeriod = $irsPeriodsController->getCurrentPeriod();
+
+            $data = Mahasiswa::with(['irs' => function ($query) use ($currentPeriod) {
+                $query->where('jenis_semester', $currentPeriod->semester)
+                    ->where('tahun_ajaran', $currentPeriod->tahun_ajaran);
+            }, 'irs.irsDetails', 'irs.irsDetails.mataKuliah', 'prodi'])
+                ->where('pembimbing_akademik_id', '=', $pa->id);
+
+            // search
+            if ($request->search) {
+                $data->where(function ($query) use ($request) {
+                    $query->where('nama', 'like', '%' . $request->search . '%')
+                        ->orWhere('nim', 'like', '%' . $request->search . '%');
+                });
+            }
+
+            // status
+            if ($request->status == 'disetujui') {
+                $data->whereHas('irs', function ($query) {
+                    $query->where('status', 'Disetujui');
+                });
+            } elseif ($request->status == 'belum_disetujui') {
+                $data->whereHas('irs', function ($query) {
+                    $query->where('status', 'Belum Disetujui');
+                });
+            } elseif ($request->status == 'belum_mengisi') {
+                $data->whereDoesntHave('irs');
+            }
+
+            $data = $data->get();
+
+            return view('pa.perwalian.tabel-perwalian', ['data' => $data]);
+        }
+    }
+
+    public function ajaxTabelRekapMhs(Request $request)
+    {
+        $pa = Auth::user()->pembimbingAkademik;
+        $mhs = $this->getMahasiswaPerwalian($pa->id);
+
+        // Filter pencarian jika ada
+        if ($request->search) {
+            $mhs = $mhs->where(function ($query) use ($request) {
+                $query->where('nama', 'like', '%' . $request->search . '%')
+                    ->orWhere('nim', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        // Ambil data mahasiswa setelah filter
+        $mhs = $mhs->get(); // Eksekusi query
+
+        return view('pa.rekapmhs.tabel-rekapmhs', ['mhs' => $mhs]);
     }
 }
