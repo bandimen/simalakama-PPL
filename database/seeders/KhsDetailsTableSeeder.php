@@ -14,7 +14,7 @@ class KhsDetailsTableSeeder extends Seeder
     public function run(): void
     {
         $khsDetails = [
-            // khs id = 1 ( farrel smt 1 th 2023/2024 ganjil)
+            // khs id = 1 ( farrel smt 1 th 2023/2024 gasal)
             [
                 'khs_id' => 1,
                 'irs_details_id' => 1,
@@ -23,7 +23,7 @@ class KhsDetailsTableSeeder extends Seeder
             [
                 'khs_id' => 1,
                 'irs_details_id' => 2,
-                'nilai' => 'A',
+                'nilai' => 'C',
             ], 
             [
                 'khs_id' => 1,
@@ -86,7 +86,7 @@ class KhsDetailsTableSeeder extends Seeder
                 'irs_details_id' => 14,
                 'nilai' => 'A',
             ], 
-            // // khs id = 3 ( farrel smt 3 th 2024/2025 ganjil)
+            // // khs id = 3 ( farrel smt 3 th 2024/2025 gasal)
             // [
             //     'khs_id' => 3,
             //     'irs_details_id' => 15,
@@ -111,6 +111,143 @@ class KhsDetailsTableSeeder extends Seeder
             //     'khs_id' => 3,
             //     'irs_details_id' => 20,
             // ], 
+
+            // khs id = 5 ( nopal smt 1 th 2022/2023 gasal)
+            [
+                'khs_id' => 5,
+                'irs_details_id' => 21,
+                'nilai' => 'A',
+            ], 
+            [
+                'khs_id' => 5,
+                'irs_details_id' => 22,
+                'nilai' => 'E',
+            ], 
+            [
+                'khs_id' => 5,
+                'irs_details_id' => 23,
+                'nilai' => 'A',
+            ], 
+            [
+                'khs_id' => 5,
+                'irs_details_id' => 24,
+                'nilai' => 'A',
+            ], 
+            [
+                'khs_id' => 5,
+                'irs_details_id' => 25,
+                'nilai' => 'A',
+            ], 
+            [
+                'khs_id' => 5,
+                'irs_details_id' => 26,
+                'nilai' => 'A',
+            ], 
+            [
+                'khs_id' => 5,
+                'irs_details_id' => 27,
+                'nilai' => 'B',
+            ], 
+             // khs id = 6( nopal smt 2 th 2022/2023 genap)
+             [
+                'khs_id' => 6,
+                'irs_details_id' => 28,
+                'nilai' => 'A',
+            ], 
+            [
+                'khs_id' => 6,
+                'irs_details_id' => 29,
+                'nilai' => 'A',
+            ], 
+            [
+                'khs_id' => 6,
+                'irs_details_id' => 30,
+                'nilai' => 'A',
+            ], 
+            [
+                'khs_id' => 6,
+                'irs_details_id' => 31,
+                'nilai' => 'A',
+            ], 
+            [
+                'khs_id' => 6,
+                'irs_details_id' => 32,
+                'nilai' => 'A',
+            ], 
+            [
+                'khs_id' => 6,
+                'irs_details_id' => 33,
+                'nilai' => 'A',
+            ], 
+            [
+                'khs_id' => 6,
+                'irs_details_id' => 34,
+                'nilai' => 'A',
+            ], 
+            // khs id = 7 ( nopal smt 3 th 2023/2024 gasal)
+            [
+                'khs_id' => 7,
+                'irs_details_id' => 35,
+                'nilai' => 'A',
+            ], 
+            [
+                'khs_id' => 7,
+                'irs_details_id' => 36,
+                'nilai' => 'A',
+            ], 
+            [
+                'khs_id' => 7,
+                'irs_details_id' => 37,
+                'nilai' => 'A',
+            ], 
+            [
+                'khs_id' => 7,
+                'irs_details_id' => 38,
+                'nilai' => 'A',
+            ], 
+            [
+                'khs_id' => 7,
+                'irs_details_id' => 39,
+                'nilai' => 'A',
+            ], 
+            [
+                'khs_id' => 7,
+                'irs_details_id' => 40,
+                'nilai' => 'A',
+            ], 
+
+            // khs id = 8 ( nopal smt 4 th 2023/2024 genap)
+            [
+                'khs_id' => 8,
+                'irs_details_id' => 41,
+                'nilai' => 'A',
+            ], 
+            [
+                'khs_id' => 8,
+                'irs_details_id' => 42,
+                'nilai' => 'A',
+            ], 
+            [
+                'khs_id' => 8,
+                'irs_details_id' => 43,
+                'nilai' => 'A',
+            ], 
+            [
+                'khs_id' => 8,
+                'irs_details_id' => 44,
+                'nilai' => 'A',
+            ], 
+            [
+                'khs_id' => 8,
+                'irs_details_id' => 45,
+                'nilai' => 'A',
+            ], 
+            [
+                'khs_id' => 8,
+                'irs_details_id' => 46,
+                'nilai' => 'A',
+            ], 
+
 
 
         ];

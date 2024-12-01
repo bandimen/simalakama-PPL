@@ -53,4 +53,9 @@ class IrsPeriods extends Model
 
         return $currentPeriod;
     }
+
+    public function jadwalKuliahs()
+    {
+        return $this->hasMany(JadwalKuliah::class, 'tahun_ajaran', 'tahun_ajaran');
+    }
 }
