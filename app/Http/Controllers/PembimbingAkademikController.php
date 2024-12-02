@@ -7,6 +7,7 @@ use App\Models\IrsDetail;
 use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 
 class PembimbingAkademikController extends Controller
@@ -104,6 +105,7 @@ class PembimbingAkademikController extends Controller
     public function ajaxTabelPerwalian(Request $request)
     {
         if ($request->ajax()) {
+
             $pa = Auth::user()->pembimbingAkademik;
             $irsPeriodsController = new IrsPeriodsController();
             $currentPeriod = $irsPeriodsController->getCurrentPeriod();
@@ -125,15 +127,15 @@ class PembimbingAkademikController extends Controller
             // status
             if ($request->status == 'disetujui') {
                 $data->whereHas('irs', function ($query) {
-                    $query->where('status', 'Disetujui');
+                    $query->where('status', '=', 'Disetujui');
                 });
             } elseif ($request->status == 'belum_disetujui') {
                 $data->whereHas('irs', function ($query) {
-                    $query->where('status', 'Belum Disetujui');
+                    $query->where('status', '=', 'Belum disetujui');
                 });
             } elseif ($request->status == 'belum_mengisi') {
                 $data->whereDoesntHave('irs');
-            }
+            }            
 
             $data = $data->get();
 

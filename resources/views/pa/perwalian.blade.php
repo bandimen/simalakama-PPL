@@ -59,7 +59,7 @@
                                         class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
                                         type="button">
                                         <span class="sr-only">Action button</span>
-                                        Status
+                                        <span id="currentStatus">Status</span>
                                         <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true"
                                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -105,7 +105,7 @@
                                     </div>
                                     <input type="text" id="searchTabel" name="search"
                                         class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                        autocomplete="off" placeholder="Cari nim/nama mahasiswa">
+                                        autocomplete="off" placeholder="Cari mahasiswa">
                                 </div>
                             </div>
                         </caption>
@@ -355,7 +355,7 @@
                                                 <a href="#" onclick="setujuiIrs({{ $m->irs->first()->id }})"
                                                     class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Setujui</a>
                                             @elseif ($m->irs->first()->status == 'Disetujui')
-                                                <a href="{{ route('batalkanIrs', $m->irs->first()->id) }}"
+                                                <a href="#" onclick="batalkanIrs({{ $m->irs->first()->id }})"
                                                     class="font-medium text-red-500 dark:text-red-500 hover:underline">Batalkan</a>
                                             @endif
                                         </td>
@@ -582,63 +582,68 @@
             });
         }
 
-        $(document).ready(function() {
+        $(document).ready(function () {
+    // Fungsi untuk mengambil data tabel berdasarkan pencarian dan status
+    function fetchTableData() {
+        var query = $('#searchTabel').val(); // Ambil input dari pencarian
+        var status = $('#dropdownAction a.active').data('status'); // Ambil status yang dipilih
 
-
-            function fetchTableData() {
-                var query = $('#searchTabel').val(); // Ambil input dari pencarian
-                var status = $('#dropdownAction a.active').data('status'); // Ambil status yang dipilih
-
-                $.ajax({
-                    url: "{{ route('ajaxPerwalian') }}", // Endpoint untuk live search dan filter
-                    type: "GET",
-                    data: {
-                        search: query,
-                        status: status
-                    }, // Kirim search dan status ke server
-                    success: function(data) {
-                        $('#bodyTabel').html(data); // Update isi tabel
-                    },
-                    error: function(xhr) {
-                        console.error(xhr.responseText); // Debug jika ada error
-                    }
-                });
+        $.ajax({
+            url: "{{ route('ajaxPerwalian') }}", // Endpoint untuk live search dan filter
+            type: "GET",
+            data: {
+                search: query,
+                status: status
+            }, // Kirim data ke server
+            success: function (data) {
+                $('#bodyTabel').html(data); // Update isi tabel
+            },
+            error: function (xhr) {
+                console.error(xhr.responseText); // Debug error
             }
-
-            // Handle modal toggle and close dynamically
-            $(document).on('click', '[data-modal-toggle]', function(e) {
-                e.preventDefault();
-                var modalId = $(this).data('modal-target');
-                $('#' + modalId).removeClass('hidden');
-
-                // Inisialisasi ulang Flowbite modal jika perlu
-                const modal = new Modal(document.getElementById(modalId));
-                modal.show(); // Menampilkan modal setelah di-setup
-            });
-
-            $(document).on('click', '[data-modal-hide]', function(e) {
-                e.preventDefault();
-                var modalId = $(this).data('modal-hide');
-                $('#' + modalId).addClass('hidden');
-
-                // Inisialisasi ulang Flowbite modal saat menutup
-                const modal = new Modal(document.getElementById(modalId));
-                modal.hide(); // Menyembunyikan modal dengan benar
-            });
-
-            // Event untuk Live Search
-            $('#searchTabel').on('keyup', function() {
-                fetchTableData(); // Panggil fungsi fetchTableData
-            });
-
-            // Event untuk Dropdown
-            $('#dropdownAction a').on('click', function(e) {
-                e.preventDefault(); // Mencegah navigasi ke `#`
-                $('#dropdownAction a').removeClass('active'); // Hapus status aktif dari semua link
-                $(this).addClass('active'); // Tandai link yang dipilih
-                fetchTableData(); // Panggil fungsi fetchTableData
-            });
-
         });
+    }
+
+    // Event untuk modal toggle dan close secara dinamis
+    $(document).on('click', '[data-modal-toggle]', function (e) {
+        e.preventDefault();
+        var modalId = $(this).data('modal-target');
+        $('#' + modalId).removeClass('hidden');
+
+        // Inisialisasi ulang Flowbite modal jika perlu
+        const modal = new Modal(document.getElementById(modalId));
+        modal.show();
+    });
+
+    $(document).on('click', '[data-modal-hide]', function (e) {
+        e.preventDefault();
+        var modalId = $(this).data('modal-hide');
+        $('#' + modalId).addClass('hidden');
+
+        // Inisialisasi ulang Flowbite modal saat menutup
+        const modal = new Modal(document.getElementById(modalId));
+        modal.hide();
+    });
+
+    // Event untuk Live Search
+    $('#searchTabel').on('keyup', function () {
+        fetchTableData(); // Panggil fungsi fetchTableData setiap kali input berubah
+    });
+
+    // Event untuk Dropdown
+    $('#dropdownAction a').on('click', function (e) {
+        e.preventDefault(); // Mencegah navigasi ke #
+        $('#dropdownAction a').removeClass('active'); // Hapus status aktif dari semua item
+        $(this).addClass('active'); // Tandai item yang dipilih
+
+        // Perbarui teks tombol dropdown
+        const selectedText = $(this).text().trim();
+        $('#dropdownActionButton span').text(selectedText);
+
+        // Panggil fungsi fetchTableData
+        fetchTableData();
+    });
+});
+
     </script>
 </x-layout>

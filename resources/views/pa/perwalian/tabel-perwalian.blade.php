@@ -144,15 +144,11 @@
                                 <div
                                     class="flex justify-center items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
                                     @if ($m->irs->first()->status == 'Belum disetujui')
-                                        <a href="{{ route('setujuiIrs', $m->irs->first()->id) }}">
-                                            <button data-modal-hide="modal-{{ $m->irs->first()->id }}" type="button"
-                                                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Setujui</button>
-                                        </a>
+                                        <button onclick="setujuiIrs({{ $m->irs->first()->id }})" type="button"
+                                            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Setujui</button>
                                     @elseif ($m->irs->first()->status == 'Disetujui')
-                                        <a href="{{ route('batalkanIrs', $m->irs->first()->id) }}">
-                                            <button data-modal-hide="modal-{{ $m->irs->first()->id }}" type="button"
-                                                class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Batalkan</button>
-                                        </a>
+                                        <button onclick="batalkanIrs({{ $m->irs->first()->id }})" type="button"
+                                            class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Batalkan</button>
                                     @endif
                                 </div>
                             </div>
@@ -185,10 +181,10 @@
                 </td>
                 <td class="px-6 py-4 text-right">
                     @if ($m->irs->first()->status == 'Belum disetujui')
-                        <a href="{{ route('setujuiIrs', $m->irs->first()->id) }}"
+                        <a href="#" onclick="setujuiIrs({{ $m->irs->first()->id }})"
                             class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Setujui</a>
                     @elseif ($m->irs->first()->status == 'Disetujui')
-                        <a href="{{ route('batalkanIrs', $m->irs->first()->id) }}"
+                        <a href="#" onclick="batalkanIrs({{ $m->irs->first()->id }})"
                             class="font-medium text-red-500 dark:text-red-500 hover:underline">Batalkan</a>
                     @endif
                 </td>
@@ -319,6 +315,7 @@
             </tr>
         @endif
     @endforeach
+
 @else
     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
         <td class="px-6 py-4 text-center align-middle" colspan="9">

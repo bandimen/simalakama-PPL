@@ -243,6 +243,7 @@ class IrsController extends Controller
         // Balas dengan respons JSON
         return response()->json(['message' => 'IRS berhasil disetujui!'], 200);
     }
+
     public function batalkanIrs(Request $request, $id)
     {
         // Validasi metode dan token CSRF
@@ -254,7 +255,7 @@ class IrsController extends Controller
             ->update(['status' => 'Belum disetujui']);
     
         // Balas dengan respons JSON
-        return response()->json(['message' => 'IRS berhasil disetujui!'], 200);
+        return response()->json(['message' => 'IRS berhasil dibatalkan!'], 200);
     }
     
 
