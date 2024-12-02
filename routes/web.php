@@ -59,8 +59,8 @@ Route::middleware(['auth'])->group(function () {
   Route::get('/pa/perwalian', [PembimbingAkademikController::class, 'perwalian']);
   Route::get('/pa/rekapmhs', [PembimbingAkademikController::class, 'rekapmhs']);
   // setujui n batalkan irs
-  Route::get('/pa/perwalian/setujui-irs/{id}', [IrsController::class, 'setujuiIrs'])->name('setujuiIrs'); //name ini  digunakan sbg alias
-  Route::get('/pa/perwalian/batalkan-irs/{id}', [IrsController::class, 'batalkanIrs'])->name('batalkanIrs');
+  Route::post('/pa/perwalian/setujui-irs/{id}', [IrsController::class, 'setujuiIrs'])->name('setujuiIrs'); //name ini  digunakan sbg alias
+  Route::post('/pa/perwalian/batalkan-irs/{id}', [IrsController::class, 'batalkanIrs'])->name('batalkanIrs');
   // show irs dan khs mhs
   Route::get('pa/rekapmhs/irs/{nim}', [PembimbingAkademikController::class, 'showIrsByNim'])->name('showIrsByNim');
   Route::get('pa/rekapmhs/khs/{nim}', [PembimbingAkademikController::class, 'showKhsByNim'])->name('showKhsByNim');

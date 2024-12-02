@@ -309,21 +309,17 @@
                                                         <div
                                                             class="flex justify-center items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
                                                             @if ($m->irs->first()->status == 'Belum disetujui')
-                                                                <a
-                                                                    href="{{ route('setujuiIrs', $m->irs->first()->id) }}">
-                                                                    <button
-                                                                        data-modal-hide="modal-{{ $m->irs->first()->id }}"
-                                                                        type="button"
-                                                                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Setujui</button>
-                                                                </a>
+                                                                <button
+                                                                    onclick="setujuiIrs({{ $m->irs->first()->id }})"
+                                                                    type="button"
+                                                                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                                                    Setujui
+                                                                </button>
                                                             @elseif ($m->irs->first()->status == 'Disetujui')
-                                                                <a
-                                                                    href="{{ route('batalkanIrs', $m->irs->first()->id) }}">
-                                                                    <button
-                                                                        data-modal-hide="modal-{{ $m->irs->first()->id }}"
-                                                                        type="button"
-                                                                        class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Batalkan</button>
-                                                                </a>
+                                                                <button
+                                                                    onclick="batalkanIrs({{ $m->irs->first()->id }})"
+                                                                    type="button"
+                                                                    class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Batalkan</button>
                                                             @endif
                                                         </div>
                                                     </div>
@@ -356,7 +352,7 @@
                                         </td>
                                         <td class="px-6 py-4 text-right">
                                             @if ($m->irs->first()->status == 'Belum disetujui')
-                                                <a href="{{ route('setujuiIrs', $m->irs->first()->id) }}"
+                                                <a href="#" onclick="setujuiIrs({{ $m->irs->first()->id }})"
                                                     class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Setujui</a>
                                             @elseif ($m->irs->first()->status == 'Disetujui')
                                                 <a href="{{ route('batalkanIrs', $m->irs->first()->id) }}"
@@ -506,7 +502,89 @@
     </div>
 
     <script>
+        function setujuiIrs(id) {
+            // Konfirmasi pengguna sebelum mengupdate
+            Swal.fire({
+                title: 'Yakin ingin menyetujui IRS?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Setujui!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Jika pengguna mengonfirmasi, kirim permintaan AJAX
+                    $.ajax({
+                        url: "{{ route('setujuiIrs', '') }}/" + id, // Sesuaikan route
+                        type: 'POST',
+                        data: {
+                            _token: "{{ csrf_token() }}" // Token CSRF
+                        },
+                        success: function(response) {
+                            Swal.fire(
+                                'Berhasil!',
+                                'IRS berhasil disetujui.',
+                                'success'
+                            ).then(() => {
+                                location.reload(); // Reload halaman jika perlu
+                            });
+                        },
+                        error: function(xhr) {
+                            Swal.fire(
+                                'Gagal!',
+                                'Terjadi kesalahan saat menyetujui IRS.',
+                                'error'
+                            );
+                        }
+                    });
+                }
+            });
+        }
+
+        function batalkanIrs(id) {
+            // Konfirmasi pengguna sebelum mengupdate
+            Swal.fire({
+                title: 'Yakin ingin membatalkan IRS?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Batalkan!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Jika pengguna mengonfirmasi, kirim permintaan AJAX
+                    $.ajax({
+                        url: "{{ route('batalkanIrs', '') }}/" + id, // Sesuaikan route
+                        type: 'POST',
+                        data: {
+                            _token: "{{ csrf_token() }}" // Token CSRF
+                        },
+                        success: function(response) {
+                            Swal.fire(
+                                'Berhasil!',
+                                'IRS berhasil dibatalkan.',
+                                'success'
+                            ).then(() => {
+                                location.reload(); // Reload halaman jika perlu
+                            });
+                        },
+                        error: function(xhr) {
+                            Swal.fire(
+                                'Gagal!',
+                                'Terjadi kesalahan saat membatalkan IRS.',
+                                'error'
+                            );
+                        }
+                    });
+                }
+            });
+        }
+
         $(document).ready(function() {
+
+
             function fetchTableData() {
                 var query = $('#searchTabel').val(); // Ambil input dari pencarian
                 var status = $('#dropdownAction a.active').data('status'); // Ambil status yang dipilih

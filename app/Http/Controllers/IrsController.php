@@ -230,23 +230,34 @@ class IrsController extends Controller
         return $irs;
     }
 
-    public function setujuiIrs($id)
+    public function setujuiIrs(Request $request, $id)
     {
+        // Validasi metode dan token CSRF
+        $request->validate(['_token' => 'required']);
+    
+        // Perbarui data di database
         DB::table('irs')
             ->where('id', $id)
             ->update(['status' => 'Disetujui']);
-
-        return redirect()->back();
+    
+        // Balas dengan respons JSON
+        return response()->json(['message' => 'IRS berhasil disetujui!'], 200);
     }
-
-    public function batalkanIrs($id)
+    public function batalkanIrs(Request $request, $id)
     {
+        // Validasi metode dan token CSRF
+        $request->validate(['_token' => 'required']);
+    
+        // Perbarui data di database
         DB::table('irs')
             ->where('id', $id)
             ->update(['status' => 'Belum disetujui']);
-
-        return redirect()->back();
+    
+        // Balas dengan respons JSON
+        return response()->json(['message' => 'IRS berhasil disetujui!'], 200);
     }
+    
+
 
     public function getIrsDetails($id)
     {
