@@ -16,18 +16,18 @@ use App\Models\Mahasiswa;
 
 class IrsController extends Controller
 {
-    
+
     public function store(Request $request)
     {
-        
+
         $request->validate([
             'nim' => 'required|string',
             'semester' => 'required|integer',
             'tahun_ajaran' => 'required|string',
             'total_sks' => 'required|integer',
-            'jadwal' => 'required|array' 
+            'jadwal' => 'required|array'
         ]);
-    
+
         try {
             // Buat IRS baru
             // $irs = new IRS();
@@ -45,7 +45,7 @@ class IrsController extends Controller
             ]);
 
 
-    
+
             // Simpan detail IRS
             foreach ($request->jadwal as $item) {
                 IrsDetail::create([
@@ -55,13 +55,13 @@ class IrsController extends Controller
                     'status' => $item['status'] ?? 'Baru'
                 ]);
             }
-            
+
             return response()->json(['success' => true]);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
         }
     }
-    
+
 
 
 
@@ -115,8 +115,9 @@ class IrsController extends Controller
         //
     }
 
-    
-    public function buatirs() {
+
+    public function buatirs()
+    {
         // Mendapatkan data mahasiswa dari user yang login
         $irsPeriodsController = new IrsPeriodsController();
         $currentPeriod = $irsPeriodsController->getCurrentPeriod();
@@ -128,7 +129,7 @@ class IrsController extends Controller
             $mahasiswa->load([
                 'irs' => function ($query) use ($currentPeriod) {
                     $query->where('jenis_semester', $currentPeriod->semester)
-                          ->where('tahun_ajaran', $currentPeriod->tahun_ajaran);
+                        ->where('tahun_ajaran', $currentPeriod->tahun_ajaran);
                 },
                 'irs.irsDetails',
                 'irs.irsDetails.mataKuliah',
@@ -140,9 +141,9 @@ class IrsController extends Controller
         $matkuls = null;
         if ($currentPeriod) {
             if ($currentPeriod->semester == 'Gasal') {
-                $matkuls = MataKuliah::where(function($query) {
-                    $query->where('semester', '0') 
-                          ->orWhereRaw('semester % 2 != 0');
+                $matkuls = MataKuliah::where(function ($query) {
+                    $query->where('semester', '0')
+                        ->orWhereRaw('semester % 2 != 0');
                 })->orderBy('semester', 'asc')->get();
             } elseif ($currentPeriod->semester == 'Genap') {
                 $matkuls = MataKuliah::whereRaw('semester % 2 = 0')->orderBy('semester', 'asc')->get();
@@ -158,41 +159,42 @@ class IrsController extends Controller
         }
         $ipk = $mahasiswa->getIPK();
         return view('mhs.akademik.buatirs', [
-            'title' => 'Akademik', 
-            'matkuls' => $matkuls, 
-            'currentPeriod' => $currentPeriod, 
+            'title' => 'Akademik',
+            'matkuls' => $matkuls,
+            'currentPeriod' => $currentPeriod,
             'activePeriodType' => $activePeriodType,
             'mahasiswa' => $mahasiswa, 
             'ipk' => $ipk,
         ]);
     }
 
-    public function lihatirs(Request $request) {
+    public function lihatirs(Request $request)
+    {
         // Ambil data mahasiswa dari user yang login
         $user = Auth::user();
         $mahasiswa = $user->mahasiswa;
-    
+
         // Ambil data Pembimbing Akademik (PA) dari mahasiswa
         $pa = $mahasiswa->pembimbingAkademik?->dosen;
-    
+
         // Dapatkan periode saat ini dari IrsPeriodsController
         $irsPeriodsController = new IrsPeriodsController();
         $currentPeriod = $irsPeriodsController->getCurrentPeriod();
-    
+
         // Hitung semester aktif saat ini berdasarkan angkatan mahasiswa dan periode aktif
         $currentSemester = $this->getSemester($mahasiswa->angkatan, $currentPeriod);
-    
+
         // Ambil semester dari parameter URL, jika tidak ada maka default ke currentSemester
         $selectedSemester = $request->query('semester', $currentSemester);
-    
+
         // Ambil data IRS yang cocok dengan nim mahasiswa dan semester yang dipilih
         $irs = Irs::where('nim', $mahasiswa->nim)
-                    ->where('semester', $selectedSemester)
-                    ->with(['irsDetails' => function($query) {
-                        $query->with(['mataKuliah', 'jadwalKuliah.ruang']);
-                    }])
-                    ->first();
-    
+            ->where('semester', $selectedSemester)
+            ->with(['irsDetails' => function ($query) {
+                $query->with(['mataKuliah', 'jadwalKuliah.ruang']);
+            }])
+            ->first();
+
         // Kirim variabel `$irs`, `$irsDetails`, `$mahasiswa`, `$pa`, dan `$currentPeriod` ke view
         return view('mhs.akademik.lihatirs', [
             'title' => 'Lihat IRS',
@@ -204,25 +206,25 @@ class IrsController extends Controller
             'currentSemester' => $currentSemester, // Semester aktif
             'selectedSemester' => $selectedSemester, // Semester yang dipilih
         ]);
-    }    
-    
+    }
+
     public function getIRSforPA($pa)
     {
         // select semua irs sesuai id
         $irs = DB::table('irs')
-        ->join('mahasiswas', 'irs.nim', '=', 'mahasiswas.nim')
-        ->join('prodis', 'mahasiswas.prodi_id', '=', 'prodis.id') 
-        ->select('irs.*', 'mahasiswas.nama', 'mahasiswas.angkatan', 'mahasiswas.pembimbing_akademik_id', 'mahasiswas.prodi_id', 'prodis.nama as nama_prodi')
-        ->where('mahasiswas.pembimbing_akademik_id', '=', $pa->id)
-        ->get();
+            ->join('mahasiswas', 'irs.nim', '=', 'mahasiswas.nim')
+            ->join('prodis', 'mahasiswas.prodi_id', '=', 'prodis.id')
+            ->select('irs.*', 'mahasiswas.nama', 'mahasiswas.angkatan', 'mahasiswas.pembimbing_akademik_id', 'mahasiswas.prodi_id', 'prodis.nama as nama_prodi')
+            ->where('mahasiswas.pembimbing_akademik_id', '=', $pa->id)
+            ->get();
 
 
         //hubungkan tabel irs dengan tabel irs_details satu satu 
         $irs->each(function ($item) {
             $item->irsDetails = IrsDetail::where('irs_id', $item->id)
-                                    ->get()->each(function($detail) {
-                                        $detail->dosenPengampuList = $detail->mataKuliah->dosenPengampu;
-                                    });
+                ->get()->each(function ($detail) {
+                    $detail->dosenPengampuList = $detail->mataKuliah->dosenPengampu;
+                });
         });
 
         return $irs;
@@ -249,8 +251,8 @@ class IrsController extends Controller
     public function getIrsDetails($id)
     {
         $irsDetails = DB::table('irs_details')
-                    ->where('irs_id', $id)
-                    ->get();
+            ->where('irs_id', $id)
+            ->get();
 
         return $irsDetails;
     }
@@ -260,13 +262,13 @@ class IrsController extends Controller
         // Pisahkan tahun akademik menjadi tahun awal dan akhir
         $currentTahunAjaran = explode('/', $currentPeriod->tahun_ajaran);
         $currentTahunAwal = (int)$currentTahunAjaran[0];
-    
+
         // Tentukan tahun angkatan mahasiswa
         $tahunAngkatan = (int)$angkatan;
-    
+
         // Hitung selisih tahun antara tahun angkatan mahasiswa dan tahun ajaran saat ini
         $selisihTahun = $currentTahunAwal - $tahunAngkatan;
-    
+
         // Setiap tahun memiliki 2 semester (ganjil dan genap), lakukan perhitungan berdasarkan semester aktif
         if ($currentPeriod->semester == 'Gasal') {
             // Jika semester Gasal (ganjil), tambahkan 1 untuk semester ganjil
@@ -275,9 +277,9 @@ class IrsController extends Controller
             // Jika semester Genap, tambahkan 2 untuk semester genap
             $semester = ($selisihTahun * 2) + 2;
         }
-        
+
         return $semester;
-    }    
+    }
 
     public function getAllMhsPerwalianWithIrsCurrentPeriod($pa)
     {
@@ -285,14 +287,12 @@ class IrsController extends Controller
         $currentPeriod = $irsPeriodsController->getCurrentPeriod();
         $mhs = Mahasiswa::with(['irs' => function ($query) use ($currentPeriod) {
             $query->where('jenis_semester', $currentPeriod->semester)
-                  ->where('tahun_ajaran', $currentPeriod->tahun_ajaran);
+                ->where('tahun_ajaran', $currentPeriod->tahun_ajaran);
         }, 'irs.irsDetails', 'irs.irsDetails.mataKuliah', 'prodi'])
             ->where('pembimbing_akademik_id', '=', $pa->id)
             ->get();
-        
+
 
         return $mhs;
     }
-
 }
-
