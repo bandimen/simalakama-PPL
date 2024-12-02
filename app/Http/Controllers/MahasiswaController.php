@@ -37,34 +37,17 @@ class MahasiswaController extends Controller
         ]);
     }
     
-
-
     // public function akademik() {
     //     return view('mhs.akademik.buatirs', ['title' => 'Akademik']);
     // }
 
 
     public function getJadwal($kodemk)
-    {    
-        // Ambil periode aktif saat ini
-        $currentPeriod = IrsPeriods::getCurrentPeriod();
-    
-        if (!$currentPeriod) {
-            return response()->json(['message' => 'Periode IRS tidak ditemukan'], 404);
-        }
-    
-        // Ambil jadwal berdasarkan kode mata kuliah dan tahun ajaran dari periode aktif
+    {        
+        // Ambil jadwal berdasarkan kode mata kuliah
         $jadwals = JadwalKuliah::with(['mataKuliah', 'ruang'])
                     ->where('kodemk', $kodemk)
-                    ->where('tahun_ajaran', $currentPeriod->tahun_ajaran) // Filter berdasarkan tahun ajaran
                     ->get();
-    
-        // Log untuk debugging
-        Log::info('Jadwal diambil', [
-            'kodemk' => $kodemk,
-            'tahun_ajaran' => $currentPeriod->tahun_ajaran,
-            'result_count' => $jadwals->count()
-        ]);
     
         return response()->json($jadwals);
     }    

@@ -42,7 +42,8 @@
         <div class="no-print">
           <h1 class="text-2xl font-bold tracking-tight text-gray-900 text-center">IRS Mahasiswa</h1>
           <p class="text-center mt-2 text-gray-700">Status IRS: <span class="font-semibold">{{ $irs->status ?? 'Belum ada data' }}</span></p>
-          <p class="text-xl font-semibold">Semester {{ $irs->semester }} | Tahun Ajaran {{ $irs->tahun_ajaran }} {{ $irs->jenis_semester }}</p>
+          <br>
+          <p class="text-xl text-center font-semibold">Semester {{ $irs->semester }} | Tahun Ajaran {{ $irs->tahun_ajaran }} {{ $irs->jenis_semester }}</p>
         </div> 
 
         <br>

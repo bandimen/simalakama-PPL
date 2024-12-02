@@ -1,63 +1,3 @@
-{{-- 
-<x-layout>
-
-  <x-slot:title>{{ $title }}</x-slot:title> masukkan ke slot yg keynya title --}}
-  <!-- Your content -->
-  {{-- <head>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-  </head> --}}
-{{-- 
-  <div class="min-h-full">
-    <x-navbar-mhs></x-navbar-mhs>
-
-   <x-header-irs-mhs></x-header-irs-mhs> 
-  <main>
-        <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-            <table class="min-w-full bg-white border border-gray-300 text-center mt-4">
-                <thead class="bg-gray-700 text-white">
-                    <tr>
-                        <th class="px-2 py-2 border border-gray-300 w-12">No</th>
-                        <th class="px-2 py-2 border border-gray-300 w-20">Kode MK</th>
-                        <th class="px-2 py-2 border border-gray-300 w-40">Mata Kuliah</th>
-                        <th class="px-2 py-2 border border-gray-300 w-16">Jenis</th>
-                        <th class="px-2 py-2 border border-gray-300 w-12">Status</th>
-                        <th class="px-2 py-2 border border-gray-300 w-32">Sks</th>
-                        <th class="px-2 py-2 border border-gray-300 w-32">Nilai Huruf</th>
-                        <th class="px-2 py-2 border border-gray-300 w-20">Bobot</th>
-                        <th class="px-2 py-2 border border-gray-300 w-20">Sks X Bobot</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if($mahasiswa->irs->first()->irsDetails->isNotEmpty())
-                        @php
-                            $counter = 0;
-                        @endphp
-                        @foreach ($mahasiswa->irs->first()->irsDetails as $detail)
-                            @foreach ($detail->khsDetails as $khsDetail)
-                                <tr>
-                                    <td class="px-2 py-2 border border-gray-300 w-12">{{ ++$counter }}</td>
-                                    <td class="px-2 py-2 border border-gray-300 w-20">{{ $detail->mataKuliah->kodemk }}</td>
-                                    <td class="px-2 py-2 border border-gray-300 w-40">{{ $detail->mataKuliah->nama }}</td>
-                                    <td class="px-2 py-2 border border-gray-300 w-16">{{ $detail->mataKuliah->sifat }}</td>
-                                    <td class="px-2 py-2 border border-gray-300 w-12">{{ $detail->status }}</td>
-                                    <td class="px-2 py-2 border border-gray-300 w-32">{{ $detail->mataKuliah->sks }}</td>
-                                    <td class="px-2 py-2 border border-gray-300 w-32">{{ $khsDetail->nilai ?? '-' }}</td>
-                                    <td class="px-2 py-2 border border-gray-300 w-20">{{ '-' }}</td>
-                                    <td class="px-2 py-2 border border-gray-300 w-20">{{ '-' }}</td>
-                                </tr>
-                            @endforeach
-                        @endforeach
-                    @endif
-                </tbody>
-            </table>
-        </div>
-      <br>
-      
-  </main>
-</div> --}}
-{{-- 
-</x-layout> --}}
-
 <x-layout>
   <x-slot:title>{{ $title }}</x-slot:title>
   <div class="min-h-full">
@@ -103,7 +43,8 @@
         <!-- Status KHS -->
         <div class="no-print">
           <h1 class="text-2xl font-bold tracking-tight text-gray-900 text-center">KHS Mahasiswa</h1>
-          <p class="text-xl font-semibold">Semester {{ $khs->irs->semester }} | Tahun Ajaran {{ $khs->irs->tahun_ajaran }} {{ $khs->irs->jenis_semester }}</p>
+          <br>
+          <p class="text-xl text-center font-semibold">Semester {{ $khs->irs->semester }} | Tahun Ajaran {{ $khs->irs->tahun_ajaran }} {{ $khs->irs->jenis_semester }}</p>
         </div> 
 
         <br>

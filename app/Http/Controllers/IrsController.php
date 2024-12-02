@@ -156,12 +156,14 @@ class IrsController extends Controller
                 $activePeriodType = 'pembatalan';
             }
         }
+        $ipk = $mahasiswa->getIPK();
         return view('mhs.akademik.buatirs', [
             'title' => 'Akademik', 
             'matkuls' => $matkuls, 
             'currentPeriod' => $currentPeriod, 
             'activePeriodType' => $activePeriodType,
-            'mahasiswa' => $mahasiswa
+            'mahasiswa' => $mahasiswa, 
+            'ipk' => $ipk,
         ]);
     }
 
