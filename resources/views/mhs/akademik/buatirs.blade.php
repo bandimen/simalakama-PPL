@@ -164,15 +164,16 @@
           /* Bagian kecil (toggle button) */
           #toggleButton {
             height: 50px; /* Tinggi bagian kecil */
-            background-color: #f3f4f6; /* Warna abu-abu terang */
+            background-color: #5c7ec4; /* Warna abu-abu terang */
             border-radius: 10px 10px 0 0; /* Rounded di bagian atas */
             cursor: pointer; /* Tampilkan pointer */
+
           }
 
           /* Ikon toggle */
           #toggleIcon {
             font-size: 16px; /* Ukuran ikon */
-            color: #4b5563; /* Warna ikon */
+            color: #ffffff; /* Warna ikon */
           }
 
           /* Konten bagian utama */
