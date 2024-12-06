@@ -116,33 +116,32 @@ class RuangController extends Controller
      
          return redirect()->route('ruang.index')->with('success', 'Ruangan berhasil diperbarui.');
      }
-    public function verifikasi()
-    {
-        // Ambil ruangan yang belum disetujui
-        $ruangs = Ruang::where('status', 'Belum disetujui')->with('prodi')->get();
-
-        // Kirim data ke view
-        return view('dekan.ruangacc', compact('ruangs'));
-    }
-
-    /**
-     * Menyetujui ruangan.
-     */
-    public function approve($id)
-    {
-        // Temukan ruangan berdasarkan ID
-        $ruang = Ruang::findOrFail($id);
-
-       
-
-        // Ubah status ruangan menjadi "Disetujui"
-        $ruang->update(['status' => 'Disetujui']);
-
-        
-
-        // Redirect dengan pesan sukses
-        return redirect()->route('ruangs.verifikasi')->with('success', 'Ruangan berhasil disetujui.');
-    }
+     public function verifikasi()
+     {
+         // Mengambil semua prodi beserta ruangan yang belum disetujui
+         $prodis = Prodi::with(['ruang' => function ($query) {
+             $query->where('status', 'Belum disetujui');
+         }])->get();
+     
+         // Kirim data ke view
+         return view('dekan.ruangacc', compact('prodis'));
+     }
+     
+     public function approveAll($prodiId)
+     {
+         // Ambil semua ruangan dalam prodi yang belum disetujui
+         $prodi = Prodi::with(['ruang' => function ($query) {
+             $query->where('status', 'Belum disetujui');
+         }])->findOrFail($prodiId);
+     
+         // Ubah status ruangan menjadi "Disetujui"
+         $prodi->ruang->each(function ($ruang) {
+             $ruang->update(['status' => 'Disetujui']);
+         });
+     
+         return redirect()->route('ruangs.verifikasi')->with('success', 'Semua ruangan di prodi ' . $prodi->nama . ' berhasil disetujui.');
+     }
+     
 
     /**
      * Remove the specified resource from storage.

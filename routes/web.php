@@ -78,6 +78,9 @@ Route::middleware(['auth'])->group(function () {
   Route::patch('/ruangs/approve/{id}', [RuangController::class, 'approve'])->name('ruangs.approve');
   Route::get('/dekan/matkul', [DekanController::class, 'jadwalKuliah'])->name('dekan.matkul');
   Route::patch('/dekan/matkul/{id}/approve', [DekanController::class, 'approveJadwalKuliah'])->name('dekan.matkul.approve');
+  Route::get('/ruangs/verifikasi', [RuangController::class, 'verifikasi'])->name('ruangs.verifikasi');
+  Route::patch('/ruangs/approve-all/{prodiId}', [RuangController::class, 'approveAll'])->name('ruangs.approveAll');
+  Route::patch('/ruangs/approve/{id}', [RuangController::class, 'approve'])->name('ruangs.approve');
 
 
 
