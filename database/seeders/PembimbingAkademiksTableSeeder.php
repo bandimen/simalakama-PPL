@@ -22,6 +22,26 @@ class PembimbingAkademiksTableSeeder extends Seeder
                 'nidn' => '0011087104', // NIDN Pak Aris S
                 'user_id' => 6,
             ],
+            [
+                'nidn' => '0023816291', // NIDN Pak Susilo MTK
+                'user_id' => 9,
+            ],
+            [
+                'nidn' => '0010098002', // NIDN Bu Rita Rahmawati Stat
+                'user_id' => 19,
+            ],
+            [
+                'nidn' => '0019027307', // NIDN Pak Adi Darmawan Kimia
+                'user_id' => 11,
+            ],
+            [
+                'nidn' => '0070117202', // NIDN Bu Suci Fani Fisika
+                'user_id' => 20,
+            ],
+            [
+                'nidn' => '0022619940', // NIDN Pak Sapto Purnomo Bio
+                'user_id' => 10,
+            ],
 
 
         ];

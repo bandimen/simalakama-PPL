@@ -62,6 +62,66 @@ class MahasiswasTableSeeder extends Seeder
                 'pembimbing_akademik_id' => 2, // ID pembimbing akademik yang sesuai
                 'user_id' => 4 // ID user yang sesuai
             ],
+            [
+                'nim' => '24010120130044',
+                'nama' => 'Riza Viaranti',
+                'alamat' => 'Jl. Logaritma No. 2',
+                'angkatan' => 2020,
+                'no_hp' => '62857109283351',
+                'status' => 'Aktif',
+                'foto' => 'riza.jpg',
+                'prodi_id' => 2,
+                'pembimbing_akademik_id' => 3, // ID pembimbing akademik yang sesuai
+                'user_id' => 14 // ID user yang sesuai
+            ],
+            [
+                'nim' => '24020122120010',
+                'nama' => 'Aiko Putri',
+                'alamat' => 'Jl. Biologi No. 9',
+                'angkatan' => 2022,
+                'no_hp' => '62882003246777',
+                'status' => 'Aktif',
+                'foto' => 'aiko.jpg',
+                'prodi_id' => 6,
+                'pembimbing_akademik_id' => 7, // ID pembimbing akademik yang sesuai
+                'user_id' => 15 // ID user yang sesuai
+            ],
+            [
+                'nim' => '24030121140094',
+                'nama' => 'Wardah Nabilah',
+                'alamat' => 'Jl. Kimia No. 14',
+                'angkatan' => 2021,
+                'no_hp' => '62882005564166',
+                'status' => 'Aktif',
+                'foto' => 'wardah.jpg',
+                'prodi_id' => 4,
+                'pembimbing_akademik_id' => 5, // ID pembimbing akademik yang sesuai
+                'user_id' => 16 // ID user yang sesuai
+            ],
+            [
+                'nim' => '24040121130080',
+                'nama' => 'Sabilla Ayu Maharastri',
+                'alamat' => 'Jl. Desain No. 15',
+                'angkatan' => 2021,
+                'no_hp' => '62857407992563',
+                'status' => 'Aktif',
+                'foto' => 'sabilla.jpg',
+                'prodi_id' => 5,
+                'pembimbing_akademik_id' => 6, // ID pembimbing akademik yang sesuai
+                'user_id' => 17 // ID user yang sesuai
+            ],
+            [
+                'nim' => '24050120120150',
+                'nama' => 'Wahyu Adjie',
+                'alamat' => 'Jl. Kenangan No. 4',
+                'angkatan' => 2021,
+                'no_hp' => '62856521099555',
+                'status' => 'Aktif',
+                'foto' => 'wahyu.jpg',
+                'prodi_id' => 3,
+                'pembimbing_akademik_id' => 4, // ID pembimbing akademik yang sesuai
+                'user_id' => 18 // ID user yang sesuai
+            ],
 
         ];
 
