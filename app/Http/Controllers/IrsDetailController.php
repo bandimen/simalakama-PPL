@@ -1,8 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Http\Controllers\IrsPeriodsController;
-use App\Http\Controllers\MahasiswaController;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Irs;
@@ -18,16 +17,14 @@ class IrsDetailController extends Controller
         try {
             $user = Auth::user();
             $mahasiswa = $user->mahasiswa;
-            
+    
             // Hitung semester mahasiswa berdasarkan angkatan dan periode saat ini
             $irsPeriodsController = new IrsPeriodsController();
             $currentPeriod = $irsPeriodsController->getCurrentPeriod();
-            Log::info('Current Period Result:', ['currentPeriod' => $currentPeriod]);
-
             $mahasiswaController = new MahasiswaController();
             $semester = $mahasiswaController->getSemester($mahasiswa->angkatan, $currentPeriod);
     
-            Log::info('Request received:', $request->all()); // Debug log
+            \Log::info('Request received:', $request->all()); // Debug log
     
             // Tentukan jenis semester
             $jenis_semester = $semester % 2 == 0 ? 'Genap' : 'Gasal';
@@ -67,52 +64,49 @@ class IrsDetailController extends Controller
             $existingDetails = IrsDetail::where('irs_id', $irs->id)->get();
     
             // Data yang baru ditambahkan
-            $newDetails = collect($bottomSheetData)->map(function ($data, $currentPeriod) use ($irs) {
+            $newDetails = collect($bottomSheetData)->map(function ($data) use ($irs, $mahasiswa) {
                 if (empty($data['kodemk']) || empty($data['kelas'])) {
                     throw new \Exception('Format data tidak valid: kodemk dan kelas wajib ada');
                 }
-    
+
                 $jadwalKuliah = JadwalKuliah::where('kodemk', $data['kodemk'])
                     ->where('kelas', $data['kelas'])
                     ->where('tahun_ajaran', '2024/2025')
-                    // ->where('tahun_ajaran', $currentPeriod->tahun_ajaran)
+                    // 'tahun_ajaran' => $currentPeriod->tahun_ajaran,
                     ->first();
-    
+
                 if (!$jadwalKuliah) {
                     throw new \Exception("Jadwal tidak ditemukan untuk kodemk: {$data['kodemk']}, kelas: {$data['kelas']}");
                 }
 
+                // Temukan semua IRS mahasiswa (semua semester)
+                $allIrsIds = Irs::where('nim', $mahasiswa->nim)->pluck('id');
+
                 // Cek apakah matakuliah sudah pernah diambil
-                $previousIrsDetail = IrsDetail::whereHas('khsDetails', function ($query) use ($data) {
-                    $query->where('kodemk', $data['kodemk']);
-                })->where('irs_id', $irs->id)
-                ->orderBy('created_at', 'desc') // Ambil data terbaru
-                ->first();
+                $previousIrsDetail = IrsDetail::whereIn('irs_id', $allIrsIds) // Cari di semua IRS mahasiswa
+                    ->whereHas('khsDetails', fn($query) => $query->where('kodemk', $data['kodemk'])) // Cocokkan kodemk
+                    ->orderBy('created_at', 'desc') // Ambil data terbaru
+                    ->first();
 
-                $status = 'Baru'; // Default status
+                $status = 'Baru';
                 if ($previousIrsDetail) {
-                    // Cek nilai dari KHS detail terkait IRS detail terakhir
                     $khsDetail = $previousIrsDetail->khsDetails()->latest()->first();
-
-                    if ($khsDetail) {
-                        $nilai = $khsDetail->nilai;
-                        if (in_array($nilai, ['B', 'C', 'D'])) {
-                            $status = 'Perbaikan';
-                        } elseif ($nilai === 'E') {
-                            $status = 'Mengulang';
-                        }
-                    }
+                    $nilai = $khsDetail->nilai ?? null;
+                    $status = match ($nilai) {
+                        'B', 'C', 'D' => 'Perbaikan',
+                        'E' => 'Ulang',
+                        default => 'Baru',
+                    };
                 }
 
-                $miaw = [
+                return [
                     'irs_id' => $irs->id,
                     'kodemk' => $data['kodemk'],
                     'jadwal_kuliah_id' => $jadwalKuliah->id,
                     'status' => $status,
                 ];
-                return $miaw;
             });
-    
+
             // Hapus entri yang tidak ada di bottomSheetData
             $existingKodems = $existingDetails->pluck('kodemk')->toArray();
             $newKodems = $newDetails->pluck('kodemk')->toArray();

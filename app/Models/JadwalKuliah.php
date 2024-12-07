@@ -15,6 +15,7 @@ class JadwalKuliah extends Model
         'kelas',
         'hari',
         'tahun_ajaran',
+        'kuota_kelas',
         'waktu_mulai',
         'waktu_selesai',
         'status',
@@ -28,7 +29,7 @@ class JadwalKuliah extends Model
 
     public function ruang()
     {
-        return $this->belongsTo(Ruang::class, 'ruang_id', 'id'); 
+        return $this->belongsTo(Ruang::class, 'ruang_id', 'id');
     }
 
     public function irsDetails()
@@ -45,4 +46,18 @@ class JadwalKuliah extends Model
         return $this->belongsTo(Prodi::class,'prodi_id','id'); // Relasi ke tabel prodi
     }
 
+
+    public function scopeSearch($query, $search)
+    {
+        if ($search) {
+            return $query->whereHas('mataKuliah', function ($q) use ($search) {
+                $q->where('nama', 'like', '%' . $search . '%');
+            })
+            ->orWhere('kelas', 'like', '%' . $search . '%')
+            ->orWhereHas('ruang', function ($q) use ($search) {
+                $q->where('nama', 'like', '%' . $search . '%');
+            });
+        }
+        return $query;
+    }
 }
