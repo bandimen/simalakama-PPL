@@ -26,10 +26,21 @@ class IrsDetailController extends Controller
     
             \Log::info('Request received:', $request->all()); // Debug log
     
-            // Temukan IRS mahasiswa
-            $irs = Irs::where('nim', $mahasiswa->nim)
-                ->where('semester', $semester)
-                ->first();
+            // Tentukan jenis semester
+            $jenis_semester = $semester % 2 == 0 ? 'Genap' : 'Gasal';
+
+            // Temukan atau buat IRS mahasiswa
+            $irs = Irs::firstOrCreate([
+                'nim' => $mahasiswa->nim,
+                'semester' => $semester,
+                'jenis_semester' => $jenis_semester,
+                'tahun_ajaran' => '2024/2025',
+                // 'tahun_ajaran' => $currentPeriod->tahun_ajaran,
+            ]);
+
+            if ($irs->wasRecentlyCreated()) {
+                Khs::firstOrCreate(['irs_id' => $irs->id]);
+            }
     
             if (!$irs) {
                 return response()->json(['message' => 'IRS tidak ditemukan untuk mahasiswa ini'], 404);
@@ -64,6 +75,8 @@ class IrsDetailController extends Controller
 
                 $jadwalKuliah = JadwalKuliah::where('kodemk', $data['kodemk'])
                     ->where('kelas', $data['kelas'])
+                    ->where('tahun_ajaran', '2024/2025')
+                    // 'tahun_ajaran' => $currentPeriod->tahun_ajaran,
                     ->first();
 
                 if (!$jadwalKuliah) {
