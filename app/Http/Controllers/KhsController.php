@@ -85,17 +85,25 @@ class KhsController extends Controller
     
         // Ambil semester dari parameter URL atau gunakan semester terakhir secara default
         $selectedSemester = $request->query('semester', $currentSemester);
-    
-        // Ambil data KHS mahasiswa berdasarkan semester yang dipilih
+
+        // Ambil data KHS berdasarkan mahasiswa dan semester yang dipilih
         $khs = Khs::whereHas('irs', function ($query) use ($mahasiswa, $selectedSemester) {
             $query->where('nim', $mahasiswa->nim)
-                  ->where('semester', $selectedSemester); // Filter semester langsung di query
+                ->where('semester', $selectedSemester);
         })
-        ->with(['irs' => function ($query) use ($selectedSemester) {
-            $query->where('semester', $selectedSemester); // Pastikan hanya IRS semester yang dipilih
-        }, 'khsDetails.irsDetails.mataKuliah'])
+        ->with([
+            'irs', // Ambil data IRS terkait
+            'khsDetails' => function ($query) {
+                $query->with([
+                    'irsDetails' => function ($query) {
+                        $query->with(['mataKuliah', 'jadwalKuliah.ruang']); // Ambil data Mata Kuliah dan Jadwal Kuliah
+                    }
+                ]);
+            }
+        ])
         ->first();
-    
+
+        
         // Kirim data ke view
         return view('mhs.akademik.lihatkhs', [
             'title' => 'Lihat KHS',
