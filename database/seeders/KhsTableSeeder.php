@@ -43,10 +43,6 @@ class KhsTableSeeder extends Seeder
             [
                 'irs_id' => 7,
             ], 
-            // khs nopal dgn id irs 9, smt 5 th ajaran 2024/2025 gasal
-            [
-                'irs_id' => 8,
-            ], 
 
         ];
 
