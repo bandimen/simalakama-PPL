@@ -44,7 +44,10 @@
         <div class="no-print">
           <h1 class="text-2xl font-bold tracking-tight text-gray-900 text-center">KHS Mahasiswa</h1>
           <br>
-          <p class="text-xl text-center font-semibold">Semester {{ $khs->irs->semester }} | Tahun Ajaran {{ $khs->irs->tahun_ajaran }} {{ $khs->irs->jenis_semester }}</p>
+          @if($khs)
+            
+          <p class="text-xl text-center font-semibold">Semester {{ $khs->irs->semester ?? ''}} | Tahun Ajaran {{ $khs->irs->tahun_ajaran ?? '' }} {{ $khs->irs->jenis_semester ?? ''}}</p>
+          @endif
         </div> 
 
         <br>
@@ -84,13 +87,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if($khs && $khsDetails->isNotEmpty())
                         @php
                             $counter = 0;
                             $totalSks = 0;
                             $totalBobot = 0;
                             $totalSksXBobot = 0;
                         @endphp
+                    @if($khs && $khsDetails->isNotEmpty())
                         @foreach ($khsDetails as $detail)
                             @php
                                 $konversi = ['A' => 4, 'B' => 3, 'C' => 2, 'D' => 1, 'E' => 0];
@@ -135,32 +138,6 @@
 
             <br>
 
-            <!-- Perhitungan IP Semester -->
-            @php
-                // Pastikan nilai default untuk $totalSks dan $totalSksXBobot
-                $totalSks = $totalSksXBobot = 0;
-
-                // Cek apakah data khsDetails ada
-                if (isset($khsDetails) && $khsDetails->isNotEmpty()) {
-                    foreach ($khsDetails as $detail) {
-                        $sks = $detail->irsDetail->mataKuliah->sks ?? 0;
-                        $nilai = $detail->nilai;
-                        
-                        // Tentukan bobot berdasarkan nilai
-                        $bobot = match ($nilai) {
-                            'A' => 4,
-                            'B' => 3,
-                            'C' => 2,
-                            'D' => 1,
-                            'E' => 0,
-                            default => 0,
-                        };
-
-                        $totalSks += $sks;
-                        $totalSksXBobot += $sks * $bobot;
-                    }
-                }
-            @endphp
 
             <div class="no-print">
                 <div class="flex justify-start items-center mt-4">

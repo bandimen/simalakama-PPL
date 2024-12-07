@@ -1,8 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Http\Controllers\IrsPeriodsController;
-use App\Http\Controllers\MahasiswaController;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Irs;
@@ -18,28 +17,19 @@ class IrsDetailController extends Controller
         try {
             $user = Auth::user();
             $mahasiswa = $user->mahasiswa;
-            
+    
             // Hitung semester mahasiswa berdasarkan angkatan dan periode saat ini
             $irsPeriodsController = new IrsPeriodsController();
             $currentPeriod = $irsPeriodsController->getCurrentPeriod();
-            Log::info('Current Period Result:', ['currentPeriod' => $currentPeriod]);
-
             $mahasiswaController = new MahasiswaController();
             $semester = $mahasiswaController->getSemester($mahasiswa->angkatan, $currentPeriod);
     
-            Log::info('Request received:', $request->all()); // Debug log
+            \Log::info('Request received:', $request->all()); // Debug log
     
-            // Tentukan jenis semester
-            $jenis_semester = $semester % 2 == 0 ? 'Genap' : 'Gasal';
-
-            // Temukan atau buat IRS mahasiswa
-            $irs = Irs::firstOrCreate([
-                'nim' => $mahasiswa->nim,
-                'semester' => $semester,
-                'jenis_semester' => $jenis_semester,
-                'tahun_ajaran' => '2024/2025',
-                // 'tahun_ajaran' => $currentPeriod->tahun_ajaran,
-            ]);
+            // Temukan IRS mahasiswa
+            $irs = Irs::where('nim', $mahasiswa->nim)
+                ->where('semester', $semester)
+                ->first();
     
             if (!$irs) {
                 return response()->json(['message' => 'IRS tidak ditemukan untuk mahasiswa ini'], 404);
@@ -71,26 +61,24 @@ class IrsDetailController extends Controller
                 if (empty($data['kodemk']) || empty($data['kelas'])) {
                     throw new \Exception('Format data tidak valid: kodemk dan kelas wajib ada');
                 }
-            
+
                 $jadwalKuliah = JadwalKuliah::where('kodemk', $data['kodemk'])
                     ->where('kelas', $data['kelas'])
-                    ->where('tahun_ajaran', '2024/2025')
-                    // ->where('tahun_ajaran', $currentPeriod->tahun_ajaran)
                     ->first();
-            
+
                 if (!$jadwalKuliah) {
                     throw new \Exception("Jadwal tidak ditemukan untuk kodemk: {$data['kodemk']}, kelas: {$data['kelas']}");
                 }
-            
+
                 // Temukan semua IRS mahasiswa (semua semester)
                 $allIrsIds = Irs::where('nim', $mahasiswa->nim)->pluck('id');
-            
+
                 // Cek apakah matakuliah sudah pernah diambil
                 $previousIrsDetail = IrsDetail::whereIn('irs_id', $allIrsIds) // Cari di semua IRS mahasiswa
                     ->whereHas('khsDetails', fn($query) => $query->where('kodemk', $data['kodemk'])) // Cocokkan kodemk
                     ->orderBy('created_at', 'desc') // Ambil data terbaru
                     ->first();
-            
+
                 $status = 'Baru';
                 if ($previousIrsDetail) {
                     $khsDetail = $previousIrsDetail->khsDetails()->latest()->first();
@@ -101,15 +89,15 @@ class IrsDetailController extends Controller
                         default => 'Baru',
                     };
                 }
-            
+
                 return [
                     'irs_id' => $irs->id,
                     'kodemk' => $data['kodemk'],
                     'jadwal_kuliah_id' => $jadwalKuliah->id,
                     'status' => $status,
                 ];
-            });            
-    
+            });
+
             // Hapus entri yang tidak ada di bottomSheetData
             $existingKodems = $existingDetails->pluck('kodemk')->toArray();
             $newKodems = $newDetails->pluck('kodemk')->toArray();
