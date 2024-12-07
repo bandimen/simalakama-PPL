@@ -1,3 +1,107 @@
+// async function addCourse() {
+//   const courseSelect = document.getElementById("courses");
+//   const courseList = document.getElementById("courseList");
+//   const selectedCourse = courseSelect.value;
+
+//   if (!selectedCourse) return;
+
+//   try {
+//     const courseData = JSON.parse(selectedCourse); 
+//     const { kodemk, nama, sks, semester } = courseData;
+
+//     // Cek apakah mata kuliah sudah ada di daftar
+//     const existingCourses = Array.from(courseList.children).map(item => {
+//       return item.textContent.split(" - ")[0].trim(); 
+//     });
+
+//     if (existingCourses.includes(kodemk)) {
+//       alert("Mata kuliah sudah ada di daftar.");
+//       return;
+//     }
+
+//     // Tambahkanroute ke daftar mata kuliah yang dipilih
+//     const listItem = document.createElement("li");
+//     listItem.className = "course-item";
+//     listItem.textContent = `${kodemk} - ${nama} (${sks} SKS, Semester ${semester})`;
+    
+//     // Tombol untuk menghapus mata kuliah dari daftar
+//     const removeBtn = document.createElement("span");
+//     removeBtn.className = "text-white bg-red-700 rounded-full text-xs px-2 py-1 ml-2";
+//     removeBtn.textContent = "X";
+//     removeBtn.onclick = function () {
+//       const selectedCourseBox = document.querySelector(`.courseBox-${kodemk}[style*="background-color: rgb(40, 167, 69)"]`); // Kotak yang sudah dipilih
+    
+//       if (selectedCourseBox) {
+//         // Jika mata kuliah sudah dipilih, tampilkan modal konfirmasi
+//         const cancelModal = document.getElementById("cancelConfirmationModal");
+//         const confirmCancelButton = document.getElementById("confirmCancelButton");
+//         const cancelCancelButton = document.getElementById("cancelCancelButton");
+    
+//         // Pastikan modal terlihat
+//         cancelModal.classList.remove("hidden");
+    
+//         // Reset event listener sebelumnya
+//         confirmCancelButton.onclick = null;
+//         cancelCancelButton.onclick = null;
+    
+//         // Tambahkan event listener untuk tombol "Ya" (konfirmasi)
+//         confirmCancelButton.onclick = () => {
+//           // Hapus elemen dari courseList
+//           courseList.removeChild(listItem);
+    
+//           // Hapus semua kotak jadwal dari tabel yang terkait dengan kodemk
+//           const courseBoxes = document.querySelectorAll(`.courseBox-${kodemk}`);
+//           courseBoxes.forEach(box => box.remove());
+    
+//           // Hapus dari selectedCourses
+//           selectedCourses = selectedCourses.filter(course => course.kodemk !== kodemk);
+    
+//           // Hapus dari bottomSheetData
+//           bottomSheetData = bottomSheetData.filter(course => course.kodemk !== kodemk);
+    
+//           // Perbarui tampilan bottom sheet
+//           updateBottomSheet();
+    
+//           // Tutup modal
+//           cancelModal.classList.add("hidden");
+          
+//         };
+    
+//         // Tambahkan event listener untuk tombol "Batal"
+//         cancelCancelButton.onclick = () => {
+//           cancelModal.classList.add("hidden"); // Tutup modal tanpa perubahan
+//         };
+//       } else {
+//         // Jika belum dipilih, langsung hapus dari daftar
+//         courseList.removeChild(listItem);
+    
+//         // Hapus semua kotak jadwal dari tabel yang terkait dengan kodemk
+//         const courseBoxes = document.querySelectorAll(`.courseBox-${kodemk}`);
+//         courseBoxes.forEach(box => box.remove());
+    
+//         // Hapus dari selectedCourses
+//         selectedCourses = selectedCourses.filter(course => course.kodemk !== kodemk);
+    
+//         // Hapus dari bottomSheetData
+//         bottomSheetData = bottomSheetData.filter(course => course.kodemk !== kodemk);
+    
+//         // Perbarui tampilan bottom sheet
+//         updateBottomSheet();
+//       }
+//     };    
+
+//   listItem.appendChild(removeBtn);
+//   courseList.appendChild(listItem);
+
+//   courseSelect.value = "";
+
+//     await fetchAndDisplaySchedule(kodemk, nama);
+//     updateScheduleConflicts();
+//   } catch (error) {
+//     console.error("Error parsing course data:", error);
+//   }
+// }
+
 async function addCourse() {
   const courseSelect = document.getElementById("courses");
   const courseList = document.getElementById("courseList");
@@ -6,12 +110,12 @@ async function addCourse() {
   if (!selectedCourse) return;
 
   try {
-    const courseData = JSON.parse(selectedCourse); 
+    const courseData = JSON.parse(selectedCourse);
     const { kodemk, nama, sks, semester } = courseData;
 
     // Cek apakah mata kuliah sudah ada di daftar
     const existingCourses = Array.from(courseList.children).map(item => {
-      return item.textContent.split(" - ")[0].trim(); 
+      return item.textContent.split(" - ")[0].trim();
     });
 
     if (existingCourses.includes(kodemk)) {
@@ -19,92 +123,166 @@ async function addCourse() {
       return;
     }
 
-    // Tambahkanroute ke daftar mata kuliah yang dipilih
+    // Hitung total SKS yang sudah dipilih
+    let totalSKS = Array.from(courseList.children).reduce((sum, item) => {
+      const sksMatch = item.textContent.match(/\((\d+) SKS/); // Ambil SKS dari teks
+      const sksValue = sksMatch ? parseInt(sksMatch[1], 10) : 0;
+      return sum + sksValue;
+    }, 0);
+
+    // Tentukan maksimal beban SKS (gunakan fungsi backend)
+    const maxBebanSks = await getMaxBebanSks();
+
+    // Tambahkan SKS mata kuliah yang dipilih
+    const newTotalSKS = totalSKS + sks;
+
+    // Cek apakah total SKS melebihi batas maksimal
+    if (newTotalSKS > maxBebanSks) {
+      alert(`Total SKS melebihi batas maksimal (${maxBebanSks} SKS). Anda tidak dapat menambahkan mata kuliah ini.`);
+      return;
+    }
+
+    // Tambahkan mata kuliah ke daftar
     const listItem = document.createElement("li");
     listItem.className = "course-item";
     listItem.textContent = `${kodemk} - ${nama} (${sks} SKS, Semester ${semester})`;
-    
+
     // Tombol untuk menghapus mata kuliah dari daftar
     const removeBtn = document.createElement("span");
     removeBtn.className = "text-white bg-red-700 rounded-full text-xs px-2 py-1 ml-2";
     removeBtn.textContent = "X";
     removeBtn.onclick = function () {
+
       const selectedCourseBox = document.querySelector(`.courseBox-${kodemk}[style*="background-color: rgb(40, 167, 69)"]`); // Kotak yang sudah dipilih
     
       if (selectedCourseBox) {
-        // Jika mata kuliah sudah dipilih, tampilkan modal konfirmasi
-        const cancelModal = document.getElementById("cancelConfirmationModal");
-        const confirmCancelButton = document.getElementById("confirmCancelButton");
-        const cancelCancelButton = document.getElementById("cancelCancelButton");
-    
-        // Pastikan modal terlihat
-        cancelModal.classList.remove("hidden");
-    
-        // Reset event listener sebelumnya
-        confirmCancelButton.onclick = null;
-        cancelCancelButton.onclick = null;
-    
-        // Tambahkan event listener untuk tombol "Ya" (konfirmasi)
-        confirmCancelButton.onclick = () => {
-          // Hapus elemen dari courseList
-          courseList.removeChild(listItem);
-    
-          // Hapus semua kotak jadwal dari tabel yang terkait dengan kodemk
-          const courseBoxes = document.querySelectorAll(`.courseBox-${kodemk}`);
-          courseBoxes.forEach(box => box.remove());
-    
-          // Hapus dari selectedCourses
-          selectedCourses = selectedCourses.filter(course => course.kodemk !== kodemk);
-    
-          // Hapus dari bottomSheetData
-          bottomSheetData = bottomSheetData.filter(course => course.kodemk !== kodemk);
-    
-          // Perbarui tampilan bottom sheet
-          updateBottomSheet();
-    
-          // Tutup modal
-          cancelModal.classList.add("hidden");
+          // Jika mata kuliah sudah dipilih, tampilkan modal konfirmasi
+          const cancelModal = document.getElementById("cancelConfirmationModal");
+          const confirmCancelButton = document.getElementById("confirmCancelButton");
+          const cancelCancelButton = document.getElementById("cancelCancelButton");
           
-        };
-    
-        // Tambahkan event listener untuk tombol "Batal"
-        cancelCancelButton.onclick = () => {
-          cancelModal.classList.add("hidden"); // Tutup modal tanpa perubahan
-        };
+          // Pastikan modal terlihat
+          cancelModal.classList.remove("hidden");
+          
+          // Reset event listener sebelumnya
+          confirmCancelButton.onclick = null;
+          cancelCancelButton.onclick = null;
+          
+          // Tambahkan event listener untuk tombol "Ya" (konfirmasi)
+          confirmCancelButton.onclick = () => {
+              // Hapus elemen dari courseList
+              courseList.removeChild(listItem);
+
+              updateTotalSKS();
+          
+              // Hapus semua kotak jadwal dari tabel yang terkait dengan kodemk
+              const courseBoxes = document.querySelectorAll(`.courseBox-${kodemk}`);
+              courseBoxes.forEach(box => box.remove());
+          
+              // Hapus dari selectedCourses
+              selectedCourses = selectedCourses.filter(course => course.kodemk !== kodemk);
+          
+              // Hapus dari bottomSheetData
+              bottomSheetData = bottomSheetData.filter(course => course.kodemk !== kodemk);
+          
+              // Perbarui tampilan bottom sheet
+              updateBottomSheet();
+          
+              // Tutup modal
+              cancelModal.classList.add("hidden");
+                
+          };
+          
+          // Tambahkan event listener untuk tombol "Batal"
+          cancelCancelButton.onclick = () => {
+              cancelModal.classList.add("hidden"); // Tutup modal tanpa perubahan
+          };
       } else {
-        // Jika belum dipilih, langsung hapus dari daftar
-        courseList.removeChild(listItem);
-    
-        // Hapus semua kotak jadwal dari tabel yang terkait dengan kodemk
-        const courseBoxes = document.querySelectorAll(`.courseBox-${kodemk}`);
-        courseBoxes.forEach(box => box.remove());
-    
-        // Hapus dari selectedCourses
-        selectedCourses = selectedCourses.filter(course => course.kodemk !== kodemk);
-    
-        // Hapus dari bottomSheetData
-        bottomSheetData = bottomSheetData.filter(course => course.kodemk !== kodemk);
-    
-        // Perbarui tampilan bottom sheet
-        updateBottomSheet();
-      }
+            // Jika belum dipilih, langsung hapus dari daftar
+            courseList.removeChild(listItem);
+          
+            // Hapus semua kotak jadwal dari tabel yang terkait dengan kodemk
+            const courseBoxes = document.querySelectorAll(`.courseBox-${kodemk}`);
+            courseBoxes.forEach(box => box.remove());
+          
+            // Hapus dari selectedCourses
+            selectedCourses = selectedCourses.filter(course => course.kodemk !== kodemk);
+          
+            // Hapus dari bottomSheetData
+            bottomSheetData = bottomSheetData.filter(course => course.kodemk !== kodemk);
+
+            updateTotalSKS(); // Perbarui total SKS setelah penghapusan
+          
+            // Perbarui tampilan bottom sheet
+            updateBottomSheet();
+            }
     };    
 
-  // Log isi courseList setelah penghapusan
-  console.log("Isi courseList setelah penghapusan:", Array.from(courseList.children).map(item => item.textContent));
-  
-  listItem.appendChild(removeBtn);
-  courseList.appendChild(listItem);
+    listItem.appendChild(removeBtn);
+    courseList.appendChild(listItem);
+    
+    // Perbarui total SKS
+    updateTotalSKS();
+    console.log("Daftar mata kuliah saat ini:", Array.from(courseList.children));
 
-  // Log isi courseList setelah penambahan
-  console.log("Isi courseList setelah penambahan:", Array.from(courseList.children).map(item => item.textContent));
-
-  courseSelect.value = "";
+    courseSelect.value = "";
 
     await fetchAndDisplaySchedule(kodemk, nama);
     updateScheduleConflicts();
   } catch (error) {
     console.error("Error parsing course data:", error);
+  }
+}
+
+function updateTotalSKS() {
+  const courseList = document.getElementById("courseList");
+
+  if (!courseList) {
+    console.error("Error: Elemen #courseList tidak ditemukan.");
+    return;
+  }
+
+  // Hitung total SKS dari setiap item di courseList
+  const totalSKS = Array.from(courseList.children).reduce((sum, item) => {
+    const sksMatch = item.textContent.match(/\((\d+) SKS/); // Cari SKS dari teks
+    const sksValue = sksMatch ? parseInt(sksMatch[1], 10) : 0;
+    return sum + sksValue;
+  }, 0);
+
+  // Update elemen total SKS pada HTML
+  const totalSKSElement = document.getElementById("totalSKS");
+  if (!totalSKSElement) {
+    console.error("Error: Elemen #totalSKS tidak ditemukan.");
+    return;
+  }
+
+  totalSKSElement.textContent = totalSKS;
+
+  // Update ikon toggle dengan total SKS
+  const toggleIcon = document.getElementById("toggleIcon");
+  if (!toggleIcon) {
+    console.error("Error: Elemen #toggleIcon tidak ditemukan.");
+    return;
+  }
+
+  toggleIcon.innerHTML = `${totalSKS} SKS`; // Tampilkan total SKS di ikon
+
+  console.log("Total SKS saat ini:", totalSKS);
+  
+}
+
+async function getMaxBebanSks() {
+  try {
+    const response = await fetch('/api/getMaxBebanSks'); // Endpoint backend untuk batas maksimal SKS
+    if (!response.ok) {
+      throw new Error('Gagal mendapatkan maksimal beban SKS.');
+    }
+
+    const data = await response.json();
+    return data.maxBebanSks; // Pastikan backend mengembalikan key ini
+  } catch (error) {
+    console.error(error);
+    return 21; // Default jika terjadi kesalahan
   }
 }
 
@@ -177,8 +355,7 @@ async function fetchAndDisplaySchedule(kodemk, nama) {
           <div class="text-xs text-gray-600 truncate">Kelas: ${kelas}</div>
           <div class="text-xs text-gray-600 truncate">Ruang: ${ruang_id}</div>
           <div class="text-xs text-gray-600 truncate">${waktu_mulai} - ${waktu_selesai}</div>
-        `;
-            
+        `;  
 
         // Tambahkan event klik dengan pengecekan tabrakan jadwal
         courseBox.onclick = () => {
@@ -232,20 +409,16 @@ function isTimeConflict(newStart, newEnd, existingStart, existingEnd, minGapMinu
 }
 
 function checkForTimeConflict(newStart, newEnd, newDay, excludeKodemk = null, minGapMinutes = 10) {
-  for (const course of selectedCourses) {
-    if (
-      course.kodemk !== excludeKodemk && // Abaikan jadwal yang sedang dihapus
-      course.hari === newDay && 
-      isTimeConflict(newStart, newEnd, course.jam.split(" - ")[0], course.jam.split(" - ")[1], minGapMinutes)
-    ) {
-      return true; // Ada tabrakan
-    }
-  }
-  return false; // Tidak ada tabrakan
+  // Periksa apakah ada konflik dengan semua jadwal yang dipilih
+  return selectedCourses.some(course =>
+    course.kodemk !== excludeKodemk && // Abaikan jadwal yang sedang diproses
+    course.hari === newDay && // Hari harus sama
+    isTimeConflict(newStart, newEnd, course.jam.split(" - ")[0], course.jam.split(" - ")[1], minGapMinutes) // Waktu harus bertabrakan
+  );
 }
 
 function updateScheduleConflicts() {
-  const allCourseBoxes = document.querySelectorAll(".courseBox"); // Semua jadwal di tabel
+  const allCourseBoxes = document.querySelectorAll(".courseBox"); // Ambil semua jadwal dari tabel
 
   allCourseBoxes.forEach(box => {
     const kodemk = box.className.match(/courseBox-([\w]+)/)[1]; // Ambil kode mata kuliah
@@ -253,34 +426,42 @@ function updateScheduleConflicts() {
     const waktuSelesai = box.getAttribute("data-end-time");
     const hari = box.getAttribute("data-hari");
 
-    // Periksa apakah ada konflik dengan semua jadwal yang dipilih
+    // Periksa apakah jadwal ini sedang dipilih
+    const isSelected = selectedCourses.some(course => course.kodemk === kodemk);
+
+    // Periksa apakah ada konflik dengan jadwal yang dipilih
     const isConflict = selectedCourses.some(course =>
       course.hari === hari && // Hari harus sama
       isTimeConflict(waktuMulai, waktuSelesai, course.jam.split(" - ")[0], course.jam.split(" - ")[1]) &&
       course.kodemk !== kodemk // Abaikan jadwal dengan kode MK yang sama
     );
 
-    if (isConflict) {
+    if (isSelected) {
+      // Jadwal sudah dipilih
+      box.style.backgroundColor = "#B8E986"; // Warna hijau untuk jadwal yang dipilih
+      box.classList.remove("conflict"); // Hapus status konflik
+      box.onclick = null; // Nonaktifkan klik pada jadwal yang sudah dipilih
+    } else if (isConflict || checkGlobalConflict(kodemk, waktuMulai, waktuSelesai, hari)) {
       // Tunjukkan konflik (merah) dan nonaktifkan klik
       box.style.backgroundColor = "#FF4D4F"; // Warna merah untuk indikasi konflik
       box.classList.add("conflict"); // Tambahkan class untuk identifikasi konflik
       box.onclick = null; // Nonaktifkan klik pada jadwal konflik
     } else {
-      // Jika tidak ada konflik, reset warna
+      // Reset ke warna default jika tidak ada konflik
       box.style.backgroundColor = ""; // Kembalikan ke warna default
       box.classList.remove("conflict"); // Hapus status konflik
-
-      // Aktifkan kembali klik jika jadwal tidak dipilih
-      const isSelected = selectedCourses.some(course => course.kodemk === kodemk);
-      if (!isSelected) {
-        box.onclick = () => showConfirmationModal(kodemk, box);
-      }
-      if (!isConflict && !box.onclick) {
-        box.onclick = () => showConfirmationModal(kodemk, box);
-      }
-      
+      box.onclick = () => showConfirmationModal(kodemk, box); // Aktifkan kembali klik
     }
   });
+}
+
+function checkGlobalConflict(kodemk, waktuMulai, waktuSelesai, hari) {
+  // Periksa jika ada jadwal lain yang memicu konflik
+  return selectedCourses.some(course =>
+    course.hari === hari && // Hari sama
+    isTimeConflict(waktuMulai, waktuSelesai, course.jam.split(" - ")[0], course.jam.split(" - ")[1]) &&
+    course.kodemk !== kodemk // Abaikan jadwal dengan kode MK yang sama
+  );
 }
 
 // Tempat penyimpanan sementara untuk jadwal yang dipilih
@@ -316,8 +497,6 @@ function showConfirmationModal(kodemk, selectedCourseBox) {
   
       selectedCourses.push(courseInfo);
       updateBottomSheet();
-      // Perbarui konflik jadwal
-      updateScheduleConflicts();
   
       const similarCourseBoxes = document.querySelectorAll(`.courseBox-${kodemk}`);
       similarCourseBoxes.forEach(box => {
@@ -342,8 +521,6 @@ function showConfirmationModal(kodemk, selectedCourseBox) {
     modal.classList.add("hidden");
   };
 }
-
-
 
 // Fungsi untuk menampilkan modal konfirmasi pembatalan pengambilan mata kuliah
 function showCancelModal(kodemk, selectedCourseBox) {
@@ -485,15 +662,17 @@ document.addEventListener("DOMContentLoaded", () => {
       // Collapse
       bottomSheet.classList.remove("expand");
       content.classList.add("hidden");
-      toggleIcon.innerHTML = "22 SKS"; // Ubah ikon ke atas
     } else {
       // Expand
       bottomSheet.classList.add("expand");
       content.classList.remove("hidden");
-      toggleIcon.innerHTML = "22 SKS"; // Ubah ikon ke bawah
     }
 
     isExpanded = !isExpanded; // Toggle status
   });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("DOM sepenuhnya dimuat. Elemen tersedia.");
 });
 

@@ -27,12 +27,20 @@ class MahasiswaController extends Controller
         $semesterMahasiswa = $this->getSemester($mahasiswa->angkatan, $currentPeriod);
 
         
-        return view('mhs.dashboard', 
+        return view('mhs.dashboard',
         [
             'title' => 'Dashboard Mahasiswa', 
             'mahasiswa' => $mahasiswa, 
             'currentPeriod' => $currentPeriod,
             'pa' => $pa,
+            'semester' => $semesterMahasiswa,
+        ]);
+
+        return view('mhs.akademik.buatirs', 
+        [
+            'title' => 'Buat Irs Mahasiswa ', 
+            'mahasiswa' => $mahasiswa, 
+            'currentPeriod' => $currentPeriod,
             'semester' => $semesterMahasiswa,
         ]);
     }
@@ -76,4 +84,13 @@ class MahasiswaController extends Controller
         return $semester;
     }
 
+    public function getMaxBebanSks()
+    {
+        $mahasiswa = Auth::user()->mahasiswa;
+        $maxBebanSks = $mahasiswa->getMaxBebanSks();
+
+        return response()->json([
+            'maxBebanSks' => $maxBebanSks,
+        ]);
+    }
 }

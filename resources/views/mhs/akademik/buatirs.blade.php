@@ -42,9 +42,9 @@
             <!-- Garis Horizontal -->
             <hr class="border-gray-300 w-full mb-4 dark:border-gray-600">
             <p class="mb-2 text-m tracking-tight text-gray-700 dark:text-white">Tahun Ajaran: {{ $currentPeriod->tahun_ajaran }}</p>
-            <p class="mb-2 text-m tracking-tight text-gray-700 dark:text-white">Indeks Prestasi Kumulatif:  {{ $ipk }} </p>
-            <p class="mb-2 text-m tracking-tight text-gray-700 dark:text-white">Indeks Prestasi Semester (lalu): {{ $mahasiswa->ips_lalu }}</p>
-            <p class="mb-2 text-m tracking-tight text-gray-700 dark:text-white">Maksimal Beban SKS: {{ $mahasiswa->max_sks }}</p>
+            <p class="mb-2 text-m tracking-tight text-gray-700 dark:text-white">Indeks Prestasi Kumulatif:  {{  $mahasiswa->getIPK() }} </p>
+            <p class="mb-2 text-m tracking-tight text-gray-700 dark:text-white">Indeks Prestasi Semester (lalu): {{ $mahasiswa->getIPSemesterLalu() }}</p>
+            <p class="mb-2 text-m tracking-tight text-gray-700 dark:text-white">Maksimal Beban SKS: {{ $mahasiswa->getMaxBebanSks() }}</p>
         </section>
 
         <br>
@@ -65,6 +65,7 @@
           <br><br>
           <div class="selected-courses" id="selectedCourses">
             <h3>Mata Kuliah yang Dipilih:</h3>
+            <br>
             <ul id="courseList"></ul>
           </div>
         </section>
@@ -118,7 +119,9 @@
               id="toggleButton" 
               class="flex justify-center items-center h-12 bg-black-200 rounded-t-lg cursor-pointer"
           >
-            <div id="toggleIcon" class="text-lg font-bold text-white">2 SKS</div> <!-- Panah -->
+            <div id="toggleIcon" class="text-lg font-bold text-white">
+              <span id="totalSKS">0</span> SKS
+            </div>
           </div>
 
           <!-- Bagian Konten -->
@@ -267,7 +270,7 @@
             </div>
           </div>
         </section>
-
+        
         <div 
             id="bottomSheet" 
             class="fixed bottom-0 inset-x-0 bg-white shadow-lg rounded-t-lg transition-transform duration-300 z-50 max-w-7xl mx-auto"
@@ -278,7 +281,9 @@
               id="toggleButton" 
               class="flex justify-center items-center h-12 bg-black-200 rounded-t-lg cursor-pointer"
           >
-            <div id="toggleIcon" class="text-lg font-bold text-white">2 SKS</div> <!-- Panah -->
+              <div id="toggleIcon" class="text-lg font-bold text-white">
+                  <span id="totalSKS">0</span> SKS
+              </div>
           </div>
 
           <!-- Bagian Konten -->

@@ -45,6 +45,7 @@ Route::middleware(['auth'])->group(function () {
   Route::get('/irs/selected-schedules', [IrsController::class, 'getSelectedSchedules']);
   Route::post('/irs/store', [IrsController::class, 'store']);
   Route::post('/irs-detail/store', [IrsDetailController::class, 'store']);
+  Route::get('/api/getMaxBebanSks', [MahasiswaController::class, 'getMaxBebanSks']);
   // Route::post('/save-selected-course', [IrsDetailController::class, 'saveSelectedCourse']);
   // Route::post('/irs-detail/store', [IrsDetailController::class, 'save'])->middleware('auth');
   // Route::get('/irs-detail/load', [IrsDetailController::class, 'load'])->middleware('auth');

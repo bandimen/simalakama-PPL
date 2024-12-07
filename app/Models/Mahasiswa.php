@@ -130,4 +130,59 @@ class Mahasiswa extends Model
         return $totalBobot;
     }
 
+    public function getIPSemesterLalu()
+    {
+        $irsTerakhir = $this->irs()->latest('tahun_ajaran')->latest('jenis_semester')->skip(1)->first();
+
+        if (!$irsTerakhir) {
+            return 'N/A'; // Jika IRS tidak ditemukan
+        }
+
+        $totalSksXBobot = 0;
+        $totalSks = 0;
+
+        foreach ($irsTerakhir->khs->khsDetails as $detail) {
+            $sks = $detail->irsDetail->mataKuliah->sks ?? 0;
+            $nilai = $detail->nilai;
+
+            // Tentukan bobot berdasarkan nilai
+            $bobot = match ($nilai) {
+                'A' => 4,
+                'B' => 3,
+                'C' => 2,
+                'D' => 1,
+                'E' => 0,
+                default => 0,
+            };
+
+            $totalSks += $sks;
+            $totalSksXBobot += $sks * $bobot;
+        }
+
+        return $totalSks > 0 ? number_format($totalSksXBobot / $totalSks, 2) : 'N/A';
+    }
+
+    public function getMaxBebanSks()
+    {
+        // Ambil IP semester lalu
+        $ipSemesterLalu = $this->getIPSemesterLalu();
+
+        if ($ipSemesterLalu === 'N/A') {
+            return 21; // Default maksimal beban SKS jika tidak ada IP semester lalu
+        }
+
+        // Konversi IP menjadi float untuk perbandingan
+        $ip = (float) $ipSemesterLalu;
+
+        // Tentukan maksimal beban SKS berdasarkan IP
+        if ($ip >= 3.00) {
+            return 24;
+        } elseif ($ip >= 2.50) {
+            return 22;
+        } elseif ($ip >= 2.00) {
+            return 20;
+        } else {
+            return 18;
+        }
+    }
 }

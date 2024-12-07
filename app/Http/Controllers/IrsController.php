@@ -52,7 +52,7 @@ class IrsController extends Controller
                     'irs_id' => $irs->id,
                     'kodemk' => $item['kodemk'],
                     'jadwal_kuliah_id' => $item['jadwal_kuliah_id'],
-                    'status' => $item['status'] ?? 'Baru'
+                    'status' => $item['status'] ?? 'Baru' ?? 'Perbaikan' ?? 'Mengulang'
                 ]);
             }
 
@@ -122,19 +122,17 @@ class IrsController extends Controller
         $irsPeriodsController = new IrsPeriodsController();
         $currentPeriod = $irsPeriodsController->getCurrentPeriod();
         $currentDateTime = now();
+        
 
         $mahasiswa = Auth::user()->mahasiswa;
 
         if ($mahasiswa) {
             $mahasiswa->load([
-                'irs' => function ($query) use ($currentPeriod) {
-                    $query->where('jenis_semester', $currentPeriod->semester)
-                        ->where('tahun_ajaran', $currentPeriod->tahun_ajaran);
-                },
+                'irs',
                 'irs.irsDetails',
                 'irs.irsDetails.mataKuliah',
                 'prodi',
-            ]);
+            ]);            
         }
 
         $activePeriodType = null;

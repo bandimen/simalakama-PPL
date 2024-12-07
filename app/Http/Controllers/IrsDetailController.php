@@ -69,12 +69,34 @@ class IrsDetailController extends Controller
                 if (!$jadwalKuliah) {
                     throw new \Exception("Jadwal tidak ditemukan untuk kodemk: {$data['kodemk']}, kelas: {$data['kelas']}");
                 }
-    
+
+                // Cek apakah matakuliah sudah pernah diambil
+                $previousIrsDetail = IrsDetail::whereHas('khsDetails', function ($query) use ($data) {
+                    $query->where('kodemk', $data['kodemk']);
+                })->where('irs_id', $irs->id)
+                ->orderBy('created_at', 'desc') // Ambil data terbaru
+                ->first();
+
+                $status = 'Baru'; // Default status
+                if ($previousIrsDetail) {
+                    // Cek nilai dari KHS detail terkait IRS detail terakhir
+                    $khsDetail = $previousIrsDetail->khsDetails()->latest()->first();
+
+                    if ($khsDetail) {
+                        $nilai = $khsDetail->nilai;
+                        if (in_array($nilai, ['B', 'C', 'D'])) {
+                            $status = 'Perbaikan';
+                        } elseif ($nilai === 'E') {
+                            $status = 'Mengulang';
+                        }
+                    }
+                }
+
                 $miaw = [
                     'irs_id' => $irs->id,
                     'kodemk' => $data['kodemk'],
                     'jadwal_kuliah_id' => $jadwalKuliah->id,
-                    'status' => 'Baru',
+                    'status' => $status,
                 ];
                 return $miaw;
             });
