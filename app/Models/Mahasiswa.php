@@ -97,19 +97,25 @@ class Mahasiswa extends Model
 }
 
 
-    public function getSKSK()
-    {
-        $totalSks = 0;
+public function getSKSK()
+{
+    $totalSks = 0;
 
-        foreach ($this->irs as $irs) {
+    foreach ($this->irs as $irs) {
+        if ($irs->khs) {
             foreach ($irs->khs->khsDetails as $detail) {
-                $sks =  $detail->irsDetail->status == 'Baru' ? $detail->irsDetail->mataKuliah->sks : 0;
-                $totalSks += $sks;
+                // Pastikan status IRS adalah 'Baru' dan nilai KHS tidak null atau kosong
+                if ($detail->irsDetail->status == 'Baru' && !is_null($detail->nilai)) {
+                    $sks = $detail->irsDetail->mataKuliah->sks;
+                    $totalSks += $sks;
+                }
             }
         }
-
-        return $totalSks;
     }
+
+    return $totalSks;
+}
+
 
     public function getBobotTerbaik()
     {
