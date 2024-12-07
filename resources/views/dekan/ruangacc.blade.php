@@ -51,7 +51,9 @@
                             </button>
                         </form>
                     @else
-                        <p class="text-center p-4">Prodi {{ $prodi->nama }} tidak memiliki ruangan untuk disetujui.</p>
+                        <div class="bg-gray-300 text-center p-4 mb-4 rounded">
+                            <p class="text-center p-4">Prodi {{ $prodi->nama }} tidak memiliki ruangan untuk disetujui.</p>
+                        </div>
                     @endif
                 @endforeach
             </div>
