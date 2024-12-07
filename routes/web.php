@@ -38,10 +38,10 @@ Route::middleware(['auth'])->group(function () {
   // MAHASISWA
   Route::get('/mhs', [MahasiswaController::class, 'index'])->name('mhs');
   Route::get('/mhs/akademik', [IrsController::class, 'buatirs']);
-  Route::get('/mhs/akademik/lihatkhs', [KhsController::class, 'lihatkhs']);
   //buat irs
   Route::get('/mhs/akademik/buatirs', [IrsController::class, 'buatirs']);
   Route::get('/mhs/akademik/lihatirs', [IrsController::class, 'lihatirs']);
+  Route::get('/mhs/akademik/lihatkhs', [KhsController::class, 'lihatkhs']);
   Route::get('/jadwal/{kodemk}', [MahasiswaController::class, 'getJadwal']);
   Route::post('/irs/details', [IrsController::class, 'storeDetail']);
   Route::get('/irs/selected-schedules', [IrsController::class, 'getSelectedSchedules']);
@@ -53,9 +53,6 @@ Route::middleware(['auth'])->group(function () {
   // Route::get('/irs-detail/load', [IrsDetailController::class, 'load'])->middleware('auth');
   // hapus irs detail
   Route::get('mhs/buatirs/delete/{id}', [IrsDetailController::class, 'delete'])->name('deleteIrsDetail');
-
-  // lihat khs
-  Route::get('/mhs/akademik/lihatkhs', [KhsController::class, 'lihatkhs']);
 
   // PEMBIMBING AKADEMIK
   Route::get('/pa', [PembimbingAkademikController::class, 'index']);

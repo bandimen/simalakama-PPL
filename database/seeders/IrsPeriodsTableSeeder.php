@@ -18,7 +18,7 @@ class IrsPeriodsTableSeeder extends Seeder
                 'semester' => 'Gasal',
                 'tahun_ajaran' => '2024/2025',
                 'periode_pengisian_start' => '2024-07-01 00:00:00',
-                'periode_pengisian_end' => '2024-08-14 23:59:59',
+                'periode_pengisian_end' => '2024-12-14 23:59:59',
                 'periode_perubahan_start' => '2024-08-15 00:00:00',
                 'periode_perubahan_end' => '2024-08-28 23:59:59',
                 'periode_pembatalan_start' => '2024-08-29 00:00:00',
