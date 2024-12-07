@@ -16,6 +16,8 @@ use App\Http\Controllers\JadwalKuliahController;
 use App\Http\Controllers\PembimbingAkademikController;
 use App\Http\Controllers\RuangController;
 use App\Http\Controllers\TenagaPendidikController;
+use App\Models\JadwalKuliah;
+use App\Models\MataKuliah;
 use App\Models\PembimbingAkademik;
 use App\Models\TenagaPendidik;
 
@@ -98,9 +100,17 @@ Route::middleware(['auth'])->group(function () {
   // KAPRODI
   Route::get('/kaprodi', [KaprodiController::class, 'index']);
   Route::get('/kaprodi/jadwalKuliah', [JadwalKuliahController::class, 'index'])->name('kaprodi.jadwalKuliah');
+  Route::get('/jadwal-kuliah/search', [KaprodiController::class, 'search'])->name('kaprodi.search');
+  Route::get('/jadwal-kuliah/tambah', [JadwalKuliahController::class, 'create'])->name('kaprodi.tambahJadwal');
+  Route::post('/kaprodi/jadwalKuliah', [JadwalKuliahController::class, 'store'])->name('kaprodi.storeJadwal');
   Route::get('/kaprodi/edit-jadwal/{id}', [JadwalKuliahController::class, 'edit'])->name('kaprodi.editJadwal');
   Route::put('/kaprodi/update-jadwal/{id}', [JadwalKuliahController::class, 'update'])->name('kaprodi.updateJadwal');
   Route::delete('/kaprodi/delete-jadwal/{id}', [JadwalKuliahController::class, 'destroy'])->name('kaprodi.deleteJadwal');
+
+  Route::get('/kaprodi/mataKuliah', [MataKuliahController::class, 'index'])->name('kaprodi.mataKuliah');
+  Route::get('/kaprodi/mataKuliah/tambah', [MataKuliahController::class, 'create'])->name('kaprodi.tambahMataKuliah');
+  Route::get('/kaprodi/edit-mataKuliah/{id}', [MataKuliahController::class, 'edit'])->name('kaprodi.editMataKuliah');
+  Route::get('/kaprodi/delete-mataKuliah/{id}', [MataKuliahController::class, 'destroy'])->name('kaprodi.deleteMataKuliah');
 
   Route::get('/logout', [SessionController::class, 'logout']);
 

@@ -5,28 +5,21 @@ namespace App\Http\Controllers;
 use App\Models\Ruang;
 use App\Models\MataKuliah;
 use App\Models\JadwalKuliah;
+use App\Models\IrsPeriods;
 use Illuminate\Http\Request;
 
 class JadwalKuliahController extends Controller
 {
-
-    // Relasi ke MataKuliah
-    public function mataKuliah()
-    {
-        return $this->belongsTo(MataKuliah::class, 'kodemk', 'kodemk');
-    }
-
-    // Relasi ke Ruang
-    public function ruang()
-    {
-        return $this->belongsTo(Ruang::class, 'ruang_id', 'id');
-    }
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $jadwalKuliah = JadwalKuliah::with(['mataKuliah', 'ruang'])->get();
+        $search = $request->input('search');
+        $jadwalKuliah = JadwalKuliah::with(['mataKuliah', 'ruang'])
+            ->search($search)
+            ->get();
+
         return view('kaprodi.jadwalKuliah', compact('jadwalKuliah'));
     }
 
@@ -42,7 +35,7 @@ class JadwalKuliahController extends Controller
         $mataKuliah = MataKuliah::where('semester', $semester === 'ganjil' ? 1 : 2)->get();
 
         // Ambil ruang yang tersedia
-        $ruang = Ruang::all();
+        $ruang = Ruang::where('status', 'Disetujui')->get();
 
         // Data dropdown lainnya
         $kelas = ['A', 'B', 'C', 'D'];
@@ -62,6 +55,7 @@ class JadwalKuliahController extends Controller
             'ruang_id' => 'required',
             'kelas' => 'required|in:A,B,C,D',
             'hari' => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat',
+            'kuota_kelas' => 'required|integer',
             'waktu_mulai' => 'required',
         ]);
 
@@ -75,15 +69,19 @@ class JadwalKuliahController extends Controller
             return redirect()->back()->withErrors(['kodemk' => 'Mata kuliah ini sudah memiliki 4 jadwal berbeda.']);
         }
 
+        // Ambil tahun ajaran pada tabel Irs_periods
+        $tahunAjaran = IrsPeriods::latest()->first();
+
         // Simpan jadwal
         JadwalKuliah::create([
             'kodemk' => $request->kodemk,
             'ruang_id' => $request->ruang_id,
             'kelas' => $request->kelas,
             'hari' => $request->hari,
+            'tahun_ajaran' => $tahunAjaran,
+            'kuota_kelas' => $request->kuota_kelas,
             'waktu_mulai' => $request->waktu_mulai,
             'waktu_selesai' => $waktuSelesai,
-            'kuota_kelas' => $request->kuota_kelas,
             'status' => 'Belum disetujui',
         ]);
 

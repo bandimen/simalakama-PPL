@@ -37,10 +37,6 @@ class IrsDetailController extends Controller
                 'tahun_ajaran' => '2024/2025',
                 // 'tahun_ajaran' => $currentPeriod->tahun_ajaran,
             ]);
-
-            if ($irs->wasRecentlyCreated()) {
-                Khs::firstOrCreate(['irs_id' => $irs->id]);
-            }
     
             if (!$irs) {
                 return response()->json(['message' => 'IRS tidak ditemukan untuk mahasiswa ini'], 404);

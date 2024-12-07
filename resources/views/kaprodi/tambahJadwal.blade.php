@@ -7,56 +7,122 @@
             <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
                 <h4 class="text-4xl font-bold text-gray-900 mb-6">Tambah Jadwal Kuliah</h4>
 
-                <form action="{{ route('simpanJadwal') }}" method="POST" class="space-y-6">
+                <form action="{{ route('kaprodi.storeJadwal') }}" method="POST" class="space-y-6">
                     @csrf
-                    <div class="mb-3">
-                        <label for="kodemk" class="form-label">Mata Kuliah</label>
-                        <select id="kodemk" name="kodemk" class="form-control" required>
+                    <!-- Mata Kuliah -->
+                    <div class="mb-4">
+                        <label for="kodemk" class="block text-sm font-medium text-gray-700">Mata Kuliah</label>
+                        <select id="kodemk" name="kodemk" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
+                            <option value="" disabled selected>Pilih Mata Kuliah</option>
                             @foreach ($mataKuliah as $mk)
-                                <option value="{{ $mk->kodemk }}">{{ $mk->nama }} ({{ $mk->sks }} SKS)</option>
+                                <option value="{{ $mk->kodemk }}" data-sks="{{ $mk->sks }}">{{ $mk->nama }} ({{ $mk->sks }} SKS)</option>
                             @endforeach
                         </select>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="ruang_id" class="form-label">Ruang</label>
-                        <select id="ruang_id" name="ruang_id" class="form-control" required>
+                    <!-- Ruang -->
+                    <div class="mb-4">
+                        <label for="ruang_id" class="block text-sm font-medium text-gray-700">Ruang</label>
+                        <select id="ruang_id" name="ruang_id" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
+                            <option value="" disabled selected>Pilih Ruang</option>
                             @foreach ($ruang as $r)
-                                <option value="{{ $r->id }}">{{ $r->nama }}</option>
+                                @if ($r->status == 'Disetujui')
+                                    <option value="{{ $r->id }}" data-kapasitas="{{ $r->kapasitas }}">{{ $r->nama }}</option>
+                                @endif
                             @endforeach
                         </select>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="kelas" class="form-label">Kelas</label>
-                        <select id="kelas" name="kelas" class="form-control" required>
+                    <!-- Kuota Kelas -->
+                    <div class="mb-4">
+                        <label for="kuota_kelas" class="block text-sm font-medium text-gray-700">Kuota Kelas</label>
+                        <input type="text" name="kuota_kelas" id="kuota_kelas" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" disabled />
+                    </div>
+
+                    <!-- Kelas -->
+                    <div class="mb-4">
+                        <label for="kelas" class="block text-sm font-medium text-gray-700">Kelas</label>
+                        <select id="kelas" name="kelas" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
+                            <option value="" disabled selected>Pilih Kelas</option>
                             @foreach ($kelas as $k)
                                 <option value="{{ $k }}">{{ $k }}</option>
                             @endforeach
                         </select>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="hari" class="form-label">Hari</label>
-                        <select id="hari" name="hari" class="form-control" required>
+                    <!-- Hari -->
+                    <div class="mb-4">
+                        <label for="hari" class="block text-sm font-medium text-gray-700">Hari</label>
+                        <select id="hari" name="hari" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
+                            <option value="" disabled selected>Pilih Hari</option>
                             @foreach ($hari as $h)
                                 <option value="{{ $h }}">{{ $h }}</option>
                             @endforeach
                         </select>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="waktu_mulai" class="form-label">Waktu Mulai</label>
-                        <select id="waktu_mulai" name="waktu_mulai" class="form-control" required>
+                    <!-- Waktu Mulai -->
+                    <div class="mb-4">
+                        <label for="waktu_mulai" class="block text-sm font-medium text-gray-700">Waktu Mulai</label>
+                        <select id="waktu_mulai" name="waktu_mulai" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
+                            <option value="" disabled selected>Pilih Waktu Mulai</option>
                             @foreach ($waktuMulai as $w)
                                 <option value="{{ $w }}">{{ $w }}</option>
                             @endforeach
                         </select>
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    <!-- Waktu Selesai -->
+                    <div class="mb-4">
+                        <label for="waktu_selesai" class="block text-sm font-medium text-gray-700">Waktu Selesai</label>
+                        <input type="text" id="waktu_selesai" name="waktu_selesai" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" disabled />
+                    </div>
+
+                    <div class="flex justify-end">
+                        <button type="submit" class="inline-flex items-center px-6 py-3 bg-indigo-600 text-white font-medium text-sm rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Simpan</button>
+                    </div>
                 </form>
             </div>
         </main>
     </div>
+
+    <script>
+        // Ambil elemen select Mata Kuliah, Waktu Mulai, Waktu Selesai, dan Ruang
+        const mataKuliahSelect = document.getElementById('kodemk');
+        const waktuSelesaiInput = document.getElementById('waktu_selesai');
+        const waktuMulaiSelect = document.getElementById('waktu_mulai');
+        const ruangSelect = document.getElementById('ruang_id');
+        const kuotaInput = document.getElementById('kuota_kelas');
+
+        // Fungsi untuk mengupdate Waktu Selesai berdasarkan SKS dan Waktu Mulai
+        function updateWaktuSelesai() {
+            const selectedOption = mataKuliahSelect.options[mataKuliahSelect.selectedIndex];
+            const sks = selectedOption ? selectedOption.getAttribute('data-sks') : null;
+            const waktuMulai = waktuMulaiSelect.value;
+
+            if (waktuMulai && sks) {
+                const waktuMulaiObj = new Date('1970-01-01T' + waktuMulai + 'Z');
+                const waktuSelesaiObj = new Date(waktuMulaiObj.getTime() + sks * 50 * 60 * 1000); // 50 menit per SKS
+                const waktuSelesai = waktuSelesaiObj.toISOString().substr(11, 5);
+
+                // Update input waktu selesai
+                waktuSelesaiInput.value = waktuSelesai;
+            }
+        }
+
+        // Fungsi untuk mengupdate Kuota Kelas berdasarkan Ruang yang dipilih
+        ruangSelect.addEventListener('change', function() {
+            const selectedOption = ruangSelect.options[ruangSelect.selectedIndex];
+            const kapasitas = selectedOption ? selectedOption.getAttribute('data-kapasitas') : null;
+
+            // Update kuota kelas dengan kapasitas ruang yang dipilih
+            kuotaInput.value = kapasitas;
+
+            document.getElementById('kuota_kelas').value = kapasitas;
+        });
+
+        // Event listeners untuk Mata Kuliah dan Waktu Mulai
+        mataKuliahSelect.addEventListener('change', updateWaktuSelesai);
+        waktuMulaiSelect.addEventListener('change', updateWaktuSelesai);
+    </script>
 </x-layout>
