@@ -28,14 +28,13 @@ class IrsDetailController extends Controller
     
             // Tentukan jenis semester
             $jenis_semester = $semester % 2 == 0 ? 'Genap' : 'Gasal';
-
+    
             // Temukan atau buat IRS mahasiswa
             $irs = Irs::firstOrCreate([
                 'nim' => $mahasiswa->nim,
                 'semester' => $semester,
                 'jenis_semester' => $jenis_semester,
                 'tahun_ajaran' => '2024/2025',
-                // 'tahun_ajaran' => $currentPeriod->tahun_ajaran,
             ]);
     
             if (!$irs) {
@@ -53,9 +52,7 @@ class IrsDetailController extends Controller
     
             // Jika `bottomSheetData` kosong, hapus semua data terkait dengan `irs_id`
             if (empty($bottomSheetData)) {
-                // Hapus semua entri yang terkait dengan IRS ID
                 IrsDetail::where('irs_id', $irs->id)->delete();
-    
                 \Log::info("Semua data terkait dengan IRS ID '{$irs->id}' telah dihapus karena bottomSheetData kosong.");
                 return response()->json(['message' => 'IRS berhasil diperbarui dan semua data dihapus'], 200);
             }
@@ -63,31 +60,46 @@ class IrsDetailController extends Controller
             // Ambil data saat ini dari database
             $existingDetails = IrsDetail::where('irs_id', $irs->id)->get();
     
-            // Data yang baru ditambahkan
-            $newDetails = collect($bottomSheetData)->map(function ($data) use ($irs, $mahasiswa) {
-                if (empty($data['kodemk']) || empty($data['kelas'])) {
-                    throw new \Exception('Format data tidak valid: kodemk dan kelas wajib ada');
-                }
-
-                $jadwalKuliah = JadwalKuliah::where('kodemk', $data['kodemk'])
+            // Hapus entri duplikat dalam bottomSheetData
+            $uniqueBottomSheetData = collect($bottomSheetData)->unique(function ($item) {
+                return $item['kodemk'] . $item['kelas'];
+            });
+    
+            // Hitung total SKS yang akan ditambahkan
+            $totalSksBaru = collect($uniqueBottomSheetData)->sum(function ($data) {
+                $jadwalKuliah = JadwalKuliah::with('mataKuliah')
+                    ->where('kodemk', $data['kodemk'])
                     ->where('kelas', $data['kelas'])
                     ->where('tahun_ajaran', '2024/2025')
-                    // 'tahun_ajaran' => $currentPeriod->tahun_ajaran,
                     ->first();
-
-                if (!$jadwalKuliah) {
-                    throw new \Exception("Jadwal tidak ditemukan untuk kodemk: {$data['kodemk']}, kelas: {$data['kelas']}");
+    
+                if (!$jadwalKuliah || !$jadwalKuliah->mataKuliah) {
+                    throw new \Exception("Jadwal tidak ditemukan atau tidak valid untuk kodemk: {$data['kodemk']}, kelas: {$data['kelas']}");
                 }
-
+    
+                return $jadwalKuliah->mataKuliah->sks;
+            });
+    
+            // Perbarui total SKS di IRS
+            $irs->update(['total_sks' => $totalSksBaru]);
+    
+            // Data yang baru ditambahkan
+            $newDetails = $uniqueBottomSheetData->map(function ($data) use ($irs, $mahasiswa) {
+                $jadwalKuliah = JadwalKuliah::with('mataKuliah')
+                    ->where('kodemk', $data['kodemk'])
+                    ->where('kelas', $data['kelas'])
+                    ->where('tahun_ajaran', '2024/2025')
+                    ->first();
+    
                 // Temukan semua IRS mahasiswa (semua semester)
                 $allIrsIds = Irs::where('nim', $mahasiswa->nim)->pluck('id');
-
+    
                 // Cek apakah matakuliah sudah pernah diambil
-                $previousIrsDetail = IrsDetail::whereIn('irs_id', $allIrsIds) // Cari di semua IRS mahasiswa
-                    ->whereHas('khsDetails', fn($query) => $query->where('kodemk', $data['kodemk'])) // Cocokkan kodemk
-                    ->orderBy('created_at', 'desc') // Ambil data terbaru
+                $previousIrsDetail = IrsDetail::whereIn('irs_id', $allIrsIds)
+                    ->whereHas('khsDetails', fn($query) => $query->where('kodemk', $data['kodemk']))
+                    ->orderBy('created_at', 'desc')
                     ->first();
-
+    
                 $status = 'Baru';
                 if ($previousIrsDetail) {
                     $khsDetail = $previousIrsDetail->khsDetails()->latest()->first();
@@ -98,7 +110,7 @@ class IrsDetailController extends Controller
                         default => 'Baru',
                     };
                 }
-
+    
                 return [
                     'irs_id' => $irs->id,
                     'kodemk' => $data['kodemk'],
@@ -106,11 +118,10 @@ class IrsDetailController extends Controller
                     'status' => $status,
                 ];
             });
-
+    
             // Hapus entri yang tidak ada di bottomSheetData
             $existingKodems = $existingDetails->pluck('kodemk')->toArray();
             $newKodems = $newDetails->pluck('kodemk')->toArray();
-    
             $kodemsToDelete = array_diff($existingKodems, $newKodems);
     
             IrsDetail::where('irs_id', $irs->id)
@@ -130,7 +141,8 @@ class IrsDetailController extends Controller
             \Log::error('Error processing IRS store:', ['error' => $e->getMessage()]);
             return response()->json(['message' => 'Terjadi kesalahan saat memproses data', 'error' => $e->getMessage()], 500);
         }
-    }  
+    }
+    
     
     public function delete($id)
     {
