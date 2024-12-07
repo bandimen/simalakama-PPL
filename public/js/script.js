@@ -288,7 +288,7 @@ async function getMaxBebanSks() {
 
 async function fetchAndDisplaySchedule(kodemk, nama) {
   try {
-    const response = await fetch(`/jadwal/${kodemk}`, { cache: "no-store" });
+    const response = await fetch(`//${kodemk}`, { cache: "no-store" });
     const jadwalList = await response.json();
 
     // Log seluruh data jadwal dari API

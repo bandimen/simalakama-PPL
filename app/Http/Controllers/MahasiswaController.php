@@ -55,6 +55,7 @@ class MahasiswaController extends Controller
         // Ambil jadwal berdasarkan kode mata kuliah
         $jadwals = JadwalKuliah::with(['mataKuliah', 'ruang'])
                     ->where('kodemk', $kodemk)
+                    ->where('status', 'Disetujui')
                     ->get();
     
         return response()->json($jadwals);

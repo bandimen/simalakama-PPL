@@ -106,7 +106,6 @@
           <br><br>
           <div class="selected-courses" id="selectedCourses">
             <h3>Mata Kuliah yang Dipilih:</h3>
-            <br>
             <ul id="courseList"></ul>
           </div>
         </section>
@@ -134,7 +133,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  @for ($hour = 7; $hour <= 19; $hour++)
+                  @for ($hour = 7; $hour <= 22; $hour++)
                     <tr data-time="{{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:00">
                       <td class="border p-2 text-center">{{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:00</td>
                       <td class="border p-2 text-center"></td>

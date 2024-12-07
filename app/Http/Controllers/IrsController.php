@@ -138,13 +138,24 @@ class IrsController extends Controller
         $activePeriodType = null;
         $matkuls = null;
         if ($currentPeriod) {
+            // ini ambil mata kuliah yang punya jadwal dan sudah disetujui
             if ($currentPeriod->semester == 'Gasal') {
                 $matkuls = MataKuliah::where(function ($query) {
-                    $query->where('semester', '0')
+                    $query->where('semester', 0)
                         ->orWhereRaw('semester % 2 != 0');
-                })->orderBy('semester', 'asc')->get();
+                })
+                ->whereHas('jadwalKuliah', function ($query) {
+                    $query->where('status', 'Disetujui');
+                })
+                ->orderBy('semester', 'asc')
+                ->get();
             } elseif ($currentPeriod->semester == 'Genap') {
-                $matkuls = MataKuliah::whereRaw('semester % 2 = 0')->orderBy('semester', 'asc')->get();
+                $matkuls = MataKuliah::whereRaw('semester % 2 = 0')
+                    ->whereHas('jadwalKuliah', function ($query) {
+                        $query->where('status', 'Disetujui');
+                    })
+                    ->orderBy('semester', 'asc')
+                    ->get();
             }
 
             if ($currentDateTime->between($currentPeriod->periode_pengisian_start, $currentPeriod->periode_pengisian_end)) {
