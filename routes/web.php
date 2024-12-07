@@ -72,16 +72,19 @@ Route::middleware(['auth'])->group(function () {
 
   // DEKAN
   Route::get('/dekan', [DekanController::class, 'index']);
-  Route::get('/dekan/matkul', [DekanController::class, 'matkul']);
+  Route::get('/dekan/matkul', [DekanController::class,'matkul'])->name('dekan.matkul');
   Route::get('/dekan/ruangacc', [DekanController::class, 'ruangacc']);
   Route::resource('mataKuliah', MataKuliahController::class);
   Route::get('/dekan/ruangacc', [RuangController::class, 'verifikasi'])->name('ruangs.verifikasi');
   Route::patch('/ruangs/approve/{id}', [RuangController::class, 'approve'])->name('ruangs.approve');
-  Route::get('/dekan/matkul', [DekanController::class, 'jadwalKuliah'])->name('dekan.matkul');
   Route::patch('/dekan/matkul/{id}/approve', [DekanController::class, 'approveJadwalKuliah'])->name('dekan.matkul.approve');
   Route::get('/ruangs/verifikasi', [RuangController::class, 'verifikasi'])->name('ruangs.verifikasi');
   Route::patch('/ruangs/approve-all/{prodiId}', [RuangController::class, 'approveAll'])->name('ruangs.approveAll');
   Route::patch('/ruangs/approve/{id}', [RuangController::class, 'approve'])->name('ruangs.approve');
+  Route::patch('/dekan/prodi/{prodi}/approve', [DekanController::class, 'approveJadwalProdi'])->name('dekan.prodi.approve');
+  Route::get('/dekan/verifikasi', [DekanController::class, 'verifikasi'])->name('dekan.verifikasi');
+  Route::patch('/dekan/approve/{prodiId}', [DekanController::class, 'approveAll'])->name('dekan.approveAll');
+
 
 
 
