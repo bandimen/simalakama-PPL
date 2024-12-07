@@ -3,14 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Mahasiswa;
+use App\Models\JadwalKuliah;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class KaprodiController extends Controller
 {
-    public function index() {
+    // Dashboard Kaprodi
+    public function index()
+    {
         $user = Auth::user();
-        $kaprodi = $user->kaprodi;
+        $kaprodi = $user->kaprodi; // Pastikan relasi user -> kaprodi sudah benar
         $jumlahMahasiswaAktif = $this->getMahasiswaAktif();
 
         return view('kaprodi.dashboard', [
@@ -20,7 +23,9 @@ class KaprodiController extends Controller
         ]);
     }
 
-    public function getMahasiswaAktif() {
+    // Contoh fungsi tambahan untuk dashboard
+    private function getMahasiswaAktif()
+    {
         return Mahasiswa::where('status', 'aktif')->count();
     }
 

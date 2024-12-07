@@ -19,4 +19,8 @@ class Kaprodi extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function getMahasiswaAktif() {
+        return Mahasiswa::where('status', 'aktif')->count();
+    }
+
 }
