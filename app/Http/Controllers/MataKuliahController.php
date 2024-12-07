@@ -18,7 +18,8 @@ class MataKuliahController extends Controller
 
     public function index()
     {
-        //
+        $mataKuliah = MataKuliah::with('prodi')->get();
+        return view('kaprodi.mataKuliah', compact('mataKuliah'));
     }
 
     /**
@@ -41,7 +42,7 @@ class MataKuliahController extends Controller
         //     'semester' => 'required|integer',
         //     'sifat' => 'required|in:Wajib,Pilihan',
         // ]);
-    
+
         // MataKuliah::create([
         //     'kodemk' => $request->kodemk,
         //     'nama' => $request->nama,
@@ -49,7 +50,7 @@ class MataKuliahController extends Controller
         //     'semester' => $request->semester,
         //     'sifat' => $request->sifat,
         // ]);
-    
+
         // return redirect('/dekan');
     }
 
