@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('semester');
             $table->enum('jenis_semester', ['Gasal', 'Genap']);
             $table->string('tahun_ajaran');
-            $table->integer('total_sks');
+            $table->integer('total_sks')->default(0);
             $table->enum('status', ['Disetujui', 'Belum disetujui'])->default('Belum disetujui');
             $table->timestamps();
         });
