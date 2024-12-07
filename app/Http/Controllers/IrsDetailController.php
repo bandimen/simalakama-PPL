@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Http\Controllers\IrsPeriodsController;
+use App\Http\Controllers\MahasiswaController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Irs;
@@ -17,19 +18,28 @@ class IrsDetailController extends Controller
         try {
             $user = Auth::user();
             $mahasiswa = $user->mahasiswa;
-    
+            
             // Hitung semester mahasiswa berdasarkan angkatan dan periode saat ini
             $irsPeriodsController = new IrsPeriodsController();
             $currentPeriod = $irsPeriodsController->getCurrentPeriod();
+            Log::info('Current Period Result:', ['currentPeriod' => $currentPeriod]);
+
             $mahasiswaController = new MahasiswaController();
             $semester = $mahasiswaController->getSemester($mahasiswa->angkatan, $currentPeriod);
     
-            \Log::info('Request received:', $request->all()); // Debug log
+            Log::info('Request received:', $request->all()); // Debug log
     
-            // Temukan IRS mahasiswa
-            $irs = Irs::where('nim', $mahasiswa->nim)
-                ->where('semester', $semester)
-                ->first();
+            // Tentukan jenis semester
+            $jenis_semester = $semester % 2 == 0 ? 'Genap' : 'Gasal';
+
+            // Temukan atau buat IRS mahasiswa
+            $irs = Irs::firstOrCreate([
+                'nim' => $mahasiswa->nim,
+                'semester' => $semester,
+                'jenis_semester' => $jenis_semester,
+                'tahun_ajaran' => '2024/2025',
+                // 'tahun_ajaran' => $currentPeriod->tahun_ajaran,
+            ]);
     
             if (!$irs) {
                 return response()->json(['message' => 'IRS tidak ditemukan untuk mahasiswa ini'], 404);
@@ -57,13 +67,15 @@ class IrsDetailController extends Controller
             $existingDetails = IrsDetail::where('irs_id', $irs->id)->get();
     
             // Data yang baru ditambahkan
-            $newDetails = collect($bottomSheetData)->map(function ($data) use ($irs) {
+            $newDetails = collect($bottomSheetData)->map(function ($data, $currentPeriod) use ($irs) {
                 if (empty($data['kodemk']) || empty($data['kelas'])) {
                     throw new \Exception('Format data tidak valid: kodemk dan kelas wajib ada');
                 }
     
                 $jadwalKuliah = JadwalKuliah::where('kodemk', $data['kodemk'])
                     ->where('kelas', $data['kelas'])
+                    ->where('tahun_ajaran', '2024/2025')
+                    // ->where('tahun_ajaran', $currentPeriod->tahun_ajaran)
                     ->first();
     
                 if (!$jadwalKuliah) {

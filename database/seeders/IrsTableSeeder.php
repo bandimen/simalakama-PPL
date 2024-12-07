@@ -40,15 +40,6 @@ class IrsTableSeeder extends Seeder
                 'status' => 'Belum disetujui'
             ], 
             
-            // irs fendi 
-            // [
-            //     'nim' => '24060122130077',
-            //     'semester' => 1,
-            //     'jenis_semester' => 'Gasal',
-            //     'tahun_ajaran' => '2024/2025',
-            //     'total_sks' => 19,
-            //     'status' => 'Belum disetujui'
-            // ], 
 
             // irs nopal 
             [

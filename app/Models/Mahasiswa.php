@@ -44,40 +44,58 @@ class Mahasiswa extends Model
     }
 
     public function getIPK()
-    {
-        $totalSksXBobot = 0;
-        $totalSks = 0;
-        
-        // Menyimpan bobot terbaik per mata kuliah
-        $mataKuliahTerbaik = [];
+{
+    $totalSksXBobot = 0;
+    $totalSks = 0;
 
-        foreach ($this->irs as $irs) {
-            foreach ($irs->khs->khsDetails as $detail) {
-                $sks = $detail->irsDetail->mataKuliah->sks ?? 0;
-                $nilai = $detail->nilai;
+    // Ensure IRS data is available
+    if (empty($this->irs)) {
+        return 'N/A'; // No data available
+    }
 
-                // Tentukan bobot berdasarkan nilai
-                $bobot = match ($nilai) {
-                    'A' => 4,
-                    'B' => 3,
-                    'C' => 2,
-                    'D' => 1,
-                    'E' => 0,
-                    default => 0,
-                };
+    // Store the best grade per course
+    $mataKuliahTerbaik = [];
 
-                // Simpan bobot terbaik per mata kuliah
-                $kodeMk = $detail->irsDetail->kodemk;
-                if (!isset($mataKuliahTerbaik[$kodeMk]) || $mataKuliahTerbaik[$kodeMk] < $bobot) {
-                    $mataKuliahTerbaik[$kodeMk] = $bobot;
-                    $totalSks += $sks;
-                    $totalSksXBobot += $sks * $bobot;
-                }
-            }
+    foreach ($this->irs as $irs) {
+        if (empty($irs->khs)) {
+            continue; // Skip if KHS is not available
         }
 
-        return $totalSks > 0 ? number_format($totalSksXBobot / $totalSks, 2) : 'N/A';
+        foreach ($irs->khs->khsDetails as $detail) {
+            $sks = $detail->irsDetail->mataKuliah->sks ?? 0;
+            $nilai = $detail->nilai;
+
+            // Determine grade weight (bobot)
+            $bobot = match ($nilai) {
+                'A' => 4,
+                'B' => 3,
+                'C' => 2,
+                'D' => 1,
+                'E' => 0,
+                default => 0,
+            };
+
+            $kodeMk = $detail->irsDetail->kodemk;
+
+            // Update to the best grade for the course
+            if (!isset($mataKuliahTerbaik[$kodeMk]) || $mataKuliahTerbaik[$kodeMk]['bobot'] < $bobot) {
+                if (isset($mataKuliahTerbaik[$kodeMk])) {
+                    // Adjust total if replacing an existing entry
+                    $totalSks -= $mataKuliahTerbaik[$kodeMk]['sks'];
+                    $totalSksXBobot -= $mataKuliahTerbaik[$kodeMk]['sks'] * $mataKuliahTerbaik[$kodeMk]['bobot'];
+                }
+
+                $mataKuliahTerbaik[$kodeMk] = ['bobot' => $bobot, 'sks' => $sks];
+                $totalSks += $sks;
+                $totalSksXBobot += $sks * $bobot;
+            }
+        }
     }
+
+    // Calculate and return IPK
+    return $totalSks > 0 ? number_format($totalSksXBobot / $totalSks, 2) : 'N/A';
+}
+
 
     public function getSKSK()
     {
