@@ -155,14 +155,12 @@
             style="transform: translateY(0);"
         >
           <!-- Bagian Kecil untuk Expand -->
-          <div 
-              id="toggleButton" 
-              class="flex justify-center items-center h-12 bg-black-200 rounded-t-lg cursor-pointer"
-          >
+          <div id="toggleButton" class="flex justify-center items-center h-12 bg-black-200 rounded-t-lg cursor-pointer">
             <div id="toggleIcon" class="text-lg font-bold text-white">
-              <span id="totalsks">0</span> SKS
+                <span id="totalsks">0</span> SKS
             </div>
-          </div>
+        </div>
+        
 
           <!-- Bagian Konten -->
           <div id="content" class="p-4 hidden">
