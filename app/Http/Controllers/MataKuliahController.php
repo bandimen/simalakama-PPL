@@ -102,24 +102,32 @@ class MataKuliahController extends Controller
      */
     public function update(Request $request, MataKuliah $mataKuliah, $id)
     {
+        // Validasi input
         $request->validate([
             'kodemk' => 'required|max:10|unique:mata_kuliahs,kodemk,' . $id . ',kodemk',
             'nama' => 'required|max:255',
             'sks' => 'required|integer|min:1|max:6',
             'semester' => 'required|integer|min:1|max:8',
             'sifat' => 'required|in:Wajib,Pilihan',
-            'prodi_id' => 'required|exists:prodis,id',
         ]);
 
+        // Cari mata kuliah dan prodi
         $mataKuliah = MataKuliah::findOrFail($id);
+        $user = Auth::user();
+        $prodiId = $user->kaprodi?->dosen?->prodi?->id;
 
+        if (!$prodiId) {
+            return redirect()->back()->with('error', 'Prodi tidak ditemukan.');
+        }
+
+        // Update data
         $mataKuliah->update([
             'kodemk' => $request->kodemk,
             'nama' => $request->nama,
             'sks' => $request->sks,
             'semester' => $request->semester,
             'sifat' => $request->sifat,
-            'prodi_id' => $request->prodi_id,
+            'prodi_id' => $prodiId,
         ]);
 
         // Redirect dengan pesan sukses

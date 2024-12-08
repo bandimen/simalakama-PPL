@@ -15,18 +15,14 @@
                     <!-- Kode Mata Kuliah -->
                     <div class="mb-4">
                         <label for="kodemk" class="block text-sm font-medium text-gray-700">Kode Mata Kuliah</label>
-                        <input type="text" id="kodemk" name="kodemk"
-                               class="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-300"
-                               value="{{ $mataKuliah->kodemk }}" readonly>
+                        <input type="text" id="kodemk" name="kodemk" class="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-300" value="{{ $mataKuliah->kodemk }}" readonly>
                         <p class="text-gray-500 text-sm">Kode mata kuliah tidak dapat diubah.</p>
                     </div>
 
                     <!-- Nama Mata Kuliah -->
                     <div class="mb-4">
                         <label for="nama" class="block text-sm font-medium text-gray-700">Nama Mata Kuliah</label>
-                        <input type="text" id="nama" name="nama"
-                               class="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-300"
-                               value="{{ old('nama', $mataKuliah->nama) }}" required>
+                        <input type="text" id="nama" name="nama" class="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-300" value="{{ old('nama', $mataKuliah->nama) }}" required>
                         @error('nama')
                             <p class="text-red-500 text-sm">{{ $message }}</p>
                         @enderror
@@ -35,9 +31,7 @@
                     <!-- SKS -->
                     <div class="mb-4">
                         <label for="sks" class="block text-sm font-medium text-gray-700">SKS</label>
-                        <input type="number" id="sks" name="sks"
-                               class="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-300"
-                               value="{{ old('sks', $mataKuliah->sks) }}" required>
+                        <input type="number" id="sks" name="sks" class="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-300" value="{{ old('sks', $mataKuliah->sks) }}" required>
                         @error('sks')
                             <p class="text-red-500 text-sm">{{ $message }}</p>
                         @enderror
@@ -46,9 +40,7 @@
                     <!-- Semester -->
                     <div class="mb-4">
                         <label for="semester" class="block text-sm font-medium text-gray-700">Semester</label>
-                        <input type="number" id="semester" name="semester"
-                               class="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-300"
-                               value="{{ old('semester', $mataKuliah->semester) }}" required>
+                        <input type="number" id="semester" name="semester" class="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-300" value="{{ old('semester', $mataKuliah->semester) }}" required>
                         @error('semester')
                             <p class="text-red-500 text-sm">{{ $message }}</p>
                         @enderror
@@ -57,9 +49,7 @@
                     <!-- Sifat -->
                     <div class="mb-4">
                         <label for="sifat" class="block text-sm font-medium text-gray-700">Sifat</label>
-                        <select id="sifat" name="sifat"
-                                class="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-300"
-                                required>
+                        <select id="sifat" name="sifat" class="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-300" required>
                             <option value="Wajib" {{ old('sifat', $mataKuliah->sifat) == 'Wajib' ? 'selected' : '' }}>Wajib</option>
                             <option value="Pilihan" {{ old('sifat', $mataKuliah->sifat) == 'Pilihan' ? 'selected' : '' }}>Pilihan</option>
                         </select>
@@ -70,19 +60,9 @@
 
                     <!-- Program Studi -->
                     <div class="mb-4">
-                        <label for="prodi_id" class="block text-sm font-medium text-gray-700">Program Studi</label>
-                        <select id="prodi_id" name="prodi_id"
-                                class="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-300"
-                                required>
-                            @foreach ($prodi as $p)
-                                <option value="{{ $p->id }}" {{ old('prodi_id', $mataKuliah->prodi_id) == $p->id ? 'selected' : '' }}>
-                                    {{ $p->nama }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('prodi_id')
-                            <p class="text-red-500 text-sm">{{ $message }}</p>
-                        @enderror
+                        <label for="prodi" class="block text-sm font-medium text-gray-700">Program Studi</label>
+                        <input type="text" id="prodi" name="prodi" class="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-300" value="{{ $prodi->nama }}" readonly>
+                        <p class="text-gray-500 text-sm">Program studi tidak dapat diubah.</p>
                     </div>
 
                     <!-- Tombol -->
