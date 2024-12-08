@@ -406,6 +406,7 @@
           </div>
         </div>
         
+       <!-- Tabel Data -->
         <table id="cancellationTableBody" class="min-w-full bg-white border border-gray-300 text-center mt-4">
           <thead class="bg-gray-700 text-white">
             <tr>
@@ -419,27 +420,30 @@
             </tr>
           </thead>
           <tbody id="cancellationTableBodyContent">
-            <!-- Data akan ditambahkan di sini -->
             @if($mahasiswa->irs->first()->irsDetails->isNotEmpty())
-            @php
-              $counter = 0;
-            @endphp
-            @foreach ($mahasiswa->irs->first()->irsDetails as $detail)
-                
-            <tr>
-              <td class="px-2 py-2 border border-gray-300 w-12"> {{++$counter}} </td>
-              <td class="px-2 py-2 border border-gray-300 w-20">{{$detail->mataKuliah->kodemk}}</td>
-              <td class="px-2 py-2 border border-gray-300 w-40">{{$detail->mataKuliah->nama}}</td>
-              <td class="px-2 py-2 border border-gray-300 w-16">{{$detail->jadwalKuliah->kelas}}</td>
-              <td class="px-2 py-2 border border-gray-300 w-12">{{$detail->jadwalKuliah->hari}}</td>
-              <td class="px-2 py-2 border border-gray-300 w-32">{{$detail->jadwalKuliah->waktu_mulai}} - {{$detail->jadwalKuliah->waktu_selesai}}</td>
-              <td class="px-2 py-2 border border-gray-300 w-20"><a href="{{route('deleteIrsDetail', $detail->id)}}">X</a></td>
-            </tr>
-            @endforeach
-              
+              @php
+                $counter = 0;
+              @endphp
+              @foreach ($mahasiswa->irs->first()->irsDetails as $detail)
+              <tr>
+                <td class="px-2 py-2 border border-gray-300 w-12"> {{++$counter}} </td>
+                <td class="px-2 py-2 border border-gray-300 w-20">{{$detail->mataKuliah->kodemk}}</td>
+                <td class="px-2 py-2 border border-gray-300 w-40">{{$detail->mataKuliah->nama}}</td>
+                <td class="px-2 py-2 border border-gray-300 w-16">{{$detail->jadwalKuliah->kelas}}</td>
+                <td class="px-2 py-2 border border-gray-300 w-12">{{$detail->jadwalKuliah->hari}}</td>
+                <td class="px-2 py-2 border border-gray-300 w-32">{{$detail->jadwalKuliah->waktu_mulai}} - {{$detail->jadwalKuliah->waktu_selesai}}</td>
+                <td class="px-2 py-2 border border-gray-300 w-20">
+                  <!-- Tombol Batal -->
+                  <a href="{{ route('deleteIrsDetail', $detail->id) }}" 
+                    onclick="return confirm('Apakah kamu ingin membatalkannya?')"
+                    class="text-red-500 hover:text-red-700 font-bold">Batal</a>
+                </td>
+              </tr>
+              @endforeach
             @endif
           </tbody>
         </table>
+
 
         @else
         <div id="alert-additional-content-2" class="p-4 mb-4 text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800" role="alert">
