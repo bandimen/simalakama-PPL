@@ -75,7 +75,6 @@ class MataKuliahController extends Controller
         ]);
 
         return redirect()->route('kaprodi.mataKuliah')->with('success', 'Mata Kuliah berhasil ditambahkan.');
-        //dd($request->all());
     }
 
     /**
@@ -89,17 +88,42 @@ class MataKuliahController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(MataKuliah $mataKuliah)
+    public function edit(MataKuliah $mataKuliah, $id)
     {
-        //
+        $mataKuliah = MataKuliah::findOrFail($id);
+        $user = Auth::user();
+        $prodi = $user->kaprodi?->dosen?->prodi;
+
+        return view('kaprodi.editMataKuliah', compact('mataKuliah', 'prodi'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, MataKuliah $mataKuliah)
+    public function update(Request $request, MataKuliah $mataKuliah, $id)
     {
-        //
+        $request->validate([
+            'kodemk' => 'required|max:10|unique:mata_kuliahs,kodemk,' . $id . ',kodemk',
+            'nama' => 'required|max:255',
+            'sks' => 'required|integer|min:1|max:6',
+            'semester' => 'required|integer|min:1|max:8',
+            'sifat' => 'required|in:Wajib,Pilihan',
+            'prodi_id' => 'required|exists:prodis,id',
+        ]);
+
+        $mataKuliah = MataKuliah::findOrFail($id);
+
+        $mataKuliah->update([
+            'kodemk' => $request->kodemk,
+            'nama' => $request->nama,
+            'sks' => $request->sks,
+            'semester' => $request->semester,
+            'sifat' => $request->sifat,
+            'prodi_id' => $request->prodi_id,
+        ]);
+
+        // Redirect dengan pesan sukses
+        return redirect()->route('kaprodi.mataKuliah')->with('success', 'Mata Kuliah berhasil diperbarui.');
     }
 
     /**
