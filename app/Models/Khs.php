@@ -13,6 +13,10 @@ class Khs extends Model
 
     protected $table = 'khs';
 
+    protected $fillable = [
+        'irs_id',
+    ];
+
     // Relasi ke IRS
     public function irs()
     {
