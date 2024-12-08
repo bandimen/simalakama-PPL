@@ -141,8 +141,8 @@ async function fetchAndDisplaySchedule(kodemk, nama) {
     }
 
     jadwalList.forEach(jadwal => {
-      const { hari, waktu_mulai, waktu_selesai, kelas, ruang, mataKuliah, kodemk} = jadwal;
-    
+      const { hari, waktu_mulai, waktu_selesai, kelas, ruang, mataKuliah, kodemk } = jadwal;
+
       // Gunakan data relasi mataKuliah
       const mataKuliahNama = mataKuliah?.nama || nama || "Tidak tersedia";
 
@@ -152,19 +152,17 @@ async function fetchAndDisplaySchedule(kodemk, nama) {
       // Normalisasi nama hari
       const normalizedDay = hari.charAt(0).toUpperCase() + hari.slice(1).toLowerCase();
       const dayColumn = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat"].indexOf(normalizedDay);
-    
+
       const startTime = normalizeTimeToHour(waktu_mulai);
       const row = document.querySelector(`#scheduleDisplay tbody tr[data-time="${startTime}"]`);
-    
+
       if (row && dayColumn >= 0) {
         const cell = row.children[dayColumn + 1];
-    
-        // Bersihkan cell terlebih dahulu untuk menghindari duplikasi
-        cell.innerHTML = "";
-    
+
+        // Tambahkan jadwal baru tanpa menghapus konten sebelumnya
         const wrapper = document.createElement("div");
         wrapper.className = "mb-2";
-    
+
         const courseBox = document.createElement("div");
         courseBox.className = `
           bg-gray-100 text-black border border-gray-300 shadow-lg rounded-md p-2
@@ -172,10 +170,10 @@ async function fetchAndDisplaySchedule(kodemk, nama) {
           courseBox-${kodemk}
         `;
         courseBox.style.cursor = "pointer";
-    
+
         // Ambil nama ruang dari data jadwal
         const ruangNama = ruang?.nama || "Tidak tersedia";
-    
+
         // Tambahkan atribut data
         courseBox.setAttribute("data-mataKuliah", mataKuliahNama);
         courseBox.setAttribute("data-kelas", kelas);
@@ -184,7 +182,7 @@ async function fetchAndDisplaySchedule(kodemk, nama) {
         courseBox.setAttribute("data-start-time", waktu_mulai);
         courseBox.setAttribute("data-end-time", waktu_selesai);
         courseBox.setAttribute("data-ruang-id", ruang?.id);
-    
+
         // Tambahkan konten ke dalam courseBox
         courseBox.innerHTML = `
           <div class="font-bold text-gray-900 truncate">${mataKuliahNama}</div>
@@ -193,19 +191,19 @@ async function fetchAndDisplaySchedule(kodemk, nama) {
           <div class="text-xs text-gray-600 truncate">Ruang: ${ruangNama}</div>
           <div class="text-xs text-gray-600 truncate">${waktu_mulai} - ${waktu_selesai}</div>
         `;
-    
+
         // Tambahkan event klik tanpa pengecekan
         courseBox.onclick = () => {
           showConfirmationModal(kodemk, courseBox);
         };
-    
+
         // Masukkan courseBox ke dalam wrapper, lalu ke sel tabel
         wrapper.appendChild(courseBox);
-        cell.appendChild(wrapper);
+        cell.appendChild(wrapper); // Append tanpa menghapus konten sebelumnya
       } else {
         console.warn(`Tidak dapat menemukan row atau cell untuk waktu: ${startTime} pada hari: ${hari}`);
       }
-    });           
+    });
   } catch (error) {
     console.error("Error fetching schedule for", kodemk, error);
   }
