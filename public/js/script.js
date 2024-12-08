@@ -1,107 +1,3 @@
-// async function addCourse() {
-//   const courseSelect = document.getElementById("courses");
-//   const courseList = document.getElementById("courseList");
-//   const selectedCourse = courseSelect.value;
-
-//   if (!selectedCourse) return;
-
-//   try {
-//     const courseData = JSON.parse(selectedCourse); 
-//     const { kodemk, nama, sks, semester } = courseData;
-
-//     // Cek apakah mata kuliah sudah ada di daftar
-//     const existingCourses = Array.from(courseList.children).map(item => {
-//       return item.textContent.split(" - ")[0].trim(); 
-//     });
-
-//     if (existingCourses.includes(kodemk)) {
-//       alert("Mata kuliah sudah ada di daftar.");
-//       return;
-//     }
-
-//     // Tambahkanroute ke daftar mata kuliah yang dipilih
-//     const listItem = document.createElement("li");
-//     listItem.className = "course-item";
-//     listItem.textContent = `${kodemk} - ${nama} (${sks} SKS, Semester ${semester})`;
-    
-//     // Tombol untuk menghapus mata kuliah dari daftar
-//     const removeBtn = document.createElement("span");
-//     removeBtn.className = "text-white bg-red-700 rounded-full text-xs px-2 py-1 ml-2";
-//     removeBtn.textContent = "X";
-//     removeBtn.onclick = function () {
-//       const selectedCourseBox = document.querySelector(`.courseBox-${kodemk}[style*="background-color: rgb(40, 167, 69)"]`); // Kotak yang sudah dipilih
-    
-//       if (selectedCourseBox) {
-//         // Jika mata kuliah sudah dipilih, tampilkan modal konfirmasi
-//         const cancelModal = document.getElementById("cancelConfirmationModal");
-//         const confirmCancelButton = document.getElementById("confirmCancelButton");
-//         const cancelCancelButton = document.getElementById("cancelCancelButton");
-    
-//         // Pastikan modal terlihat
-//         cancelModal.classList.remove("hidden");
-    
-//         // Reset event listener sebelumnya
-//         confirmCancelButton.onclick = null;
-//         cancelCancelButton.onclick = null;
-    
-//         // Tambahkan event listener untuk tombol "Ya" (konfirmasi)
-//         confirmCancelButton.onclick = () => {
-//           // Hapus elemen dari courseList
-//           courseList.removeChild(listItem);
-    
-//           // Hapus semua kotak jadwal dari tabel yang terkait dengan kodemk
-//           const courseBoxes = document.querySelectorAll(`.courseBox-${kodemk}`);
-//           courseBoxes.forEach(box => box.remove());
-    
-//           // Hapus dari selectedCourses
-//           selectedCourses = selectedCourses.filter(course => course.kodemk !== kodemk);
-    
-//           // Hapus dari bottomSheetData
-//           bottomSheetData = bottomSheetData.filter(course => course.kodemk !== kodemk);
-    
-//           // Perbarui tampilan bottom sheet
-//           updateBottomSheet();
-    
-//           // Tutup modal
-//           cancelModal.classList.add("hidden");
-          
-//         };
-    
-//         // Tambahkan event listener untuk tombol "Batal"
-//         cancelCancelButton.onclick = () => {
-//           cancelModal.classList.add("hidden"); // Tutup modal tanpa perubahan
-//         };
-//       } else {
-//         // Jika belum dipilih, langsung hapus dari daftar
-//         courseList.removeChild(listItem);
-    
-//         // Hapus semua kotak jadwal dari tabel yang terkait dengan kodemk
-//         const courseBoxes = document.querySelectorAll(`.courseBox-${kodemk}`);
-//         courseBoxes.forEach(box => box.remove());
-    
-//         // Hapus dari selectedCourses
-//         selectedCourses = selectedCourses.filter(course => course.kodemk !== kodemk);
-    
-//         // Hapus dari bottomSheetData
-//         bottomSheetData = bottomSheetData.filter(course => course.kodemk !== kodemk);
-    
-//         // Perbarui tampilan bottom sheet
-//         updateBottomSheet();
-//       }
-//     };    
-
-//   listItem.appendChild(removeBtn);
-//   courseList.appendChild(listItem);
-
-//   courseSelect.value = "";
-
-//     await fetchAndDisplaySchedule(kodemk, nama);
-//     updateScheduleConflicts();
-//   } catch (error) {
-//     console.error("Error parsing course data:", error);
-//   }
-// }
-
 async function addCourse() {
   const courseSelect = document.getElementById("courses");
   const courseList = document.getElementById("courseList");
@@ -120,25 +16,6 @@ async function addCourse() {
 
     if (existingCourses.includes(kodemk)) {
       alert("Mata kuliah sudah ada di daftar.");
-      return;
-    }
-
-    // Hitung total SKS yang sudah dipilih
-    let totalSKS = Array.from(courseList.children).reduce((sum, item) => {
-      const sksMatch = item.textContent.match(/\((\d+) SKS/); // Ambil SKS dari teks
-      const sksValue = sksMatch ? parseInt(sksMatch[1], 10) : 0;
-      return sum + sksValue;
-    }, 0);
-
-    // Tentukan maksimal beban SKS (gunakan fungsi backend)
-    const maxBebanSks = await getMaxBebanSks();
-
-    // Tambahkan SKS mata kuliah yang dipilih
-    const newTotalSKS = totalSKS + sks;
-
-    // Cek apakah total SKS melebihi batas maksimal
-    if (newTotalSKS > maxBebanSks) {
-      alert(`Total SKS melebihi batas maksimal (${maxBebanSks} SKS). Anda tidak dapat menambahkan mata kuliah ini.`);
       return;
     }
 
@@ -172,8 +49,6 @@ async function addCourse() {
           confirmCancelButton.onclick = () => {
               // Hapus elemen dari courseList
               courseList.removeChild(listItem);
-
-              updateTotalSKS();
           
               // Hapus semua kotak jadwal dari tabel yang terkait dengan kodemk
               const courseBoxes = document.querySelectorAll(`.courseBox-${kodemk}`);
@@ -210,8 +85,6 @@ async function addCourse() {
           
             // Hapus dari bottomSheetData
             bottomSheetData = bottomSheetData.filter(course => course.kodemk !== kodemk);
-
-            updateTotalSKS(); // Perbarui total SKS setelah penghapusan
           
             // Perbarui tampilan bottom sheet
             updateBottomSheet();
@@ -221,55 +94,14 @@ async function addCourse() {
     listItem.appendChild(removeBtn);
     courseList.appendChild(listItem);
     
-    // Perbarui total SKS
-    updateTotalSKS();
-    console.log("Daftar mata kuliah saat ini:", Array.from(courseList.children));
-
     courseSelect.value = "";
 
     await fetchAndDisplaySchedule(kodemk, nama);
-    updateScheduleConflicts();
   } catch (error) {
     console.error("Error parsing course data:", error);
   }
 }
 
-function updateTotalSKS() {
-  const courseList = document.getElementById("courseList");
-
-  if (!courseList) {
-    console.error("Error: Elemen #courseList tidak ditemukan.");
-    return;
-  }
-
-  // Hitung total SKS dari setiap item di courseList
-  const totalSKS = Array.from(courseList.children).reduce((sum, item) => {
-    const sksMatch = item.textContent.match(/\((\d+) SKS/); // Cari SKS dari teks
-    const sksValue = sksMatch ? parseInt(sksMatch[1], 10) : 0;
-    return sum + sksValue;
-  }, 0);
-
-  // Update elemen total SKS pada HTML
-  const totalSKSElement = document.getElementById("totalSKS");
-  if (!totalSKSElement) {
-    console.error("Error: Elemen #totalSKS tidak ditemukan.");
-    return;
-  }
-
-  totalSKSElement.textContent = totalSKS;
-
-  // Update ikon toggle dengan total SKS
-  const toggleIcon = document.getElementById("toggleIcon");
-  if (!toggleIcon) {
-    console.error("Error: Elemen #toggleIcon tidak ditemukan.");
-    return;
-  }
-
-  toggleIcon.innerHTML = `${totalSKS} SKS`; // Tampilkan total SKS di ikon
-
-  console.log("Total SKS saat ini:", totalSKS);
-  
-}
 
 async function getMaxBebanSks() {
   try {
@@ -289,13 +121,13 @@ async function getMaxBebanSks() {
 async function fetchAndDisplaySchedule(kodemk, nama) {
   try {
     const response = await fetch(`/jadwal/${kodemk}`, { cache: "no-store" });
+    console.log("Response object:", response);
     const jadwalList = await response.json();
 
     // Log seluruh data jadwal dari API
-    console.log(`Jadwal untuk ${kodemk}:`, jadwalList);
+    console.log(`Jadwal list dari ${kodemk}:`, jadwalList);
 
     // Simpan jadwal ke selectedCourses
-
     selectedCourses = selectedCourses.map(course => {
       if (course.kodemk === kodemk) {
         return { ...course, jadwal: jadwalList }; // Tambahkan jadwal ke dalam course
@@ -308,15 +140,16 @@ async function fetchAndDisplaySchedule(kodemk, nama) {
       return `${String(jam).padStart(2, '0')}:00`;
     }
 
-    function isTimeConflict(newStart, newEnd, existingStart, existingEnd) {
-      const [startA, endA] = [newStart, newEnd].map(time => new Date(`1970-01-01T${time}:00Z`));
-      const [startB, endB] = [existingStart, existingEnd].map(time => new Date(`1970-01-01T${time}:00Z`));
-      return (startA < endB && endA > startB);
-    }
-
     jadwalList.forEach(jadwal => {
-      const { hari, waktu_mulai, waktu_selesai, kelas, ruang_id } = jadwal;
+      const { hari, waktu_mulai, waktu_selesai, kelas, ruang, mataKuliah, kodemk } = jadwal;
 
+      // Gunakan data relasi mataKuliah
+      const mataKuliahNama = mataKuliah?.nama || nama || "Tidak tersedia";
+
+      console.log('Mata Kuliah:', mataKuliah);
+      console.log('Mata Ruang:', ruang);
+
+      // Normalisasi nama hari
       const normalizedDay = hari.charAt(0).toUpperCase() + hari.slice(1).toLowerCase();
       const dayColumn = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat"].indexOf(normalizedDay);
 
@@ -326,9 +159,7 @@ async function fetchAndDisplaySchedule(kodemk, nama) {
       if (row && dayColumn >= 0) {
         const cell = row.children[dayColumn + 1];
 
-        // Bersihkan cell terlebih dahulu untuk menghindari duplikasi
-        cell.innerHTML = "";
-
+        // Tambahkan jadwal baru tanpa menghapus konten sebelumnya
         const wrapper = document.createElement("div");
         wrapper.className = "mb-2";
 
@@ -339,47 +170,36 @@ async function fetchAndDisplaySchedule(kodemk, nama) {
           courseBox-${kodemk}
         `;
         courseBox.style.cursor = "pointer";
-        
+
+        // Ambil nama ruang dari data jadwal
+        const ruangNama = ruang?.nama || "Tidak tersedia";
+
         // Tambahkan atribut data
-        courseBox.setAttribute("data-mataKuliah", nama);
+        courseBox.setAttribute("data-mataKuliah", mataKuliahNama);
         courseBox.setAttribute("data-kelas", kelas);
         courseBox.setAttribute("data-hari", hari);
         courseBox.setAttribute("data-jam", `${waktu_mulai} - ${waktu_selesai}`);
         courseBox.setAttribute("data-start-time", waktu_mulai);
         courseBox.setAttribute("data-end-time", waktu_selesai);
+        courseBox.setAttribute("data-ruang-id", ruang?.id);
 
         // Tambahkan konten ke dalam courseBox
         courseBox.innerHTML = `
-          <div class="font-bold text-gray-900 truncate">${nama}</div>
+          <div class="font-bold text-gray-900 truncate">${mataKuliahNama}</div>
           <div class="text-xs text-gray-600 truncate">Kode: ${kodemk}</div>
           <div class="text-xs text-gray-600 truncate">Kelas: ${kelas}</div>
-          <div class="text-xs text-gray-600 truncate">Ruang: ${ruang_id}</div>
+          <div class="text-xs text-gray-600 truncate">Ruang: ${ruangNama}</div>
           <div class="text-xs text-gray-600 truncate">${waktu_mulai} - ${waktu_selesai}</div>
-        `;  
+        `;
 
-        // Tambahkan event klik dengan pengecekan tabrakan jadwal
+        // Tambahkan event klik tanpa pengecekan
         courseBox.onclick = () => {
-          if (!checkForTimeConflict(waktu_mulai, waktu_selesai, hari)) {
-            showConfirmationModal(kodemk, courseBox);
-          } else {
-            courseBox.style.backgroundColor = "#FF4D4F"; // Warna merah untuk indikasi tabrakan
-            alert("Jadwal ini bertabrakan dengan jadwal lain.");
-          }
+          showConfirmationModal(kodemk, courseBox);
         };
 
         // Masukkan courseBox ke dalam wrapper, lalu ke sel tabel
         wrapper.appendChild(courseBox);
-        cell.appendChild(wrapper);
-
-        console.log("Menambahkan courseBox:", {
-          kodemk,
-          nama,
-          kelas,
-          hari,
-          ruang_id,
-          waktu_mulai,
-          waktu_selesai,
-        });
+        cell.appendChild(wrapper); // Append tanpa menghapus konten sebelumnya
       } else {
         console.warn(`Tidak dapat menemukan row atau cell untuk waktu: ${startTime} pada hari: ${hari}`);
       }
@@ -389,80 +209,6 @@ async function fetchAndDisplaySchedule(kodemk, nama) {
   }
 }
 
-
-function isTimeConflict(newStart, newEnd, existingStart, existingEnd, minGapMinutes = 0) {
-  const parseTime = time => {
-    const [hour, minute] = time.split(":").map(Number);
-    return hour * 60 + minute; // Waktu dalam menit
-  };
-
-  const newStartMinutes = parseTime(newStart);
-  const newEndMinutes = parseTime(newEnd);
-  const existingStartMinutes = parseTime(existingStart);
-  const existingEndMinutes = parseTime(existingEnd);
-
-  // Periksa jika ada overlap
-  const overlap = 
-    (newStartMinutes < existingEndMinutes + minGapMinutes && newEndMinutes > existingStartMinutes - minGapMinutes);
-
-  return overlap;
-}
-
-function checkForTimeConflict(newStart, newEnd, newDay, excludeKodemk = null, minGapMinutes = 10) {
-  // Periksa apakah ada konflik dengan semua jadwal yang dipilih
-  return selectedCourses.some(course =>
-    course.kodemk !== excludeKodemk && // Abaikan jadwal yang sedang diproses
-    course.hari === newDay && // Hari harus sama
-    isTimeConflict(newStart, newEnd, course.jam.split(" - ")[0], course.jam.split(" - ")[1], minGapMinutes) // Waktu harus bertabrakan
-  );
-}
-
-function updateScheduleConflicts() {
-  const allCourseBoxes = document.querySelectorAll(".courseBox"); // Ambil semua jadwal dari tabel
-
-  allCourseBoxes.forEach(box => {
-    const kodemk = box.className.match(/courseBox-([\w]+)/)[1]; // Ambil kode mata kuliah
-    const waktuMulai = box.getAttribute("data-start-time");
-    const waktuSelesai = box.getAttribute("data-end-time");
-    const hari = box.getAttribute("data-hari");
-
-    // Periksa apakah jadwal ini sedang dipilih
-    const isSelected = selectedCourses.some(course => course.kodemk === kodemk);
-
-    // Periksa apakah ada konflik dengan jadwal yang dipilih
-    const isConflict = selectedCourses.some(course =>
-      course.hari === hari && // Hari harus sama
-      isTimeConflict(waktuMulai, waktuSelesai, course.jam.split(" - ")[0], course.jam.split(" - ")[1]) &&
-      course.kodemk !== kodemk // Abaikan jadwal dengan kode MK yang sama
-    );
-
-    if (isSelected) {
-      // Jadwal sudah dipilih
-      box.style.backgroundColor = "#B8E986"; // Warna hijau untuk jadwal yang dipilih
-      box.classList.remove("conflict"); // Hapus status konflik
-      box.onclick = null; // Nonaktifkan klik pada jadwal yang sudah dipilih
-    } else if (isConflict || checkGlobalConflict(kodemk, waktuMulai, waktuSelesai, hari)) {
-      // Tunjukkan konflik (merah) dan nonaktifkan klik
-      box.style.backgroundColor = "#FF4D4F"; // Warna merah untuk indikasi konflik
-      box.classList.add("conflict"); // Tambahkan class untuk identifikasi konflik
-      box.onclick = null; // Nonaktifkan klik pada jadwal konflik
-    } else {
-      // Reset ke warna default jika tidak ada konflik
-      box.style.backgroundColor = ""; // Kembalikan ke warna default
-      box.classList.remove("conflict"); // Hapus status konflik
-      box.onclick = () => showConfirmationModal(kodemk, box); // Aktifkan kembali klik
-    }
-  });
-}
-
-function checkGlobalConflict(kodemk, waktuMulai, waktuSelesai, hari) {
-  // Periksa jika ada jadwal lain yang memicu konflik
-  return selectedCourses.some(course =>
-    course.hari === hari && // Hari sama
-    isTimeConflict(waktuMulai, waktuSelesai, course.jam.split(" - ")[0], course.jam.split(" - ")[1]) &&
-    course.kodemk !== kodemk // Abaikan jadwal dengan kode MK yang sama
-  );
-}
 
 // Tempat penyimpanan sementara untuk jadwal yang dipilih
 let selectedCourses = [];
@@ -478,26 +224,62 @@ function showConfirmationModal(kodemk, selectedCourseBox) {
   cancelButton.onclick = null;
 
   confirmButton.onclick = () => {
-    if (selectedCourseBox.classList.contains("bg-gray-100")) {
-      selectedCourseBox.style.backgroundColor = "#28a745";
+    // Ambil informasi jadwal yang akan dipilih
+    const hariBaru = selectedCourseBox.getAttribute("data-hari");
+    const waktuMulaiBaru = selectedCourseBox.getAttribute("data-start-time");
+    const waktuSelesaiBaru = selectedCourseBox.getAttribute("data-end-time");
+
+    // Cek konflik dengan jadwal yang sudah dipilih
+    const isConflict = selectedCourses.some(course => {
+      const hariTerpilih = course.hari;
+      const waktuMulaiTerpilih = course.jam.split(" - ")[0];
+      const waktuSelesaiTerpilih = course.jam.split(" - ")[1];
+
+      // Periksa apakah hari sama dan waktu bertabrakan
+      return (
+        hariBaru === hariTerpilih &&
+        (waktuMulaiBaru < waktuSelesaiTerpilih && waktuSelesaiBaru > waktuMulaiTerpilih)
+      );
+    });
+
+    if (isConflict) {
+      // Ubah warna courseBox menjadi merah untuk menunjukkan konflik
+      selectedCourseBox.style.backgroundColor = "#dc3545"; // Warna merah
       selectedCourseBox.classList.replace("text-black", "text-white");
-  
+
+      // Nonaktifkan klik pada elemen
+      // selectedCourseBox.onclick = null;
+
+      alert("Jadwal yang dipilih bertabrakan dengan jadwal lain.");
+      modal.classList.add("hidden");
+      return; // Batalkan pemilihan
+    }
+
+    // Jika tidak ada konflik, lanjutkan pemilihan
+    if (selectedCourseBox.classList.contains("bg-gray-100")) {
+      selectedCourseBox.style.backgroundColor = "#28a745"; // Warna hijau untuk jadwal terpilih
+      selectedCourseBox.classList.replace("text-black", "text-white");
+
       const courseInfo = {
         kodemk,
         mataKuliah: selectedCourseBox.getAttribute("data-mataKuliah"),
         kelas: selectedCourseBox.getAttribute("data-kelas"),
         hari: selectedCourseBox.getAttribute("data-hari"),
-        jam: selectedCourseBox.getAttribute("data-jam"),
+        jam: `${waktuMulaiBaru} - ${waktuSelesaiBaru}`,
+        sks: selectedCourseBox.getAttribute("data-sks"),
       };
-  
+
+      console.log("Info:", courseInfo);
+
       if (!courseInfo.mataKuliah || !courseInfo.kelas || !courseInfo.hari || !courseInfo.jam) {
         alert("Data jadwal tidak lengkap. Periksa elemen.");
         return;
       }
-  
+
       selectedCourses.push(courseInfo);
       updateBottomSheet();
-  
+      calculateTotalSKS();
+
       const similarCourseBoxes = document.querySelectorAll(`.courseBox-${kodemk}`);
       similarCourseBoxes.forEach(box => {
         box.onclick = null;
@@ -506,16 +288,15 @@ function showConfirmationModal(kodemk, selectedCourseBox) {
           box.classList.remove("text-black");
         }
       });
-  
+
       selectedCourseBox.onclick = () => showCancelModal(kodemk, selectedCourseBox);
       console.log(`Mata kuliah ${kodemk} dipilih.`);
-  
     } else {
       alert("Mata kuliah ini sudah dipilih.");
     }
 
     modal.classList.add("hidden");
-  };     
+  };
 
   cancelButton.onclick = () => {
     modal.classList.add("hidden");
@@ -534,8 +315,7 @@ function showCancelModal(kodemk, selectedCourseBox) {
     // Hapus dari array
     selectedCourses = selectedCourses.filter(course => course.kodemk !== kodemk);
     updateBottomSheet();
-    // Perbarui konflik jadwal
-    updateScheduleConflicts();
+    calculateTotalSKS(); // Hitung ulang total SKS
   
     // Mata kuliah dibatalkan, kembalikan warna dan aktifkan kembali klik
     selectedCourseBox.style.backgroundColor = ""; // Kembalikan ke warna semula
@@ -555,6 +335,24 @@ function showCancelModal(kodemk, selectedCourseBox) {
   cancelCancelButton.onclick = () => {
     cancelModal.classList.add("hidden");
   };
+}
+
+let totalSKS = 0;
+
+function calculateTotalSKS() {
+  // Hitung total SKS dari selectedCourses
+  totalSKS = selectedCourses.reduce((total, course) => {
+    const sks = parseInt(course.sks, 10) || 0; // Pastikan SKS berupa angka
+    return total + sks;
+  }, 0);
+
+  console.log(`Total SKS saat ini: ${totalSKS}`);
+
+  // Perbarui tampilan total SKS di UI
+  const totalSKSElement = document.getElementById("totalsks");
+  if (totalSKSElement) {
+    totalSKSElement.textContent = totalSKS;
+  }
 }
 
 let bottomSheetData = []; // Variabel untuk menyimpan data bottomSheet
@@ -675,3 +473,37 @@ document.addEventListener("DOMContentLoaded", () => {
 document.addEventListener("DOMContentLoaded", () => {
   console.log("DOM sepenuhnya dimuat. Elemen tersedia.");
 });
+
+
+// Fungsi untuk mengupdate total SKS
+function updateTotalSks(newTotalSks) {
+  document.getElementById('totalsks').innerText = newTotalSks;
+}
+
+// Contoh fungsi untuk menambahkan jadwal baru
+async function tambahJadwal(dataJadwal) {
+  try {
+      const response = await fetch('/irs-detail/store', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+          },
+          body: JSON.stringify({ bottomSheetData: dataJadwal }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+          // Jika berhasil, perbarui total SKS
+          updateTotalSks(result.new_total_sks);
+          alert('Jadwal berhasil ditambahkan');
+      } else {
+          // Jika gagal, tampilkan pesan error
+          alert(result.message || 'Gagal menambahkan jadwal');
+      }
+  } catch (error) {
+      console.error('Error:', error);
+      alert('Terjadi kesalahan, silakan coba lagi');
+  }
+}
