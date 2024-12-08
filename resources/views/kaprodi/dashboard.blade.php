@@ -11,11 +11,19 @@
                     Welcome to Dashboard Program Studi, {{ $prodiNama }}
                 </h1>
 
+                <p class="mb text-2m tracking-tight text-gray-900 dark:text-white">Program Studi {{ $prodiNama }} adalah salah satu Program Studi di Fakultas Sains dan Matematika, Universitas Diponegoro</p>
+                <br>
                 {{-- Card Mahasiswa Aktif --}}
                 <div class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                     <p class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Mahasiswa Aktif</p>
                     <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Semester Gasal 2024/2025</p>
                     <p class="text-m">Jumlah Mahasiswa Aktif: {{ $jumlahMahasiswaAktif }}</p>
+                </div>
+                <br>
+                {{-- Card Dosen --}}
+                <div class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                    <p class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Dosen {{ $prodiNama }}</p>
+                    <p class="text-m">Total Dosen : {{ $jumlahDosen }}</p>
                 </div>
             </div>
         </main>

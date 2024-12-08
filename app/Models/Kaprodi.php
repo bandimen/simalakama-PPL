@@ -24,4 +24,9 @@ class Kaprodi extends Model
         return Mahasiswa::where('prodi_id', $prodiId)->where('status', 'aktif')->count();
     }
 
+    public function getDosen() {
+        $prodiId = $this->dosen?->prodi_id;
+        return Dosen::where('prodi_id', $prodiId)->count();
+    }
+
 }
