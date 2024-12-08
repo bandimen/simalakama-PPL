@@ -248,9 +248,6 @@ function showConfirmationModal(kodemk, selectedCourseBox) {
       selectedCourseBox.style.backgroundColor = "#dc3545"; // Warna merah
       selectedCourseBox.classList.replace("text-black", "text-white");
 
-      // Nonaktifkan klik pada elemen
-      // selectedCourseBox.onclick = null;
-
       alert("Jadwal yang dipilih bertabrakan dengan jadwal lain.");
       modal.classList.add("hidden");
       return; // Batalkan pemilihan
@@ -258,9 +255,6 @@ function showConfirmationModal(kodemk, selectedCourseBox) {
 
     // Jika tidak ada konflik, lanjutkan pemilihan
     if (selectedCourseBox.classList.contains("bg-gray-100")) {
-      selectedCourseBox.style.backgroundColor = "#28a745"; // Warna hijau untuk jadwal terpilih
-      selectedCourseBox.classList.replace("text-black", "text-white");
-
       const courseInfo = {
         kodemk,
         mataKuliah: selectedCourseBox.getAttribute("data-mataKuliah"),
@@ -270,27 +264,56 @@ function showConfirmationModal(kodemk, selectedCourseBox) {
         sks: selectedCourseBox.getAttribute("data-sks"),
       };
 
-      console.log("Info:", courseInfo);
-
       if (!courseInfo.mataKuliah || !courseInfo.kelas || !courseInfo.hari || !courseInfo.jam) {
         alert("Data jadwal tidak lengkap. Periksa elemen.");
         return;
       }
 
-      selectedCourses.push(courseInfo);
-      updateBottomSheet();
+      // Kirim data ke backend untuk validasi dan penyimpanan
+      fetch("/irs-detail/store", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+        },
+        body: JSON.stringify({ bottomSheetData: [courseInfo] }),
+      })
+        .then(response => {
+          if (!response.ok) {
+            return response.json().then(data => {
+              throw new Error(data.message || "Terjadi kesalahan");
+            });
+          }
+          return response.json();
+        })
+        .then(() => {
+          // Jika berhasil, tambahkan data ke selectedCourses dan perbarui tampilan
+          selectedCourses.push(courseInfo);
+          updateBottomSheet();
 
-      const similarCourseBoxes = document.querySelectorAll(`.courseBox-${kodemk}`);
-      similarCourseBoxes.forEach(box => {
-        box.onclick = null;
-        if (box !== selectedCourseBox) {
-          box.style.backgroundColor = "#D1D5DB";
-          box.classList.remove("text-black");
-        }
-      });
+          selectedCourseBox.style.backgroundColor = "#28a745"; // Warna hijau
+          selectedCourseBox.classList.replace("text-black", "text-white");
 
-      selectedCourseBox.onclick = () => showCancelModal(kodemk, selectedCourseBox);
-      console.log(`Mata kuliah ${kodemk} dipilih.`);
+          const similarCourseBoxes = document.querySelectorAll(`.courseBox-${kodemk}`);
+          similarCourseBoxes.forEach(box => {
+            box.onclick = null;
+            if (box !== selectedCourseBox) {
+              box.style.backgroundColor = "#D1D5DB";
+              box.classList.remove("text-black");
+            }
+          });
+
+          selectedCourseBox.onclick = () => showCancelModal(kodemk, selectedCourseBox);
+          console.log(`Mata kuliah ${kodemk} dipilih.`);
+        })
+        .catch(error => {
+          // Jika gagal, kembalikan kotak ke putih
+          selectedCourseBox.classList.remove("bg-green-500", "text-white"); // Hapus kelas hijau (atau yang terkait)
+          selectedCourseBox.classList.add("bg-gray-100", "text-black"); // Tambahkan kelas warna abu-abu kembali
+
+          alert(error.message || "Terjadi kesalahan saat menyimpan data.");
+        });
+
     } else {
       alert("Mata kuliah ini sudah dipilih.");
     }

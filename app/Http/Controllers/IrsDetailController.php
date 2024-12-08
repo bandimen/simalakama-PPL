@@ -8,7 +8,6 @@ use App\Models\Irs;
 use App\Models\IrsDetail;
 use App\Models\MataKuliah;
 use App\Models\JadwalKuliah;
-use App\Models\Khs;
 use Illuminate\Support\Facades\Log;
 
 class IrsDetailController extends Controller
@@ -28,31 +27,13 @@ class IrsDetailController extends Controller
             // Tentukan jenis semester
             $jenis_semester = $semester % 2 == 0 ? 'Genap' : 'Gasal';
     
-            $irs = Irs::firstOrCreate(
-                [
-                    'nim' => $mahasiswa->nim,
-                    'semester' => $semester,
-                    'jenis_semester' => $jenis_semester,
-                    'tahun_ajaran' => $currentPeriod->tahun_ajaran,
-                    'max_sks' => $mahasiswa->getMaxBebanSks(),
-                ],
-            );
-
-            $irs->refresh(); // Memastikan data IRS sudah tersimpan sepenuhnya
-
-            Log::info('IRS ID:', ['irs_id' => $irs->id]);
-
-            $khs = Khs::firstOrCreate(
-                [
-                    'irs_id' => $irs->id,
-                ]
-            );
-            
-            Log::info('KHS Created or Retrieved:', ['khs' => $khs]);
-            
-
-            
-            
+            // Temukan atau buat IRS mahasiswa
+            $irs = Irs::firstOrCreate([
+                'nim' => $mahasiswa->nim,
+                'semester' => $semester,
+                'jenis_semester' => $jenis_semester,
+                'tahun_ajaran' => '2024/2025',
+            ]);
 
             if (!$irs) {
                 return response()->json(['message' => 'IRS tidak ditemukan untuk mahasiswa ini'], 404);
@@ -66,8 +47,7 @@ class IrsDetailController extends Controller
             }
     
             // Maksimum SKS yang diizinkan
-            // $maxSks = $irs->max_sks; // Ambil dari database atau gunakan default
-            $maxSks = $irs->max_sks; // Ambil dari database atau gunakan default
+            $maxSks = 21; // Ambil dari database atau gunakan default
             $totalSksSaatIni = $irs->total_sks;
     
             // Ambil daftar kode matkul yang sudah ada di IRS
@@ -168,17 +148,6 @@ class IrsDetailController extends Controller
     
         // Redirect kembali ke halaman sebelumnya
         return redirect()->back();
-    }
-
-    public static function boot()
-    {
-        parent::boot();
-
-        // Event yang dijalankan sebelum data dihapus
-        static::deleting(function ($irsDetail) {
-            // Hapus data terkait di khs_details
-            $irsDetail->khsDetails()->delete();
-        });
     }
 }
 
