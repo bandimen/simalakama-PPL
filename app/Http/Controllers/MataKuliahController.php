@@ -6,6 +6,7 @@ use App\Models\MataKuliah;
 use App\Models\JadwalKuliah;
 use Illuminate\Http\Request;
 use App\Models\PengampuMataKuliah;
+use Illuminate\Support\Facades\Auth;
 
 class MataKuliahController extends Controller
 {
@@ -16,9 +17,12 @@ class MataKuliahController extends Controller
     protected $table = 'mata_kuliahs';
     protected $fillable = ['kodemk', 'nama', 'sks', 'semester', 'sifat'];
 
-    public function index()
+    public function index(Request $request)
     {
-        $mataKuliah = MataKuliah::with('prodi')->get();
+        $user = Auth::user();
+        $prodi = $user->kaprodi?->dosen?->prodi;
+        $mataKuliah = MataKuliah::where('prodi_id', $prodi->id)->get();
+
         return view('kaprodi.mataKuliah', compact('mataKuliah'));
     }
 
