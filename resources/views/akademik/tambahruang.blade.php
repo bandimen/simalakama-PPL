@@ -147,7 +147,7 @@
                                 <div>
                                     <label for="edit_kapasitas" class="block text-sm font-medium text-gray-700">Kapasitas</label>
                                     <input type="number" name="kapasitas" id="edit_kapasitas" 
-                                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required min="1">
                                 </div>
                                 <div>
                                     <label for="edit_prodi_id" class="block text-sm font-medium text-gray-700">Prodi</label>
