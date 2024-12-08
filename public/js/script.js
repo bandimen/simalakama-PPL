@@ -432,45 +432,55 @@ function sendBottomSheetData() {
 }
 
 // Event untuk toggle bottom sheet
-document.getElementById("toggleButton").onclick = () => {
-  const bottomSheet = document.getElementById("bottomSheet");
-  const content = document.getElementById("content");
-
-  if (bottomSheet.classList.contains("translate-y-full")) {
-    bottomSheet.classList.remove("translate-y-full");
-    bottomSheet.classList.add("translate-y-0");
-    content.classList.remove("hidden");
-  } else {
-    bottomSheet.classList.add("translate-y-full");
-    bottomSheet.classList.remove("translate-y-0");
-    content.classList.add("hidden");
-  }
-};
-
 document.addEventListener("DOMContentLoaded", () => {
-  const bottomSheet = document.getElementById("bottomSheet");
-  const toggleButton = document.getElementById("toggleButton");
-  const toggleIcon = document.getElementById("toggleIcon");
-  const content = document.getElementById("content");
+  // Tombol untuk menambahkan mata kuliah
+  document.querySelector("#addCourseButton").addEventListener("click", function () {
+    // Ambil data dari form input
+    const kodemk = document.querySelector("#kodemk").value.trim();
+    const nama = document.querySelector("#nama").value.trim();
+    const sks = parseInt(document.querySelector("#sks").value);
 
-  let isExpanded = false; // Status awal collapsed
-
-  toggleButton.addEventListener("click", () => {
-    if (isExpanded) {
-      // Collapse
-      bottomSheet.classList.remove("expand");
-      content.classList.add("hidden");
-    } else {
-      // Expand
-      bottomSheet.classList.add("expand");
-      content.classList.remove("hidden");
+    // Validasi data input
+    if (!kodemk || !nama || isNaN(sks) || sks <= 0) {
+      alert("Harap isi semua kolom dengan benar.");
+      return;
     }
 
-    isExpanded = !isExpanded; // Toggle status
+    // Data mata kuliah yang akan dikirim
+    const mataKuliahData = [{ kodemk, nama, sks }];
+
+    // Ambil semester saat ini dari dropdown (contoh elemen HTML lain)
+    const currentSemester = document.querySelector("#currentSemester")?.value || 1;
+
+    // Kirim data ke server menggunakan Fetch API
+    fetch("/updatetotalsks", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-TOKEN": document
+          .querySelector('meta[name="csrf-token"]')
+          .getAttribute("content"),
+      },
+      body: JSON.stringify({ mataKuliahData, semester: currentSemester }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.message === "Total SKS berhasil diperbarui") {
+          // Update total SKS pada tampilan
+          document.getElementById("total_sks").innerText = data.total_sks;
+
+          // Reset form input
+          document.querySelector("#mataKuliahForm").reset();
+        } else {
+          alert(data.message || "Gagal menambahkan mata kuliah.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        alert("Terjadi kesalahan. Silakan coba lagi.");
+      });
   });
 });
 
-document.addEventListener("DOMContentLoaded", () => {
-  console.log("DOM sepenuhnya dimuat. Elemen tersedia.");
-});
+
 

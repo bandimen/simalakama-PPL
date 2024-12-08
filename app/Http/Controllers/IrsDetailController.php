@@ -175,6 +175,7 @@ class IrsDetailController extends Controller
     }
     
     
+    
 
 
     
@@ -191,5 +192,39 @@ class IrsDetailController extends Controller
         // Redirect kembali ke halaman sebelumnya
         return redirect()->back();
     }
+
+    public function updateTotalSks(Request $request)
+{
+    try {
+        $user = Auth::user();
+        $mahasiswa = $user->mahasiswa;
+
+        // Cari IRS mahasiswa berdasarkan semester aktif
+        $irs = Irs::where('nim', $mahasiswa->nim)
+            ->where('semester', $request->input('semester'))
+            ->first();
+
+        if (!$irs) {
+            return response()->json(['message' => 'IRS tidak ditemukan'], 404);
+        }
+
+        // Total SKS baru berdasarkan data yang dikirimkan
+        $totalSksBaru = collect($request->input('mataKuliah', []))->sum('sks');
+
+        // Update total SKS di IRS
+        $irs->update(['total_sks' => $irs->total_sks + $totalSksBaru]);
+
+        return response()->json([
+            'message' => 'Total SKS berhasil diperbarui',
+            'total_sks' => $irs->total_sks,
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Terjadi kesalahan',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
+
 }
 
