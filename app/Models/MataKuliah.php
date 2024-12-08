@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class MataKuliah extends Model
 {
-
+    protected $table = 'mata_kuliahs';
     protected $fillable = [
         'kodemk',
         'nama',
@@ -44,7 +44,6 @@ class MataKuliah extends Model
     {
         return $this->hasMany(JadwalKuliah::class, 'kodemk', 'kodemk');
     }
-
 
     public function pengampuMataKuliah()
     {

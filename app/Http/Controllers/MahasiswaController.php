@@ -52,11 +52,15 @@ class MahasiswaController extends Controller
 
     public function getJadwal($kodemk)
     {        
+        $irsPeriodsController = new IrsPeriodsController();
+        $currentPeriod = $irsPeriodsController->getCurrentPeriod();
         // Ambil jadwal berdasarkan kode mata kuliah
         $jadwals = JadwalKuliah::with(['mataKuliah', 'ruang'])
                     ->where('kodemk', $kodemk)
+                    ->where('status', 'Disetujui')
+                    ->where('tahun_ajaran', $currentPeriod->tahun_ajaran)
                     ->get();
-    
+
         return response()->json($jadwals);
     }    
  
