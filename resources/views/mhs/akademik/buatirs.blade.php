@@ -418,12 +418,11 @@
                             class="fixed bottom-0 inset-x-0 bg-white shadow-lg rounded-t-lg transition-transform duration-300 z-50 max-w-7xl mx-auto"
                             style="transform: translateY(0);">
                             <!-- Bagian Kecil untuk Expand -->
-                            <div id="toggleButton"
-                                class="flex justify-center items-center h-12 bg-black-200 rounded-t-lg cursor-pointer">
-                                <div id="toggleIcon" class="text-lg font-bold text-white">
-                                    <span id="totalSKS">0</span> SKS
-                                </div>
-                            </div>
+                            <div id="toggleButton" class="flex justify-center items-center h-12 bg-black-200 rounded-t-lg cursor-pointer">
+                              <div id="toggleIcon" class="text-lg font-bold text-white">
+                                  <span id="total_sks">0</span> SKS
+                              </div>
+                          </div>
 
                             <!-- Bagian Konten -->
                             <div id="content" class="p-4 hidden">
