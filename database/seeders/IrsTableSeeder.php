@@ -21,7 +21,8 @@ class IrsTableSeeder extends Seeder
                 'jenis_semester' => 'Gasal',
                 'tahun_ajaran' => '2023/2024',
                 'total_sks' => 19,
-                'status' => 'Disetujui'
+                'status' => 'Disetujui',
+                'max_sks' => 21,
             ], 
             [
                 'nim' => '24060122140165',
@@ -29,7 +30,8 @@ class IrsTableSeeder extends Seeder
                 'jenis_semester' => 'Genap',
                 'tahun_ajaran' => '2023/2024',
                 'total_sks' => 18,
-                'status' => 'Disetujui'
+                'status' => 'Disetujui',
+                'max_sks' => 24,
             ], 
 
             
@@ -41,7 +43,8 @@ class IrsTableSeeder extends Seeder
                 'jenis_semester' => 'Gasal',
                 'tahun_ajaran' => '2022/2023',
                 'total_sks' => 19,
-                'status' => 'Disetujui'
+                'status' => 'Disetujui',
+                'max_sks' => 21,
             ], 
 
             [
@@ -50,7 +53,8 @@ class IrsTableSeeder extends Seeder
                 'jenis_semester' => 'Genap',
                 'tahun_ajaran' => '2022/2023',
                 'total_sks' => 18,
-                'status' => 'Disetujui'
+                'status' => 'Disetujui',
+                'max_sks' => 24,
             ], 
 
             [
@@ -59,7 +63,8 @@ class IrsTableSeeder extends Seeder
                 'jenis_semester' => 'Gasal',
                 'tahun_ajaran' => '2023/2024',
                 'total_sks' => 19,
-                'status' => 'Disetujui'
+                'status' => 'Disetujui',
+                'max_sks' => 24,
             ], 
 
             [
@@ -68,7 +73,8 @@ class IrsTableSeeder extends Seeder
                 'jenis_semester' => 'Genap',
                 'tahun_ajaran' => '2023/2024',
                 'total_sks' => 18,
-                'status' => 'Disetujui'
+                'status' => 'Disetujui',
+                'max_sks' => 24,
             ], 
         ];
 

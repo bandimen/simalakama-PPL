@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('tahun_ajaran');
             $table->integer('total_sks')->default(0);
             $table->enum('status', ['Disetujui', 'Belum disetujui'])->default('Belum disetujui');
+            $table->integer('max_sks')->default(0)->nullable();
             $table->timestamps();
         });
     }
