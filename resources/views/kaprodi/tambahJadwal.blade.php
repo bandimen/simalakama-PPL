@@ -1,10 +1,10 @@
 <x-layout>
     <x-slot:title>Tambah Jadwal Kuliah</x-slot:title>
     <div class="min-h-full">
-        <x-sidebar-kaprodi></x-sidebar-kaprodi>
+        <x-navbar-kaprodi></x-navbar-kaprodi>
 
-        <main>
-            <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        <main class="flex justify-center w-full px-4 py-6 sm:px-6 lg:px-8">
+            <div class="max-w-lg w-full bg-white shadow-lg rounded-lg p-8">
                 <h4 class="text-4xl font-bold text-gray-900 mb-6">Tambah Jadwal Kuliah</h4>
 
                 <form action="{{ route('kaprodi.storeJadwal') }}" method="POST" class="space-y-6">
@@ -33,12 +33,6 @@
                         </select>
                     </div>
 
-                    <!-- Kuota Kelas -->
-                    <div class="mb-4">
-                        <label for="kuota_kelas" class="block text-sm font-medium text-gray-700">Kuota Kelas</label>
-                        <input type="text" name="kuota_kelas" id="kuota_kelas" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" disabled />
-                    </div>
-
                     <!-- Kelas -->
                     <div class="mb-4">
                         <label for="kelas" class="block text-sm font-medium text-gray-700">Kelas</label>
@@ -61,12 +55,20 @@
                         </select>
                     </div>
 
+                    <input type="hidden" name="tahun_ajaran" value="{{ $tahun_ajaran }}">
+
+                    <!-- Kuota Kelas -->
+                    <div class="mb-4">
+                        <label for="kuota_kelas" class="block text-sm font-medium text-gray-700">Kuota Kelas</label>
+                        <input type="text" name="kuota_kelas" id="kuota_kelas" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" readonly />
+                    </div>
+
                     <!-- Waktu Mulai -->
                     <div class="mb-4">
                         <label for="waktu_mulai" class="block text-sm font-medium text-gray-700">Waktu Mulai</label>
                         <select id="waktu_mulai" name="waktu_mulai" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
                             <option value="" disabled selected>Pilih Waktu Mulai</option>
-                            @foreach ($waktuMulai as $w)
+                            @foreach ($waktu_mulai as $w)
                                 <option value="{{ $w }}">{{ $w }}</option>
                             @endforeach
                         </select>
@@ -75,7 +77,7 @@
                     <!-- Waktu Selesai -->
                     <div class="mb-4">
                         <label for="waktu_selesai" class="block text-sm font-medium text-gray-700">Waktu Selesai</label>
-                        <input type="text" id="waktu_selesai" name="waktu_selesai" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" disabled />
+                        <input type="text" id="waktu_selesai" name="waktu_selesai" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" readonly />
                     </div>
 
                     <div class="flex justify-end">
@@ -108,6 +110,7 @@
                 // Update input waktu selesai
                 waktuSelesaiInput.value = waktuSelesai;
             }
+            document.getElementById('waktu_selesai').value = waktuSelesaiInput.value;
         }
 
         // Fungsi untuk mengupdate Kuota Kelas berdasarkan Ruang yang dipilih
@@ -117,7 +120,6 @@
 
             // Update kuota kelas dengan kapasitas ruang yang dipilih
             kuotaInput.value = kapasitas;
-
             document.getElementById('kuota_kelas').value = kapasitas;
         });
 

@@ -2,11 +2,11 @@
     <x-slot:title>Tambah Mata Kuliah</x-slot:title>
 
     <div class="min-h-full">
-        <x-sidebar-kaprodi></x-sidebar-kaprodi>
+        <x-navbar-kaprodi></x-navbar-kaprodi>
 
-        <main>
-            <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                <h1 class="text-4xl font-extrabold text-gray-900 mb-6">Tambah Mata Kuliah untuk Program Studi {{ $prodi->nama }}</h1>
+        <main class="flex justify-center w-full px-4 py-6 sm:px-6 lg:px-8">
+            <div class="max-w-lg w-full bg-white shadow-lg rounded-lg p-8">
+                <h1 class="text-4xl font-extrabold text-gray-900 mb-6">Tambah Mata Kuliah</h1>
 
                 <!-- Form Tambah Mata Kuliah -->
                 <form action="{{ route('kaprodi.storeMataKuliah') }}" method="POST">
@@ -60,7 +60,7 @@
                         <!-- Hidden Prodi ID -->
                         <input type="hidden" name="prodi_id" value="{{ $prodi->id }}">
 
-                        <div class="mt-6">
+                        <div lass="flex justify-end">
                             <button type="submit" class="bg-blue-500 text-white py-2 px-6 rounded-lg hover:bg-blue-600">Simpan Mata Kuliah</button>
                         </div>
                     </div>

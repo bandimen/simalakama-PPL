@@ -2,7 +2,7 @@
     <x-slot:title>{{ $title }}</x-slot:title>
 
     <div class="min-h-full">
-        <x-sidebar-kaprodi></x-sidebar-kaprodi>
+        <x-navbar-kaprodi></x-navbar-kaprodi>
 
         <main>
             <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
