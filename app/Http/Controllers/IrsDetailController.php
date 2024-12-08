@@ -29,6 +29,7 @@ class IrsDetailController extends Controller
             // Tentukan jenis semester
             $jenis_semester = $semester % 2 == 0 ? 'Genap' : 'Gasal';
     
+            // Temukan atau buat IRS mahasiswa
             $irs = Irs::firstOrCreate(
                 [
                     'nim' => $mahasiswa->nim,
@@ -50,10 +51,6 @@ class IrsDetailController extends Controller
             );
             
             Log::info('KHS Created or Retrieved:', ['khs' => $khs]);
-            
-
-            
-            
 
             if (!$irs) {
                 return response()->json(['message' => 'IRS tidak ditemukan untuk mahasiswa ini'], 404);
@@ -67,7 +64,6 @@ class IrsDetailController extends Controller
             }
     
             // Maksimum SKS yang diizinkan
-            // $maxSks = $irs->max_sks; // Ambil dari database atau gunakan default
             $maxSks = $irs->max_sks; // Ambil dari database atau gunakan default
             $totalSksSaatIni = $irs->total_sks;
     
