@@ -146,7 +146,7 @@ async function fetchAndDisplaySchedule(kodemk, nama) {
       // Gunakan data relasi mataKuliah
       const mataKuliahNama = mataKuliah?.nama || nama || "Tidak tersedia";
 
-      console.log('Mata Kuliah:', mataKuliah);
+      console.log('Mata Kuliah:', mataKuliahNama);
       console.log('Mata Ruang:', ruang);
 
       // Normalisasi nama hari
@@ -496,7 +496,7 @@ async function tambahJadwal(dataJadwal) {
 
       if (response.ok) {
           // Jika berhasil, perbarui total SKS
-          updateTotalSks(result.new_total_sks);
+          updateTotalSks(result.newTotalSks);
           alert('Jadwal berhasil ditambahkan');
       } else {
           // Jika gagal, tampilkan pesan error

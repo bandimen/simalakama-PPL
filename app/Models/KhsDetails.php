@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class KhsDetails extends Model
 {
     use HasFactory;
+    protected $table = 'khs_details'; // Jika tabel Anda adalah plural
 
     protected $fillable = ['khs_id', 'irs_details_id', 'nilai'];
 

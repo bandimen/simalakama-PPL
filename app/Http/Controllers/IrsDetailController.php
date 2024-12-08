@@ -9,6 +9,7 @@ use App\Models\IrsDetail;
 use App\Models\MataKuliah;
 use App\Models\JadwalKuliah;
 use App\Models\Khs;
+use App\Models\KhsDetails;
 use Illuminate\Support\Facades\Log;
 
 class IrsDetailController extends Controller
@@ -139,14 +140,35 @@ class IrsDetailController extends Controller
             });
     
             foreach ($newDetails as $detail) {
-                IrsDetail::updateOrCreate(
+                // Update atau buat IRS Detail
+                $irsDetail = IrsDetail::updateOrCreate(
                     ['irs_id' => $irs->id, 'kodemk' => $detail['kodemk']],
                     $detail
                 );
+            
+                $irsDetail->refresh(); // Memastikan data IRS sudah tersimpan sepenuhnya
+            
+                Log::info('IRS Detail ID:', ['irs_detail_id' => $irsDetail->id]);
+            
+                // Tambahkan logika untuk KHS Detail
+                $khsDetail = KhsDetails::firstOrCreate(
+                    [
+                        'khs_id' => $khs->id, // Relasi ke KHS
+                        'irs_details_id' => $irsDetail->id, // Relasi ke IRS Detail
+                    ],
+                    [
+                        'nilai' => null, // Nilai default
+                    ]
+                );
+            
+                Log::info('KHS Detail Created or Retrieved:', ['khs_detail' => $khsDetail]);
             }
+            
+            
+            
             return response()->json([
                 'message' => 'Data IRS berhasil diperbarui',
-                'new_total_sks' => $newTotalSks,
+                'newTotalSks' => $irs->total_sks,
             ], 200);
 
             // return response()->json(['message' => 'Data IRS berhasil diperbarui'], 200);
