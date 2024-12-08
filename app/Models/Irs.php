@@ -12,7 +12,6 @@ class Irs extends Model
     use HasFactory;
 
     protected $table = 'irs';
-    protected $guarded = [];
     protected $fillable = [
         'nim',
         'semester',
@@ -20,6 +19,7 @@ class Irs extends Model
         'tahun_ajaran',
         'status',
         'total_sks',
+        'max_sks',
     ];
 
     // relasi ke mahasiswa many to 1
