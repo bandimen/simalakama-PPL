@@ -17,7 +17,7 @@
                         <div class="mb-4">
                             <label for="kodemk" class="block text-sm font-medium text-gray-700">Mata Kuliah</label>
                             <select id="kodemk" name="kodemk" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
-                                <option value="" disabled>Pilih Mata Kuliah</option>
+                                <option value="" disabled selected>Pilih Mata Kuliah</option>
                                 @foreach ($mataKuliah as $mk)
                                     <option value="{{ $mk->kodemk }}" data-sks="{{ $mk->sks }}" {{ $jadwalKuliah->kodemk == $mk->kodemk ? 'selected' : '' }}>
                                         {{ $mk->nama }} ({{ $mk->sks }} SKS)
@@ -30,7 +30,7 @@
                         <div class="mb-4">
                             <label for="ruang_id" class="block text-sm font-medium text-gray-700">Ruang</label>
                             <select id="ruang_id" name="ruang_id" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
-                                <option value="" disabled>Pilih Ruang</option>
+                                <option value="" disabled selected>Pilih Ruang</option>
                                 @foreach ($ruang as $r)
                                     @if ($r->status == 'Disetujui')
                                         <option value="{{ $r->id }}" data-kapasitas="{{ $r->kapasitas }}" {{ $jadwalKuliah->ruang_id == $r->id ? 'selected' : '' }}>
@@ -45,7 +45,7 @@
                         <div class="mb-4">
                             <label for="kelas" class="block text-sm font-medium text-gray-700">Kelas</label>
                             <select id="kelas" name="kelas" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
-                                <option value="" disabled>Pilih Kelas</option>
+                                <option value="" disabled selected>Pilih Kelas</option>
                                 @foreach ($kelas as $k)
                                     <option value="{{ $k }}" {{ $jadwalKuliah->kelas == $k ? 'selected' : '' }}>
                                         {{ $k }}
@@ -58,7 +58,7 @@
                         <div class="mb-4">
                             <label for="hari" class="block text-sm font-medium text-gray-700">Hari</label>
                             <select id="hari" name="hari" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
-                                <option value="" disabled>Pilih Hari</option>
+                                <option value="" disabled selected>Pilih Hari</option>
                                 @foreach ($hari as $h)
                                     <option value="{{ $h }}" {{ $jadwalKuliah->hari == $h ? 'selected' : '' }}>
                                         {{ $h }}
@@ -79,7 +79,7 @@
                         <div class="mb-4">
                             <label for="waktu_mulai" class="block text-sm font-medium text-gray-700">Waktu Mulai</label>
                             <select id="waktu_mulai" name="waktu_mulai" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
-                                <option value="" disabled>Pilih Waktu Mulai</option>
+                                <option value="" disabled selected>Pilih Waktu Mulai</option>
                                 @foreach ($waktu_mulai as $w)
                                     <option value="{{ $w }}" {{ $jadwalKuliah->waktu_mulai == $w ? 'selected' : '' }}>
                                         {{ $w }}

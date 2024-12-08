@@ -113,11 +113,12 @@ class JadwalKuliahController extends Controller
     public function edit($id)
     {
         $jadwalKuliah = JadwalKuliah::find($id);
+
         $user = Auth::user();
+        $prodi = $user->kaprodi?->dosen?->prodi;
+
         $currentYear = date('Y');
         $semester = (date('n') <= 6) ? 'genap' : 'ganjil';
-
-        $prodi = $user->kaprodi?->dosen?->prodi;
 
         // Filter mata kuliah berdasarkan semester
         $mataKuliah = MataKuliah::where('prodi_id', $prodi->id)
@@ -125,7 +126,6 @@ class JadwalKuliahController extends Controller
                                 ->get();
 
         $tahun_ajaran = IrsPeriods::latest()->first()?->periode ?? '2024/2025';
-        // Ambil ruang yang tersedia
         $ruang = Ruang::where('status', 'Disetujui')->get();
         $kuota_kelas = Ruang::where('kapasitas')->get();
         $kelas = ['A', 'B', 'C', 'D'];
@@ -133,10 +133,10 @@ class JadwalKuliahController extends Controller
         $waktu_mulai = ['07:00', '09:40', '13:00', '15:40'];
 
         // Mengambil nilai waktu selesai berdasarkan waktu mulai dan durasi SKS
-        $mataKuliah = MataKuliah::where('kodemk', $jadwalKuliah->kodemk)->first();
-        $waktuSelesai = date('H:i', strtotime($jadwalKuliah->waktu_mulai) + $mataKuliah->sks * 50 * 60);
+        $mataKuliahSks = MataKuliah::where('kodemk', $jadwalKuliah->kodemk)->first()?->sks;
+        $waktuSelesai = date('H:i', strtotime($jadwalKuliah->waktu_mulai) + $mataKuliahSks * 50 * 60);
 
-        return view('kaprodi.editJadwal', compact('jadwalKuliah', 'mataKuliah', 'ruang', 'kelas', 'hari', 'kuota_kelas', 'waktuSelesai'));
+        return view('kaprodi.editJadwal', compact('jadwalKuliah', 'mataKuliah', 'ruang', 'kelas', 'hari', 'tahun_ajaran','kuota_kelas', 'waktu_mulai', 'waktuSelesai'));
     }
 
     /**
@@ -147,17 +147,19 @@ class JadwalKuliahController extends Controller
         $request->validate([
             'kodemk' => 'required|exists:mata_kuliahs,kodemk',
             'ruang_id' => 'required|exists:ruangs,id',
-            'kelas' => 'required|string',
-            'hari' => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat,Belum dijadwalkan',
+            'kelas' => 'required|string|max:1',
+            'hari' => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat',
             'tahun_ajaran' => 'required|string',
             'kuota_kelas' => 'required|integer|min:30',
             'waktu_mulai' => 'required|date_format:H:i',
             'waktu_selesai' => 'required|date_format:H:i|after:waktu_mulai',
         ]);
 
+        $jadwalKuliah = JadwalKuliah::findOrFail($id);
+
         // Ambil data mata kuliah untuk menghitung waktu selesai
-        $mataKuliah = MataKuliah::where('kodemk', $request->kodemk)->first();
-        $waktuSelesai = date('H:i', strtotime($request->waktu_mulai) + $mataKuliah->sks * 50 * 60);
+        $mataKuliahSks = MataKuliah::where('kodemk', $jadwalKuliah->kodemk)->first()?->sks;
+        $waktuSelesai = date('H:i', strtotime($jadwalKuliah->waktu_mulai) + $mataKuliahSks * 50 * 60);
 
         // Periksa batas 4 kelas untuk mata kuliah
         $existingClasses = JadwalKuliah::where('kodemk', $request->kodemk)->distinct('kelas')->count();
@@ -165,8 +167,7 @@ class JadwalKuliahController extends Controller
             return redirect()->back()->withErrors(['kodemk' => 'Mata kuliah ini sudah memiliki 4 jadwal berbeda.']);
         }
 
-        $jadwal = JadwalKuliah::findOrFail($id);
-        $jadwal->update([
+        $jadwalKuliah->update([
             'kodemk' => $request->kodemk,
             'ruang_id' => $request->ruang_id,
             'kelas' => $request->kelas,
