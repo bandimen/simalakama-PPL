@@ -92,7 +92,7 @@
                                 <h5 class="mb-2 text-3xl font-bold text-gray-900 dark:text-white">IRS Anda sudah
                                     disetujui.</h5>
                                 <p class="mb-5 text-base text-gray-500 sm:text-lg dark:text-gray-400">IRS Anda disetujui
-                                    oleh Pembimbing Akademik pada blablabla. Anda tidak bisa mengubah IRS. Jika Anda
+                                    oleh Pembimbing Akademik. Anda tidak bisa mengubah IRS. Jika Anda
                                     ingin melihat IRS, silakan menuju ke halaman Lihat IRS. Jika Anda ingin melakukan
                                     perubahan IRS, hubungi Pembimbing Akademik Anda untuk mendapatkan akses.</p>
                                 <div class="flex items-center justify-center ">

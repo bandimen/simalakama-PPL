@@ -101,7 +101,19 @@
                                 {{ $detail->jadwalKuliah->waktu_mulai ?? '-' }} - {{ $detail->jadwalKuliah->waktu_selesai ?? '-' }}
                             </td>
                             <td class="px-2 py-4 border border-gray-300">{{ $detail->status ?? '-' }}</td>
-                            <td class="px-2 py-4 border border-gray-300">Dosen Pengampu</td>
+                            <td class="px-2 py-4 border border-gray-300">
+                              @if ($detail->mataKuliah->dosenPengampu->isNotEmpty())
+                              <ul>
+                                  @foreach ($detail->mataKuliah->dosenPengampu as $dosen)
+                                      <li>{{ $dosen->nama }}
+                                      </li>
+                                  @endforeach
+                              </ul>
+                          @else
+                              Tidak ada Dosen
+                              Pengampu
+                          @endif
+                            </td>
                         </tr>
                     @endforeach
                 @else
