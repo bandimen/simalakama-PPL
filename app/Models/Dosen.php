@@ -11,9 +11,9 @@ use Illuminate\Database\Eloquent\Model;
 class Dosen extends Model
 {
     protected $table = 'dosen';
-    protected $primaryKey = 'nidn'; 
+    protected $primaryKey = 'nidn';
 
-    public $incrementing = false; 
+    public $incrementing = false;
 
     public function pembimbingAkademik()
     {
@@ -32,6 +32,6 @@ class Dosen extends Model
 
     public function prodi()
     {
-        return $this->belongsTo(Prodi::class);
+        return $this->belongsTo(Prodi::class, 'prodi_id', 'id');
     }
 }

@@ -150,7 +150,7 @@
                                                 <table
                                                     class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                                     <thead
-                                                        class="text-xs text-gray-700 uppercase bg-blue-400 dark:bg-blue-700 dark:text-blue-400">
+                                                        class="text-xs bg-blue-800 text-white uppercase dark:bg-blue-700 dark:text-blue-400">
                                                         <tr>
                                                             <th scope="col" class="px-6 py-3">
                                                                 No

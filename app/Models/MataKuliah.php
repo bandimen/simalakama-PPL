@@ -11,13 +11,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class MataKuliah extends Model
 {
-    protected $table = 'mata_kuliahs';
+
+    protected $table ='mata_kuliahs';
     protected $fillable = [
         'kodemk',
         'nama',
         'sks',
         'semester',
         'sifat',
+        'prodi_id',
+        'status'
     ];
 
     public function jadwals() {
@@ -42,7 +45,7 @@ class MataKuliah extends Model
     // Relasi ke JadwalKuliah
     public function jadwalKuliah()
     {
-        return $this->hasMany(JadwalKuliah::class, 'kodemk', 'kodemk');
+        return $this->hasMany(JadwalKuliah::class, 'kodemk', 'kodemk','prodi_id');
     }
 
     public function pengampuMataKuliah()
@@ -52,6 +55,6 @@ class MataKuliah extends Model
 
     public function prodi()
     {
-        return $this->belongsTo(Prodi::class);
+        return $this->belongsTo(Prodi::class,'prodi_id','id');
     }
 }

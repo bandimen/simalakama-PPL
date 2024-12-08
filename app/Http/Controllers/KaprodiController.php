@@ -12,21 +12,15 @@ class KaprodiController extends Controller
     // Dashboard Kaprodi
     public function index()
     {
-        $user = Auth::user();
-        $kaprodi = $user->kaprodi; // Pastikan relasi user -> kaprodi sudah benar
-        $jumlahMahasiswaAktif = $this->getMahasiswaAktif();
+        $user = Auth::user()->load('kaprodi.dosen.prodi'); // Eager loading relasi
+        $prodi = $user->kaprodi?->dosen?->prodi; // Ambil nama prodi dari relasi
+        $jumlahMahasiswaAktif = $user->kaprodi?->getMahasiswaAktif() ?? 0;
 
         return view('kaprodi.dashboard', [
             'title' => 'Dashboard Kaprodi',
-            'kaprodi' => $kaprodi,
+            'prodiNama' => $prodi?->nama ?? 'Prodi tidak ditemukan',
             'jumlahMahasiswaAktif' => $jumlahMahasiswaAktif,
         ]);
-    }
-
-    // Contoh fungsi tambahan untuk dashboard
-    private function getMahasiswaAktif()
-    {
-        return Mahasiswa::where('status', 'aktif')->count();
     }
 
 }

@@ -17,7 +17,27 @@ class KaprodiTableSeeder extends Seeder
             [
                 'nidn' => '0011087104', // NIDN Pak Aris S
                 'user_id' => 6,
-            ]
+            ],
+            [
+                'nidn' => '0023816291', // Matematika
+                'user_id' => 9,
+            ],
+            [
+                'nidn' => '0022619940', // Biologi
+                'user_id' => 10,
+            ],
+            [
+                'nidn' => '0019027307', // Kimia
+                'user_id' => 11,
+            ],
+            [
+                'nidn' => '0002151998', // Fisika
+                'user_id' => 12,
+            ],
+            [
+                'nidn' => '0006076305', // Statistika
+                'user_id' => 13,
+            ],
         ];
 
         foreach ($kaprodis as $kaprodi) {

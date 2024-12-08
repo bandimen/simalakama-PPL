@@ -66,7 +66,7 @@ class User extends Authenticatable
 
     public function mahasiswa()
     {
-        return $this->hasOne(Mahasiswa::class, 'user_id', 'id');    
+        return $this->hasOne(Mahasiswa::class, 'user_id', 'id');
     }
 
     public function pembimbingAkademik()
@@ -86,6 +86,6 @@ class User extends Authenticatable
 
     public function kaprodi()
     {
-        return $this->hasOne(Kaprodi::class);
+        return $this->hasOne(Kaprodi::class, 'user_id');
     }
 }

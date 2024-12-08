@@ -51,7 +51,7 @@ class MahasiswaController extends Controller
 
 
     public function getJadwal($kodemk)
-    {        
+    {   
         $irsPeriodsController = new IrsPeriodsController();
         $currentPeriod = $irsPeriodsController->getCurrentPeriod();
         // Ambil jadwal berdasarkan kode mata kuliah

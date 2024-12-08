@@ -18,7 +18,8 @@ class JadwalKuliah extends Model
         'kuota_kelas',
         'waktu_mulai',
         'waktu_selesai',
-        'status'
+        'status',
+        'prodi_id'
     ];
 
     public function mataKuliah()
@@ -40,6 +41,11 @@ class JadwalKuliah extends Model
     {
         return $this->belongsTo(IrsPeriods::class, 'tahun_ajaran', 'tahun_ajaran');
     }
+    public function prodi()
+    {
+        return $this->belongsTo(Prodi::class,'prodi_id','id'); // Relasi ke tabel prodi
+    }
+
 
     public function scopeSearch($query, $search)
     {

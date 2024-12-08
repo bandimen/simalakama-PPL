@@ -11,16 +11,17 @@ class Kaprodi extends Model
 
     public function dosen()
     {
-        return $this->belongsTo(Dosen::class);
+        return $this->belongsTo(Dosen::class, 'nidn', 'nidn');
     }
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function getMahasiswaAktif() {
-        return Mahasiswa::where('status', 'aktif')->count();
+        $prodiId = $this->dosen?->prodi_id;
+        return Mahasiswa::where('prodi_id', $prodiId)->where('status', 'aktif')->count();
     }
 
 }

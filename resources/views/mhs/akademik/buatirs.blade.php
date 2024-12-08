@@ -106,7 +106,6 @@
           <br><br>
           <div class="selected-courses" id="selectedCourses">
             <h3>Mata Kuliah yang Dipilih:</h3>
-            <br>
             <ul id="courseList"></ul>
           </div>
         </section>

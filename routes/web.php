@@ -73,16 +73,19 @@ Route::middleware(['auth'])->group(function () {
 
   // DEKAN
   Route::get('/dekan', [DekanController::class, 'index']);
-  Route::get('/dekan/matkul', [DekanController::class, 'matkul']);
+  Route::get('/dekan/matkul', [DekanController::class,'matkul'])->name('dekan.matkul');
   Route::get('/dekan/ruangacc', [DekanController::class, 'ruangacc']);
   Route::resource('mataKuliah', MataKuliahController::class);
   Route::get('/dekan/ruangacc', [RuangController::class, 'verifikasi'])->name('ruangs.verifikasi');
   Route::patch('/ruangs/approve/{id}', [RuangController::class, 'approve'])->name('ruangs.approve');
-  Route::get('/dekan/matkul', [DekanController::class, 'jadwalKuliah'])->name('dekan.matkul');
   Route::patch('/dekan/matkul/{id}/approve', [DekanController::class, 'approveJadwalKuliah'])->name('dekan.matkul.approve');
   Route::get('/ruangs/verifikasi', [RuangController::class, 'verifikasi'])->name('ruangs.verifikasi');
   Route::patch('/ruangs/approve-all/{prodiId}', [RuangController::class, 'approveAll'])->name('ruangs.approveAll');
   Route::patch('/ruangs/approve/{id}', [RuangController::class, 'approve'])->name('ruangs.approve');
+  Route::patch('/dekan/prodi/{prodi}/approve', [DekanController::class, 'approveJadwalProdi'])->name('dekan.prodi.approve');
+  Route::get('/dekan/verifikasi', [DekanController::class, 'verifikasi'])->name('dekan.verifikasi');
+  Route::patch('/dekan/approve/{prodiId}', [DekanController::class, 'approveAll'])->name('dekan.approveAll');
+
 
 
 
@@ -111,8 +114,10 @@ Route::middleware(['auth'])->group(function () {
 
   Route::get('/kaprodi/mataKuliah', [MataKuliahController::class, 'index'])->name('kaprodi.mataKuliah');
   Route::get('/kaprodi/mataKuliah/tambah', [MataKuliahController::class, 'create'])->name('kaprodi.tambahMataKuliah');
-  Route::get('/kaprodi/edit-mataKuliah/{id}', [MataKuliahController::class, 'edit'])->name('kaprodi.editMataKuliah');
-  Route::get('/kaprodi/delete-mataKuliah/{id}', [MataKuliahController::class, 'destroy'])->name('kaprodi.deleteMataKuliah');
+  Route::post('/kaprodi/mataKuliah', [MataKuliahController::class, 'store'])->name('kaprodi.storeMataKuliah');
+  Route::get('/kaprodi/mataKuliah/{kodemk}/edit', [MataKuliahController::class, 'edit'])->name('kaprodi.editMataKuliah');
+  Route::put('/kaprodi/mataKuliah/{kodemk}', [MataKuliahController::class, 'update'])->name('kaprodi.updateMataKuliah');
+  Route::delete('/kaprodi/mataKuliah/{kodemk}', [MataKuliahController::class, 'destroy'])->name('kaprodi.deleteMataKuliah');
 
   Route::get('/logout', [SessionController::class, 'logout']);
 

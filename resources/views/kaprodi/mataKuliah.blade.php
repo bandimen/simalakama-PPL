@@ -53,9 +53,7 @@
                                               method="POST" class="inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit"
-                                                    class="bg-red-500 text-white py-1 px-3 rounded-lg hover:bg-red-600"
-                                                    onclick="return confirm('Yakin ingin menghapus mata kuliah ini?')">Hapus</button>
+                                            <button type="submit" class="bg-red-500 text-white py-1 px-3 rounded-lg hover:bg-red-600" onclick="return confirm('Yakin ingin menghapus mata kuliah ini?')">Hapus</button>
                                         </form>
                                     </td>
                                 </tr>

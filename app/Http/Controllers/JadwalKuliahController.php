@@ -7,6 +7,7 @@ use App\Models\MataKuliah;
 use App\Models\JadwalKuliah;
 use App\Models\IrsPeriods;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class JadwalKuliahController extends Controller
 {
@@ -15,8 +16,11 @@ class JadwalKuliahController extends Controller
      */
     public function index(Request $request)
     {
+        $user = Auth::user();
+        $prodi = $user->kaprodi?->dosen?->prodi;
+        $jadwalKuliah = JadwalKuliah::where('prodi_id', $prodi->id)->get();
         $search = $request->input('search');
-        $jadwalKuliah = JadwalKuliah::with(['mataKuliah', 'ruang'])
+        $carijadwal = JadwalKuliah::with(['mataKuliah', 'ruang'])
             ->search($search)
             ->get();
 
