@@ -21,6 +21,7 @@ return new class extends Migration
             $table->enum('hari', ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Belum dijadwalkan']);
             $table->string('tahun_ajaran');
             $table->integer('kuota_kelas');
+            $table->integer('kuota_terpakai')->default(0);
             $table->time('waktu_mulai')->nullable();
             $table->time('waktu_selesai')->nullable();
             $table->enum('status', ['Disetujui', 'Belum disetujui'])->default('Belum disetujui');

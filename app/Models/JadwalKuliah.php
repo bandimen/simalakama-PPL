@@ -16,6 +16,7 @@ class JadwalKuliah extends Model
         'hari',
         'tahun_ajaran',
         'kuota_kelas',
+        'kuota_terpakai',
         'waktu_mulai',
         'waktu_selesai',
         'status',
