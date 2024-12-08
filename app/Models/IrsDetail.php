@@ -15,6 +15,17 @@ class IrsDetail extends Model
         'status',
     ];
 
+    public static function boot()
+    {
+        parent::boot();
+
+        // Event yang dijalankan sebelum data dihapus
+        static::deleting(function ($irsDetail) {
+            // Hapus data terkait di khs_details
+            $irsDetail->khsDetails()->delete();
+        });
+    }
+
     public function irs() 
     {
         return $this->belongsTo(Irs::class, 'irs_id', 'id');
@@ -34,3 +45,4 @@ class IrsDetail extends Model
         return $this->hasOne(KhsDetails::class, 'irs_details_id');
     }    
 }
+

@@ -160,7 +160,7 @@
               class="flex justify-center items-center h-12 bg-black-200 rounded-t-lg cursor-pointer"
           >
             <div id="toggleIcon" class="text-lg font-bold text-white">
-              <span id="totalsks">0</span> SKS
+              <span id="totalsks">0</span> SKS 
             </div>
           </div>
 

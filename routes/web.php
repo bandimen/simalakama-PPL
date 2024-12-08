@@ -47,6 +47,7 @@ Route::middleware(['auth'])->group(function () {
   Route::get('/irs/selected-schedules', [IrsController::class, 'getSelectedSchedules']);
   Route::post('/irs/store', [IrsController::class, 'store']);
   Route::post('/irs-detail/store', [IrsDetailController::class, 'store']);
+  Route::delete('/irs-detail/delete-all', [IrsDetailController::class, 'deleteAll']);
   Route::get('/api/getMaxBebanSks', [MahasiswaController::class, 'getMaxBebanSks']);
 
   Route::get('/mataKuliah/sks/{kodemk}', [MataKuliahController::class, 'getSksByKode']);
@@ -55,7 +56,7 @@ Route::middleware(['auth'])->group(function () {
   // Route::get('/irs-detail/load', [IrsDetailController::class, 'load'])->middleware('auth');
   // hapus irs detail
   Route::get('mhs/buatirs/delete/{id}', [IrsDetailController::class, 'delete'])->name('deleteIrsDetail');
-
+  
   // PEMBIMBING AKADEMIK
   Route::get('/pa', [PembimbingAkademikController::class, 'index']);
   Route::get('/pa/perwalian', [PembimbingAkademikController::class, 'perwalian']);

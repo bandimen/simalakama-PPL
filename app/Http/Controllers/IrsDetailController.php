@@ -149,5 +149,16 @@ class IrsDetailController extends Controller
         // Redirect kembali ke halaman sebelumnya
         return redirect()->back();
     }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        // Event yang dijalankan sebelum data dihapus
+        static::deleting(function ($irsDetail) {
+            // Hapus data terkait di khs_details
+            $irsDetail->khsDetails()->delete();
+        });
+    }
 }
 
