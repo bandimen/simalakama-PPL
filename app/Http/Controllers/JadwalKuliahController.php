@@ -53,7 +53,6 @@ class JadwalKuliahController extends Controller
         $hari = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'];
         $waktu_mulai = ['07:00', '09:40', '13:00', '15:40'];
 
-
         return view('kaprodi.tambahJadwal', compact('mataKuliah', 'ruang', 'kelas', 'hari', 'tahun_ajaran', 'kuota_kelas', 'waktu_mulai'));
     }
 
@@ -66,7 +65,7 @@ class JadwalKuliahController extends Controller
             'kodemk' => 'required|exists:mata_kuliahs,kodemk',
             'ruang_id' => 'required|exists:ruangs,id',
             'kelas' => 'required|string',
-            'hari' => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat,Belum dijadwalkan',
+            'hari' => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat',
             'tahun_ajaran' => 'required|string',
             'kuota_kelas' => 'required|integer|min:30',
             'waktu_mulai' => 'required|date_format:H:i',
@@ -81,6 +80,19 @@ class JadwalKuliahController extends Controller
         $existingClasses = JadwalKuliah::where('kodemk', $request->kodemk)->distinct('kelas')->count();
         if ($existingClasses >= 4) {
             return redirect()->back()->withErrors(['kodemk' => 'Mata kuliah ini sudah memiliki 4 jadwal berbeda.']);
+        }
+
+        // Cek apakah ada jadwal yang tumpang tindih
+        $existingSchedule = JadwalKuliah::where('kodemk', $request->kodemk)
+            ->where('hari', $request->hari)
+            ->where('waktu_mulai', $request->waktu_mulai)
+            ->where('ruang_id', $request->ruang_id)
+            ->first();
+
+        if ($existingSchedule) {
+            return redirect()->back()->withErrors([
+                'jadwal_tumpang_tindih' => 'Jadwal kuliah ini sudah ada pada hari dan waktu yang sama di ruang yang dipilih.'
+            ]);
         }
 
         // Simpan jadwal
@@ -136,7 +148,13 @@ class JadwalKuliahController extends Controller
         $mataKuliahSks = MataKuliah::where('kodemk', $jadwalKuliah->kodemk)->first()?->sks;
         $waktuSelesai = date('H:i', strtotime($jadwalKuliah->waktu_mulai) + $mataKuliahSks * 50 * 60);
 
-        return view('kaprodi.editJadwal', compact('jadwalKuliah', 'mataKuliah', 'ruang', 'kelas', 'hari', 'tahun_ajaran','kuota_kelas', 'waktu_mulai', 'waktuSelesai'));
+        // Get existing jadwals for the selected kelas
+        $existingJadwals = JadwalKuliah::where('kelas', $jadwalKuliah->kelas)
+                                        ->where('hari', $jadwalKuliah->hari)
+                                        ->where('waktu_mulai', $jadwalKuliah->waktu_mulai)
+                                        ->get();
+
+        return view('kaprodi.editJadwal', compact('jadwalKuliah', 'mataKuliah', 'ruang', 'kelas', 'hari', 'tahun_ajaran','kuota_kelas', 'waktu_mulai', 'waktuSelesai', 'existingJadwals'));
     }
 
     /**
@@ -160,6 +178,20 @@ class JadwalKuliahController extends Controller
         // Ambil data mata kuliah untuk menghitung waktu selesai
         $mataKuliahSks = MataKuliah::where('kodemk', $jadwalKuliah->kodemk)->first()?->sks;
         $waktuSelesai = date('H:i', strtotime($jadwalKuliah->waktu_mulai) + $mataKuliahSks * 50 * 60);
+
+        // Cek apakah kelas yang dipilih sudah ada pada waktu yang sama
+        $existingSchedule = JadwalKuliah::where('kodemk', $request->kodemk)
+                                    ->where('hari', $request->hari)
+                                    ->where('waktu_mulai', $request->waktu_mulai)
+                                    ->where('id', '!=', $id) // Pastikan tidak memeriksa jadwal yang sedang diupdate
+                                    ->where('ruang_id', $request->ruang_id)
+                                    ->first();
+
+        if ($existingSchedule) {
+            return redirect()->back()->withErrors([
+                'jadwal_tumpang_tindih' => 'Jadwal kuliah ini sudah ada pada hari dan waktu yang sama di ruang yang dipilih.'
+            ]);
+        }
 
         // Periksa batas 4 kelas untuk mata kuliah
         $existingClasses = JadwalKuliah::where('kodemk', $request->kodemk)->distinct('kelas')->count();

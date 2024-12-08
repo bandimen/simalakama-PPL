@@ -120,6 +120,7 @@ Route::middleware(['auth'])->group(function () {
   Route::put('/kaprodi/mataKuliah/{kodemk}', [MataKuliahController::class, 'update'])->name('kaprodi.updateMataKuliah');
   Route::delete('/kaprodi/mataKuliah/{kodemk}', [MataKuliahController::class, 'destroy'])->name('kaprodi.deleteMataKuliah');
 
+  Route::post('/updateTotalSks', [IrsDetailController::class, 'updateTotalSks'])->name('updateTotalSks');
 
   Route::get('/logout', [SessionController::class, 'logout']);
 

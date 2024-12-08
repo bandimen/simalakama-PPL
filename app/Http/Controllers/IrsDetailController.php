@@ -141,50 +141,50 @@ class IrsDetailController extends Controller
             Log::info('isi newDetails:', $newDetails);
 
             foreach ($newDetails as $detail) {
-                $jadwalKuliah = JadwalKuliah::where('id', $detail['jadwal_kuliah_id'])->lockForUpdate()->first();
-
+                $jadwalKuliah = JadwalKuliah::find($detail['jadwal_kuliah_id']);
+                
                 // Pastikan jadwal kuliah ditemukan
                 if (!$jadwalKuliah) {
                     return response()->json([
                         'message' => 'Jadwal kuliah tidak ditemukan untuk kodemk: ' . $detail['kodemk'],
                     ], 400);
                 }
-
-                // *Cek apakah kuota masih tersedia sebelum menambah IRS dan increment kuota*
-                if ($jadwalKuliah->kuota_terpakai < $jadwalKuliah->kuota_kelas) {
-                    $jadwalKuliah->increment('kuota_terpakai'); // Increment langsung ke database
-                    // Update atau buat IRS Detail
-                    $irsDetail = IrsDetail::updateOrCreate(
-                        ['irs_id' => $irs->id, 'kodemk' => $detail['kodemk']],
-                        $detail
-                    );
-
-                    $irsDetail->refresh(); // Memastikan data IRS sudah tersimpan sepenuhnya
-
-                    Log::info('IRS Detail ID:', ['irs_detail_id' => $irsDetail->id]);
-
-                    // Tambahkan logika untuk KHS Detail
-                    $khsDetail = KhsDetails::firstOrCreate(
-                        [
-                            'khs_id' => $khs->id, // Relasi ke KHS
-                            'irs_details_id' => $irsDetail->id, // Relasi ke IRS Detail
-                        ],
-                        [
-                            'nilai' => null, // Nilai default
-                        ]
-                    );
-
-                    Log::info('KHS Detail Created or Retrieved:', ['khs_detail' => $khsDetail]);
-                
-                    Log::info('Kuota Terpakai Setelah Increment:', ['kuota_terpakai' => $jadwalKuliah->kuota_terpakai]);
-                    
-                } else {
+            
+                // Cek apakah kuota penuh
+                if ($jadwalKuliah->kuota_terpakai >= $jadwalKuliah->kuota_kelas) {
                     return response()->json([
                         'message' => 'Kuota kelas untuk mata kuliah ' . $jadwalKuliah->kodemk . ' sudah penuh.',
                     ], 400);
                 }
+            
+                // Update atau buat IRS Detail
+                $irsDetail = IrsDetail::updateOrCreate(
+                    ['irs_id' => $irs->id, 'kodemk' => $detail['kodemk']],
+                    $detail
+                );
+            
+                $irsDetail->refresh(); // Memastikan data IRS sudah tersimpan sepenuhnya
+            
+                Log::info('IRS Detail ID:', ['irs_detail_id' => $irsDetail->id]);
+            
+                // Tambahkan logika untuk KHS Detail
+                $khsDetail = KhsDetails::firstOrCreate(
+                    [
+                        'khs_id' => $khs->id, // Relasi ke KHS
+                        'irs_details_id' => $irsDetail->id, // Relasi ke IRS Detail
+                    ],
+                    [
+                        'nilai' => null, // Nilai default
+                    ]
+                );
+            
+                Log::info('KHS Detail Created or Retrieved:', ['khs_detail' => $khsDetail]);
+            
+                // **Tambahkan logika untuk menambah kuota terpakai hanya sekali**
+                $jadwalKuliah->increment('kuota_terpakai');
             }
-
+            
+            
             return response()->json([
                 'message' => 'Data IRS berhasil diperbarui',
                 'newTotalSks' => $irs->total_sks,
@@ -194,6 +194,12 @@ class IrsDetailController extends Controller
             return response()->json(['message' => 'Terjadi kesalahan saat memproses data', 'error' => $e->getMessage()], 500);
         }
     }
+    
+    
+    
+
+
+    
     
     public function delete($id)
     {
@@ -207,5 +213,39 @@ class IrsDetailController extends Controller
         // Redirect kembali ke halaman sebelumnya
         return redirect()->back();
     }
+
+    public function updateTotalSks(Request $request)
+{
+    try {
+        $user = Auth::user();
+        $mahasiswa = $user->mahasiswa;
+
+        // Cari IRS mahasiswa berdasarkan semester aktif
+        $irs = Irs::where('nim', $mahasiswa->nim)
+            ->where('semester', $request->input('semester'))
+            ->first();
+
+        if (!$irs) {
+            return response()->json(['message' => 'IRS tidak ditemukan'], 404);
+        }
+
+        // Total SKS baru berdasarkan data yang dikirimkan
+        $totalSksBaru = collect($request->input('mataKuliah', []))->sum('sks');
+
+        // Update total SKS di IRS
+        $irs->update(['total_sks' => $irs->total_sks + $totalSksBaru]);
+
+        return response()->json([
+            'message' => 'Total SKS berhasil diperbarui',
+            'total_sks' => $irs->total_sks,
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Terjadi kesalahan',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
+
 }
 

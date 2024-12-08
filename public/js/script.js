@@ -146,7 +146,7 @@ async function fetchAndDisplaySchedule(kodemk, nama) {
       // Gunakan data relasi mataKuliah
       const mataKuliahNama = mataKuliah?.nama || nama || "Tidak tersedia";
 
-      console.log('Mata Kuliah:', mataKuliahNama);
+      console.log('Mata Kuliah:', mataKuliah);
       console.log('Mata Ruang:', ruang);
 
       // Normalisasi nama hari
@@ -212,7 +212,6 @@ async function fetchAndDisplaySchedule(kodemk, nama) {
 }
 
 
-
 // Tempat penyimpanan sementara untuk jadwal yang dipilih
 let selectedCourses = [];
 
@@ -250,6 +249,9 @@ function showConfirmationModal(kodemk, selectedCourseBox) {
       selectedCourseBox.style.backgroundColor = "#dc3545"; // Warna merah
       selectedCourseBox.classList.replace("text-black", "text-white");
 
+      // Nonaktifkan klik pada elemen
+      // selectedCourseBox.onclick = null;
+
       alert("Jadwal yang dipilih bertabrakan dengan jadwal lain.");
       modal.classList.add("hidden");
       return; // Batalkan pemilihan
@@ -257,6 +259,9 @@ function showConfirmationModal(kodemk, selectedCourseBox) {
 
     // Jika tidak ada konflik, lanjutkan pemilihan
     if (selectedCourseBox.classList.contains("bg-gray-100")) {
+      selectedCourseBox.style.backgroundColor = "#28a745"; // Warna hijau untuk jadwal terpilih
+      selectedCourseBox.classList.replace("text-black", "text-white");
+
       const courseInfo = {
         kodemk,
         mataKuliah: selectedCourseBox.getAttribute("data-mataKuliah"),
@@ -266,56 +271,28 @@ function showConfirmationModal(kodemk, selectedCourseBox) {
         sks: selectedCourseBox.getAttribute("data-sks"),
       };
 
+      console.log("Info:", courseInfo);
+
       if (!courseInfo.mataKuliah || !courseInfo.kelas || !courseInfo.hari || !courseInfo.jam) {
         alert("Data jadwal tidak lengkap. Periksa elemen.");
         return;
       }
 
-      // Kirim data ke backend untuk validasi dan penyimpanan
-      fetch("/irs-detail/store", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
-        },
-        body: JSON.stringify({ bottomSheetData: [courseInfo] }),
-      })
-        .then(response => {
-          if (!response.ok) {
-            return response.json().then(data => {
-              throw new Error(data.message || "Terjadi kesalahan");
-            });
-          }
-          return response.json();
-        })
-        .then(() => {
-          // Jika berhasil, tambahkan data ke selectedCourses dan perbarui tampilan
-          selectedCourses.push(courseInfo);
-          updateBottomSheet();
+      selectedCourses.push(courseInfo);
+      updateBottomSheet();
+      calculateTotalSKS();
 
-          selectedCourseBox.style.backgroundColor = "#28a745"; // Warna hijau
-          selectedCourseBox.classList.replace("text-black", "text-white");
+      const similarCourseBoxes = document.querySelectorAll(`.courseBox-${kodemk}`);
+      similarCourseBoxes.forEach(box => {
+        box.onclick = null;
+        if (box !== selectedCourseBox) {
+          box.style.backgroundColor = "#D1D5DB";
+          box.classList.remove("text-black");
+        }
+      });
 
-          const similarCourseBoxes = document.querySelectorAll(`.courseBox-${kodemk}`);
-          similarCourseBoxes.forEach(box => {
-            box.onclick = null;
-            if (box !== selectedCourseBox) {
-              box.style.backgroundColor = "#D1D5DB";
-              box.classList.remove("text-black");
-            }
-          });
-
-          selectedCourseBox.onclick = () => showCancelModal(kodemk, selectedCourseBox);
-          console.log(`Mata kuliah ${kodemk} dipilih.`);
-        })
-        .catch(error => {
-          // Jika gagal, kembalikan kotak ke putih
-          selectedCourseBox.classList.remove("bg-green-500", "text-white"); // Hapus kelas hijau (atau yang terkait)
-          selectedCourseBox.classList.add("bg-gray-100", "text-black"); // Tambahkan kelas warna abu-abu kembali
-
-          alert(error.message || "Terjadi kesalahan saat menyimpan data.");
-        });
-
+      selectedCourseBox.onclick = () => showCancelModal(kodemk, selectedCourseBox);
+      console.log(`Mata kuliah ${kodemk} dipilih.`);
     } else {
       alert("Mata kuliah ini sudah dipilih.");
     }
@@ -340,6 +317,7 @@ function showCancelModal(kodemk, selectedCourseBox) {
     // Hapus dari array
     selectedCourses = selectedCourses.filter(course => course.kodemk !== kodemk);
     updateBottomSheet();
+    calculateTotalSKS(); // Hitung ulang total SKS
   
     // Mata kuliah dibatalkan, kembalikan warna dan aktifkan kembali klik
     selectedCourseBox.style.backgroundColor = ""; // Kembalikan ke warna semula
@@ -361,6 +339,23 @@ function showCancelModal(kodemk, selectedCourseBox) {
   };
 }
 
+let totalSKS = 0;
+
+function calculateTotalSKS() {
+  // Hitung total SKS dari selectedCourses
+  totalSKS = selectedCourses.reduce((total, course) => {
+    const sks = parseInt(course.sks, 10) || 0; // Pastikan SKS berupa angka
+    return total + sks;
+  }, 0);
+
+  console.log(`Total SKS saat ini: ${totalSKS}`);
+
+  // Perbarui tampilan total SKS di UI
+  const totalSKSElement = document.getElementById("totalsks");
+  if (totalSKSElement) {
+    totalSKSElement.textContent = totalSKS;
+  }
+}
 
 let bottomSheetData = []; // Variabel untuk menyimpan data bottomSheet
 
@@ -376,12 +371,6 @@ function updateBottomSheet() {
         <td colspan="6" class="text-center text-gray-500">Belum ada jadwal yang dipilih.</td>
       </tr>
     `;
-
-    // Kosongkan bottomSheetData
-    bottomSheetData = [];
-
-    // Kirim permintaan ke backend untuk menghapus semua data terkait
-    sendBottomSheetData(true); // Kirim dengan flag true untuk menghapus data di database
     return;
   }
 
@@ -390,6 +379,7 @@ function updateBottomSheet() {
 
   // Tambahkan jadwal yang dipilih ke tabel dan update bottomSheetData
   selectedCourses.forEach((course, index) => {
+
     bottomSheetTable.innerHTML += `
       <tr>
         <td class="border border-gray-300 px-4 py-2">${index + 1}</td>
@@ -412,49 +402,11 @@ function updateBottomSheet() {
   console.log("Data yang terkumpul di bottomSheetData:", bottomSheetData);
 
   // Kirim data terbaru secara otomatis
-  sendBottomSheetData(false); // Kirim tanpa flag true untuk memperbarui data
+  sendBottomSheetData();
 }
 
 // Fungsi untuk mengirim data ke backend
-function sendBottomSheetData(isDelete) {
-  if (isDelete) {
-    console.log("Menghapus semua data di database karena tidak ada jadwal yang dipilih.");
-
-    fetch("/irs-detail/delete-all", {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Respon dari server:", data);
-        alert(data.message || "Semua data berhasil dihapus.");
-      })
-      .catch((error) => {
-        console.error("Terjadi kesalahan saat menghapus data:", error);
-
-        // Tambahkan log detail ke dalam konsol
-        if (error.response) {
-          // Kesalahan dari respons server
-          console.error("Respons error:", error.response);
-          console.error("Status code:", error.response.status);
-          console.error("Data error:", error.response.data);
-        } else if (error.request) {
-            // Kesalahan karena tidak ada respons dari server
-            console.error("Permintaan yang dikirim:", error.request);
-        } else {
-            // Kesalahan lainnya
-            console.error("Kesalahan lainnya:", error.message);
-        }
-
-        alert("Terjadi kesalahan saat menghapus data.");
-      });
-
-    return;
-  }
-
+function sendBottomSheetData() {
   if (bottomSheetData.length === 0) {
     console.log("Tidak ada data untuk dikirim.");
     return;
@@ -482,78 +434,55 @@ function sendBottomSheetData(isDelete) {
 }
 
 // Event untuk toggle bottom sheet
-document.getElementById("toggleButton").onclick = () => {
-  const bottomSheet = document.getElementById("bottomSheet");
-  const content = document.getElementById("content");
-
-  if (bottomSheet.classList.contains("translate-y-full")) {
-    bottomSheet.classList.remove("translate-y-full");
-    bottomSheet.classList.add("translate-y-0");
-    content.classList.remove("hidden");
-  } else {
-    bottomSheet.classList.add("translate-y-full");
-    bottomSheet.classList.remove("translate-y-0");
-    content.classList.add("hidden");
-  }
-};
-
 document.addEventListener("DOMContentLoaded", () => {
-  const bottomSheet = document.getElementById("bottomSheet");
-  const toggleButton = document.getElementById("toggleButton");
-  const toggleIcon = document.getElementById("toggleIcon");
-  const content = document.getElementById("content");
+  // Tombol untuk menambahkan mata kuliah
+  document.querySelector("#addCourseButton").addEventListener("click", function () {
+    // Ambil data dari form input
+    const kodemk = document.querySelector("#kodemk").value.trim();
+    const nama = document.querySelector("#nama").value.trim();
+    const sks = parseInt(document.querySelector("#sks").value);
 
-  let isExpanded = false; // Status awal collapsed
-
-  toggleButton.addEventListener("click", () => {
-    if (isExpanded) {
-      // Collapse
-      bottomSheet.classList.remove("expand");
-      content.classList.add("hidden");
-    } else {
-      // Expand
-      bottomSheet.classList.add("expand");
-      content.classList.remove("hidden");
+    // Validasi data input
+    if (!kodemk || !nama || isNaN(sks) || sks <= 0) {
+      alert("Harap isi semua kolom dengan benar.");
+      return;
     }
 
-    isExpanded = !isExpanded; // Toggle status
+    // Data mata kuliah yang akan dikirim
+    const mataKuliahData = [{ kodemk, nama, sks }];
+
+    // Ambil semester saat ini dari dropdown (contoh elemen HTML lain)
+    const currentSemester = document.querySelector("#currentSemester")?.value || 1;
+
+    // Kirim data ke server menggunakan Fetch API
+    fetch("/updatetotalsks", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-TOKEN": document
+          .querySelector('meta[name="csrf-token"]')
+          .getAttribute("content"),
+      },
+      body: JSON.stringify({ mataKuliahData, semester: currentSemester }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.message === "Total SKS berhasil diperbarui") {
+          // Update total SKS pada tampilan
+          document.getElementById("total_sks").innerText = data.total_sks;
+
+          // Reset form input
+          document.querySelector("#mataKuliahForm").reset();
+        } else {
+          alert(data.message || "Gagal menambahkan mata kuliah.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        alert("Terjadi kesalahan. Silakan coba lagi.");
+      });
   });
 });
 
-document.addEventListener("DOMContentLoaded", () => {
-  console.log("DOM sepenuhnya dimuat. Elemen tersedia.");
-});
 
 
-// Fungsi untuk mengupdate total SKS
-function updateTotalSks(newTotalSks) {
-  document.getElementById('totalsks').innerText = newTotalSks;
-}
-
-// Contoh fungsi untuk menambahkan jadwal baru
-async function tambahJadwal(dataJadwal) {
-  try {
-      const response = await fetch('/irs-detail/store', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-          },
-          body: JSON.stringify({ bottomSheetData: dataJadwal }),
-      });
-
-      const result = await response.json();
-
-      if (response.ok) {
-          // Jika berhasil, perbarui total SKS
-          updateTotalSks(result.newTotalSks);
-          alert('Jadwal berhasil ditambahkan');
-      } else {
-          // Jika gagal, tampilkan pesan error
-          alert(result.message || 'Gagal menambahkan jadwal');
-      }
-  } catch (error) {
-      console.error('Error:', error);
-      alert('Terjadi kesalahan, silakan coba lagi');
-  }
-}
