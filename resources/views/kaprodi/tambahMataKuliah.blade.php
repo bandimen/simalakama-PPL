@@ -6,95 +6,63 @@
 
         <main>
             <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                <h4 class="text-4xl font-bold text-gray-900 mb-6">Tambah Mata Kuliah</h4>
+                <h1 class="text-4xl font-extrabold text-gray-900 mb-6">Tambah Mata Kuliah untuk Program Studi {{ $prodi->nama }}</h1>
 
-                <form action="{{ route('kaprodi.storeMataKuliah') }}" method="POST" class="bg-white p-6 rounded-lg shadow-lg">
+                <!-- Form Tambah Mata Kuliah -->
+                <form action="{{ route('kaprodi.storeMataKuliah') }}" method="POST">
                     @csrf
-                    <!-- Kode Mata Kuliah -->
-                    <div class="mb-4">
-                        <label for="kodemk" class="block text-sm font-medium text-gray-700">Kode Mata Kuliah</label>
-                        <input type="text" id="kodemk" name="kodemk"
-                               class="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-300"
-                               value="{{ old('kodemk') }}" required>
-                        @error('kodemk')
-                            <p class="text-red-500 text-sm">{{ $message }}</p>
-                        @enderror
-                    </div>
 
-                    <!-- Nama Mata Kuliah -->
-                    <div class="mb-4">
-                        <label for="nama" class="block text-sm font-medium text-gray-700">Nama Mata Kuliah</label>
-                        <input type="text" id="nama" name="nama"
-                               class="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-300"
-                               value="{{ old('nama') }}" required>
-                        @error('nama')
-                            <p class="text-red-500 text-sm">{{ $message }}</p>
-                        @enderror
-                    </div>
+                    <div class="space-y-4">
+                        <!-- Kode Mata Kuliah -->
+                        <div>
+                            <label for="kodemk" class="block text-sm font-medium text-gray-700">Kode Mata Kuliah</label>
+                            <input type="text" name="kodemk" id="kodemk" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg" placeholder="UUW00000" required>
+                        </div>
 
-                    <!-- SKS -->
-                    <div class="mb-4">
-                        <label for="sks" class="block text-sm font-medium text-gray-700">SKS</label>
-                        <input type="number" id="sks" name="sks"
-                               class="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-300"
-                               value="{{ old('sks') }}" required>
-                        @error('sks')
-                            <p class="text-red-500 text-sm">{{ $message }}</p>
-                        @enderror
-                    </div>
+                        <!-- Nama Mata Kuliah -->
+                        <div>
+                            <label for="nama" class="block text-sm font-medium text-gray-700">Nama Mata Kuliah</label>
+                            <input type="text" name="nama" id="nama" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg" placeholder="Mata Kuliah" required>
+                        </div>
 
-                    <!-- Semester -->
-                    <div class="mb-4">
-                        <label for="semester" class="block text-sm font-medium text-gray-700">Semester</label>
-                        <input type="number" id="semester" name="semester"
-                               class="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-300"
-                               value="{{ old('semester') }}" required>
-                        @error('semester')
-                            <p class="text-red-500 text-sm">{{ $message }}</p>
-                        @enderror
-                    </div>
+                        <!-- SKS -->
+                        <div>
+                            <label for="sks" class="block text-sm font-medium text-gray-700">SKS</label>
+                            <select name="sks" id="sks" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg" required>
+                                <option value="" disabled selected>Pilih SKS</option>
+                                @for ($i = 1; $i <= 6; $i++)
+                                    <option value="{{ $i }}">{{ $i }}</option>
+                                @endfor
+                            </select>
+                        </div>
 
-                    <!-- Sifat -->
-                    <div class="mb-4">
-                        <label for="sifat" class="block text-sm font-medium text-gray-700">Sifat</label>
-                        <select id="sifat" name="sifat"
-                                class="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-300"
-                                required>
-                            <option value="Wajib" {{ old('sifat') == 'Wajib' ? 'selected' : '' }}>Wajib</option>
-                            <option value="Pilihan" {{ old('sifat') == 'Pilihan' ? 'selected' : '' }}>Pilihan</option>
-                        </select>
-                        @error('sifat')
-                            <p class="text-red-500 text-sm">{{ $message }}</p>
-                        @enderror
-                    </div>
+                        <!-- Semester -->
+                        <div>
+                            <label for="semester" class="block text-sm font-medium text-gray-700">Semester</label>
+                            <select name="semester" id="semester" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg" required>
+                                <option value="" disabled selected>Pilih Semester</option>
+                                @for ($i = 1; $i <= 8; $i++)
+                                    <option value="{{ $i }}">{{ $i }}</option>
+                                @endfor
+                            </select>
+                        </div>
 
-                    <!-- Program Studi -->
-                    <div class="mb-4">
-                        <label for="prodi_id" class="block text-sm font-medium text-gray-700">Program Studi</label>
-                        <select id="prodi_id" name="prodi_id"
-                                class="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-300"
-                                required>
-                            @foreach ($prodi as $p)
-                                <option value="{{ $p->id }}" {{ old('prodi_id') == $p->id ? 'selected' : '' }}>
-                                    {{ $p->nama }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('prodi_id')
-                            <p class="text-red-500 text-sm">{{ $message }}</p>
-                        @enderror
-                    </div>
+                        <!-- Sifat -->
+                        <div>
+                            <label for="sifat" class="block text-sm font-medium text-gray-700">Sifat</label>
+                            <select name="sifat" id="sifat" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg" required>
+                                <option value="" disabled selected>Pilih Sifat</option>
+                                <option value="Wajib">Wajib</option>
+                                <option value="Pilihan">Pilihan</option>
+                            </select>
+                        </div>
 
-                    <!-- Tombol -->
-                    <div class="flex justify-end">
-                        <a href="{{ route('kaprodi.mataKuliah') }}"
-                           class="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600 mr-2">
-                           Batal
-                        </a>
-                        <button type="submit"
-                                class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
-                            Simpan
-                        </button>
+                        <!-- Hidden Prodi ID -->
+                        <input type="hidden" name="prodi_id" value="{{ $prodi->id }}">
+
+                        <div class="mt-6">
+                            <button type="submit" class="bg-blue-500 text-white py-2 px-6 rounded-lg hover:bg-blue-600">Simpan Mata Kuliah</button>
+                        </div>
                     </div>
                 </form>
             </div>

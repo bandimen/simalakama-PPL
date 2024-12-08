@@ -18,11 +18,9 @@ class JadwalKuliahController extends Controller
     {
         $user = Auth::user();
         $prodi = $user->kaprodi?->dosen?->prodi;
-        $jadwalKuliah = JadwalKuliah::where('prodi_id', $prodi->id)->get();
-        $search = $request->input('search');
-        $carijadwal = JadwalKuliah::with(['mataKuliah', 'ruang'])
-            ->search($search)
-            ->get();
+        $jadwalKuliah = JadwalKuliah::whereHas('matakuliah', function ($query) use ($prodi) {
+            $query->where('prodi_id', $prodi->id);
+        })->get();
 
         return view('kaprodi.jadwalKuliah', compact('jadwalKuliah'));
     }
