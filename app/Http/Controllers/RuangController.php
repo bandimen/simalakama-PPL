@@ -153,5 +153,4 @@ class RuangController extends Controller
     return redirect()->back()->with('success', 'Ruangan berhasil dihapus.');
 }
 
-
 }

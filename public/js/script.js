@@ -141,7 +141,7 @@ async function fetchAndDisplaySchedule(kodemk, nama) {
     }
 
     jadwalList.forEach(jadwal => {
-      const { hari, waktu_mulai, waktu_selesai, kelas, ruang, mataKuliah, kodemk } = jadwal;
+      const { hari, waktu_mulai, waktu_selesai, kelas, ruang, mataKuliah, kodemk, kuota_kelas, kuota_terpakai } = jadwal;
 
       // Gunakan data relasi mataKuliah
       const mataKuliahNama = mataKuliah?.nama || nama || "Tidak tersedia";
@@ -182,6 +182,7 @@ async function fetchAndDisplaySchedule(kodemk, nama) {
         courseBox.setAttribute("data-start-time", waktu_mulai);
         courseBox.setAttribute("data-end-time", waktu_selesai);
         courseBox.setAttribute("data-ruang-id", ruang?.id);
+        courseBox.setAttribute("data-kuota", `${kuota_terpakai} / ${kuota_kelas}`);
 
         // Tambahkan konten ke dalam courseBox
         courseBox.innerHTML = `
@@ -190,6 +191,7 @@ async function fetchAndDisplaySchedule(kodemk, nama) {
           <div class="text-xs text-gray-600 truncate">Kelas: ${kelas}</div>
           <div class="text-xs text-gray-600 truncate">Ruang: ${ruangNama}</div>
           <div class="text-xs text-gray-600 truncate">${waktu_mulai} - ${waktu_selesai}</div>
+          <div class="text-xs text-gray-600 truncate">Kapasitas: ${kuota_terpakai} / ${kuota_kelas}</div>
         `;
 
         // Tambahkan event klik tanpa pengecekan

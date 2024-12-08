@@ -25,10 +25,10 @@ class IrsDetailController extends Controller
             $currentPeriod = $irsPeriodsController->getCurrentPeriod();
             $mahasiswaController = new MahasiswaController();
             $semester = $mahasiswaController->getSemester($mahasiswa->angkatan, $currentPeriod);
-    
+
             // Tentukan jenis semester
             $jenis_semester = $semester % 2 == 0 ? 'Genap' : 'Gasal';
-    
+
             // Temukan atau buat IRS mahasiswa
             $irs = Irs::firstOrCreate(
                 [
@@ -37,7 +37,7 @@ class IrsDetailController extends Controller
                     'jenis_semester' => $jenis_semester,
                     'tahun_ajaran' => $currentPeriod->tahun_ajaran,
                     'max_sks' => $mahasiswa->getMaxBebanSks(),
-                ],
+                ]
             );
 
             $irs->refresh(); // Memastikan data IRS sudah tersimpan sepenuhnya
@@ -49,7 +49,7 @@ class IrsDetailController extends Controller
                     'irs_id' => $irs->id,
                 ]
             );
-            
+
             Log::info('KHS Created or Retrieved:', ['khs' => $khs]);
 
             if (!$irs) {
@@ -59,17 +59,20 @@ class IrsDetailController extends Controller
             // Ambil data JSON dari request
             $bottomSheetData = $request->input('bottomSheetData', []);
 
+            Log::info('Bottom Sheet Data Input:', $bottomSheetData);
+
+
             if (!is_array($bottomSheetData)) {
                 return response()->json(['message' => 'Data tidak valid atau kosong'], 400);
             }
-    
+
             // Maksimum SKS yang diizinkan
             $maxSks = $irs->max_sks; // Ambil dari database atau gunakan default
             $totalSksSaatIni = $irs->total_sks;
-    
+
             // Ambil daftar kode matkul yang sudah ada di IRS
             $existingKodems = IrsDetail::where('irs_id', $irs->id)->pluck('kodemk')->toArray();
-    
+
             // Hitung SKS baru dari data tambahan saja (tidak termasuk data yang sudah ada)
             $totalSksBaru = collect($bottomSheetData)
                 ->reject(fn($data) => in_array($data['kodemk'], $existingKodems)) // Hanya matkul baru
@@ -79,14 +82,14 @@ class IrsDetailController extends Controller
                         ->where('kelas', $data['kelas'])
                         ->where('tahun_ajaran', '2024/2025')
                         ->first();
-    
+
                     if (!$jadwalKuliah || !$jadwalKuliah->mataKuliah) {
                         throw new \Exception("Jadwal tidak ditemukan atau tidak valid untuk kodemk: {$data['kodemk']}, kelas: {$data['kelas']}");
                     }
-    
+
                     return $jadwalKuliah->mataKuliah->sks;
                 });
-    
+
             // Cek apakah total SKS baru melebihi maksimum SKS
             if ($totalSksSaatIni + $totalSksBaru > $maxSks) {
                 return response()->json([
@@ -96,11 +99,11 @@ class IrsDetailController extends Controller
                     'sks_ditambahkan' => $totalSksBaru,
                 ], 400);
             }
-    
+
             // Update total SKS di IRS
             $newTotalSks = $totalSksSaatIni + $totalSksBaru;
             $irs->update(['total_sks' => $newTotalSks]);
-    
+
             // Proses data baru setelah validasi berhasil
             $newDetails = collect($bottomSheetData)->map(function ($data) use ($irs, $mahasiswa) {
                 $jadwalKuliah = JadwalKuliah::with('mataKuliah')
@@ -108,14 +111,14 @@ class IrsDetailController extends Controller
                     ->where('kelas', $data['kelas'])
                     ->where('tahun_ajaran', '2024/2025')
                     ->first();
-    
+
                 $allIrsIds = Irs::where('nim', $mahasiswa->nim)->pluck('id');
-    
+
                 $previousIrsDetail = IrsDetail::whereIn('irs_id', $allIrsIds)
                     ->whereHas('khsDetails', fn($query) => $query->where('kodemk', $data['kodemk']))
                     ->orderBy('created_at', 'desc')
                     ->first();
-    
+
                 $status = 'Baru';
                 if ($previousIrsDetail) {
                     $khsDetail = $previousIrsDetail->khsDetails()->latest()->first();
@@ -126,58 +129,71 @@ class IrsDetailController extends Controller
                         default => 'Baru',
                     };
                 }
-    
+
                 return [
                     'irs_id' => $irs->id,
                     'kodemk' => $data['kodemk'],
                     'jadwal_kuliah_id' => $jadwalKuliah->id,
                     'status' => $status,
                 ];
-            });
-    
+            })->toArray();
+
+            Log::info('isi newDetails:', $newDetails);
+
             foreach ($newDetails as $detail) {
-                // Update atau buat IRS Detail
-                $irsDetail = IrsDetail::updateOrCreate(
-                    ['irs_id' => $irs->id, 'kodemk' => $detail['kodemk']],
-                    $detail
-                );
-            
-                $irsDetail->refresh(); // Memastikan data IRS sudah tersimpan sepenuhnya
-            
-                Log::info('IRS Detail ID:', ['irs_detail_id' => $irsDetail->id]);
-            
-                // Tambahkan logika untuk KHS Detail
-                $khsDetail = KhsDetails::firstOrCreate(
-                    [
-                        'khs_id' => $khs->id, // Relasi ke KHS
-                        'irs_details_id' => $irsDetail->id, // Relasi ke IRS Detail
-                    ],
-                    [
-                        'nilai' => null, // Nilai default
-                    ]
-                );
-            
-                Log::info('KHS Detail Created or Retrieved:', ['khs_detail' => $khsDetail]);
+                $jadwalKuliah = JadwalKuliah::where('id', $detail['jadwal_kuliah_id'])->lockForUpdate()->first();
+
+                // Pastikan jadwal kuliah ditemukan
+                if (!$jadwalKuliah) {
+                    return response()->json([
+                        'message' => 'Jadwal kuliah tidak ditemukan untuk kodemk: ' . $detail['kodemk'],
+                    ], 400);
+                }
+
+                // *Cek apakah kuota masih tersedia sebelum menambah IRS dan increment kuota*
+                if ($jadwalKuliah->kuota_terpakai < $jadwalKuliah->kuota_kelas) {
+                    $jadwalKuliah->increment('kuota_terpakai'); // Increment langsung ke database
+                    // Update atau buat IRS Detail
+                    $irsDetail = IrsDetail::updateOrCreate(
+                        ['irs_id' => $irs->id, 'kodemk' => $detail['kodemk']],
+                        $detail
+                    );
+
+                    $irsDetail->refresh(); // Memastikan data IRS sudah tersimpan sepenuhnya
+
+                    Log::info('IRS Detail ID:', ['irs_detail_id' => $irsDetail->id]);
+
+                    // Tambahkan logika untuk KHS Detail
+                    $khsDetail = KhsDetails::firstOrCreate(
+                        [
+                            'khs_id' => $khs->id, // Relasi ke KHS
+                            'irs_details_id' => $irsDetail->id, // Relasi ke IRS Detail
+                        ],
+                        [
+                            'nilai' => null, // Nilai default
+                        ]
+                    );
+
+                    Log::info('KHS Detail Created or Retrieved:', ['khs_detail' => $khsDetail]);
+                
+                    Log::info('Kuota Terpakai Setelah Increment:', ['kuota_terpakai' => $jadwalKuliah->kuota_terpakai]);
+                    
+                } else {
+                    return response()->json([
+                        'message' => 'Kuota kelas untuk mata kuliah ' . $jadwalKuliah->kodemk . ' sudah penuh.',
+                    ], 400);
+                }
             }
-            
-            
-            
+
             return response()->json([
                 'message' => 'Data IRS berhasil diperbarui',
                 'newTotalSks' => $irs->total_sks,
             ], 200);
-
-            // return response()->json(['message' => 'Data IRS berhasil diperbarui'], 200);
+            
         } catch (\Exception $e) {
-            // \Log::error('Error processing IRS store:', ['error' => $e->getMessage()]);
             return response()->json(['message' => 'Terjadi kesalahan saat memproses data', 'error' => $e->getMessage()], 500);
         }
     }
-    
-    
-
-
-    
     
     public function delete($id)
     {
