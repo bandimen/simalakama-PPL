@@ -127,7 +127,7 @@ class IrsDetailController extends Controller
 
             return response()->json(['message' => 'Data IRS berhasil diperbarui'], 200);
         } catch (\Exception $e) {
-            \Log::error('Error processing IRS store:', ['error' => $e->getMessage()]);
+            // \Log::error('Error processing IRS store:', ['error' => $e->getMessage()]);
             return response()->json(['message' => 'Terjadi kesalahan saat memproses data', 'error' => $e->getMessage()], 500);
         }
     }
