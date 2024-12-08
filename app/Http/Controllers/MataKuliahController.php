@@ -14,8 +14,8 @@ class MataKuliahController extends Controller
      * Display a listing of the resource.
      */
 
-    protected $table = 'mata_kuliahs';
-    protected $fillable = ['kodemk', 'nama', 'sks', 'semester', 'sifat'];
+    // protected $table = 'mata_kuliahs';
+    // protected $fillable = ['kodemk', 'nama', 'sks', 'semester', 'sifat'];
 
     public function index(Request $request)
     {
