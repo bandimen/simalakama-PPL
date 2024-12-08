@@ -18,6 +18,9 @@
                                 <option value="{{ $mk->kodemk }}" data-sks="{{ $mk->sks }}">{{ $mk->nama }} ({{ $mk->sks }} SKS)</option>
                             @endforeach
                         </select>
+                        @error('kodemk')
+                            <span class="text-sm text-red-600">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <!-- Ruang -->
@@ -31,6 +34,9 @@
                                 @endif
                             @endforeach
                         </select>
+                        @error('ruang_id')
+                            <span class="text-sm text-red-600">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <!-- Kelas -->
@@ -42,6 +48,9 @@
                                 <option value="{{ $k }}">{{ $k }}</option>
                             @endforeach
                         </select>
+                        @error('kelas')
+                            <span class="text-sm text-red-600">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <!-- Hari -->
@@ -53,6 +62,9 @@
                                 <option value="{{ $h }}">{{ $h }}</option>
                             @endforeach
                         </select>
+                        @error('hari')
+                            <span class="text-sm text-red-600">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <input type="hidden" name="tahun_ajaran" value="{{ $tahun_ajaran }}">
@@ -61,6 +73,9 @@
                     <div class="mb-4">
                         <label for="kuota_kelas" class="block text-sm font-medium text-gray-700">Kuota Kelas</label>
                         <input type="text" name="kuota_kelas" id="kuota_kelas" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" readonly />
+                        @error('kuota_kelas')
+                            <span class="text-sm text-red-600">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <!-- Waktu Mulai -->
@@ -72,6 +87,9 @@
                                 <option value="{{ $w }}">{{ $w }}</option>
                             @endforeach
                         </select>
+                        @error('waktu_mulai')
+                            <span class="text-sm text-red-600">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <!-- Waktu Selesai -->
@@ -89,12 +107,35 @@
     </div>
 
     <script>
-        // Ambil elemen select Mata Kuliah, Waktu Mulai, Waktu Selesai, dan Ruang
         const mataKuliahSelect = document.getElementById('kodemk');
-        const waktuSelesaiInput = document.getElementById('waktu_selesai');
-        const waktuMulaiSelect = document.getElementById('waktu_mulai');
         const ruangSelect = document.getElementById('ruang_id');
+        const waktuMulaiSelect = document.getElementById('waktu_mulai');
+        const waktuSelesaiInput = document.getElementById('waktu_selesai');
         const kuotaInput = document.getElementById('kuota_kelas');
+        const hariSelect = document.getElementById('hari');
+
+        // Menonaktifkan waktu yang sudah dipilih pada ruang yang sama dan hari yang sama
+        ruangSelect.addEventListener('change', function() {
+            const ruangId = ruangSelect.value;
+            const hari = hariSelect.value;
+            const waktuMulai = waktuMulaiSelect.value;
+            // const selectedOption = ruangSelect.options[ruangSelect.selectedIndex];
+            const kapasitas = selectedOption ? selectedOption.getAttribute('data-kapasitas') : null;
+
+            if (ruangId && hari && waktuMulai) {
+                // Mengambil jadwal yang sudah ada
+                fetch(`/cek-jadwal-ruang/${ruangId}/${hari}/${waktuMulai}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.is_conflict) {
+                            alert('Ada jadwal lain pada ruang dan waktu ini.');
+                        }
+                    });
+            }
+
+            kuotaInput.value = kapasitas;
+            document.getElementById('kuota_kelas').value = kapasitas;
+        });
 
         // Fungsi untuk mengupdate Waktu Selesai berdasarkan SKS dan Waktu Mulai
         function updateWaktuSelesai() {
@@ -112,16 +153,6 @@
             }
             document.getElementById('waktu_selesai').value = waktuSelesaiInput.value;
         }
-
-        // Fungsi untuk mengupdate Kuota Kelas berdasarkan Ruang yang dipilih
-        ruangSelect.addEventListener('change', function() {
-            const selectedOption = ruangSelect.options[ruangSelect.selectedIndex];
-            const kapasitas = selectedOption ? selectedOption.getAttribute('data-kapasitas') : null;
-
-            // Update kuota kelas dengan kapasitas ruang yang dipilih
-            kuotaInput.value = kapasitas;
-            document.getElementById('kuota_kelas').value = kapasitas;
-        });
 
         // Event listeners untuk Mata Kuliah dan Waktu Mulai
         mataKuliahSelect.addEventListener('change', updateWaktuSelesai);

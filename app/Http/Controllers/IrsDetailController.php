@@ -136,6 +136,22 @@ class IrsDetailController extends Controller
             });
     
             foreach ($newDetails as $detail) {
+                $jadwalKuliah = JadwalKuliah::find($detail['jadwal_kuliah_id']);
+                
+                // Pastikan jadwal kuliah ditemukan
+                if (!$jadwalKuliah) {
+                    return response()->json([
+                        'message' => 'Jadwal kuliah tidak ditemukan untuk kodemk: ' . $detail['kodemk'],
+                    ], 400);
+                }
+            
+                // Cek apakah kuota penuh
+                if ($jadwalKuliah->kuota_terpakai >= $jadwalKuliah->kuota_kelas) {
+                    return response()->json([
+                        'message' => 'Kuota kelas untuk mata kuliah ' . $jadwalKuliah->kodemk . ' sudah penuh.',
+                    ], 400);
+                }
+            
                 // Update atau buat IRS Detail
                 $irsDetail = IrsDetail::updateOrCreate(
                     ['irs_id' => $irs->id, 'kodemk' => $detail['kodemk']],
@@ -158,8 +174,10 @@ class IrsDetailController extends Controller
                 );
             
                 Log::info('KHS Detail Created or Retrieved:', ['khs_detail' => $khsDetail]);
-            }
             
+                // **Tambahkan logika untuk menambah kuota terpakai hanya sekali**
+                $jadwalKuliah->increment('kuota_terpakai');
+            }
             
             
             return response()->json([
