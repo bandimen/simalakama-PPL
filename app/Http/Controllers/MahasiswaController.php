@@ -60,7 +60,7 @@ class MahasiswaController extends Controller
                     ->where('status', 'Disetujui')
                     ->where('tahun_ajaran', $currentPeriod->tahun_ajaran)
                     ->get();
-    
+
         return response()->json($jadwals);
     }    
  

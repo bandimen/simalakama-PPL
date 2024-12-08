@@ -49,7 +49,6 @@ class MataKuliah extends Model
         return $this->hasMany(JadwalKuliah::class, 'kodemk', 'kodemk','prodi_id');
     }
 
-
     public function pengampuMataKuliah()
     {
         return $this->hasMany(PengampuMataKuliah::class, 'kodemk', 'kodemk');
