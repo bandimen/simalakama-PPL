@@ -112,8 +112,10 @@ Route::middleware(['auth'])->group(function () {
 
   Route::get('/kaprodi/mataKuliah', [MataKuliahController::class, 'index'])->name('kaprodi.mataKuliah');
   Route::get('/kaprodi/mataKuliah/tambah', [MataKuliahController::class, 'create'])->name('kaprodi.tambahMataKuliah');
-  Route::get('/kaprodi/edit-mataKuliah/{id}', [MataKuliahController::class, 'edit'])->name('kaprodi.editMataKuliah');
-  Route::get('/kaprodi/delete-mataKuliah/{id}', [MataKuliahController::class, 'destroy'])->name('kaprodi.deleteMataKuliah');
+  Route::post('/kaprodi/mataKuliah', [MataKuliahController::class, 'store'])->name('kaprodi.storeMataKuliah');
+  Route::get('/kaprodi/mataKuliah/{kodemk}/edit', [MataKuliahController::class, 'edit'])->name('kaprodi.editMataKuliah');
+  Route::put('/kaprodi/mataKuliah/{kodemk}', [MataKuliahController::class, 'update'])->name('kaprodi.updateMataKuliah');
+  Route::delete('/kaprodi/mataKuliah/{kodemk}', [MataKuliahController::class, 'destroy'])->name('kaprodi.deleteMataKuliah');
 
   Route::get('/logout', [SessionController::class, 'logout']);
 
