@@ -21,7 +21,20 @@ class MataKuliahController extends Controller
     {
         $user = Auth::user();
         $prodi = $user->kaprodi?->dosen?->prodi;
-        $mataKuliah = MataKuliah::where('prodi_id', $prodi->id)->get();
+        $mataKuliah = MataKuliah::where('prodi_id', $prodi->id)
+        ->get();
+
+        $query = MataKuliah::query();
+
+        // Cek apakah ada query pencarian
+        if ($request->has('search') && $request->search != '') {
+            $searchTerm = $request->search;
+            $query->where('nama', 'like', '%' . $searchTerm . '%')
+                ->orWhere('kodemk', 'like', '%' . $searchTerm . '%');
+        }
+
+        // Ambil hasil pencarian atau semua data
+        $mataKuliah = $query->get();
 
         return view('kaprodi.mataKuliah', compact('mataKuliah'));
     }
@@ -34,7 +47,7 @@ class MataKuliahController extends Controller
         $user = Auth::user();
         $prodi = $user->kaprodi?->dosen?->prodi;
 
-        return view('kaprodi.tambahMataKuliah', ['prodi' => $prodi]);
+        return view('kaprodi.tambahMataKuliah', compact('prodi'));
     }
 
     /**
@@ -43,17 +56,26 @@ class MataKuliahController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'kodemk' => 'required|unique:matakuliah,kodemk',
-            'nama' => 'required',
-            'sks' => 'required|integer',
-            'semester' => 'required',
-            'sifat' => 'required',
-            'prodi_id' => 'required|exists:prodi,id',
+            'kodemk' => 'required|unique:mata_kuliahs,kodemk|max:10',
+            'nama' => 'required|max:255',
+            'sks' => 'required|integer|min:1|max:6',
+            'semester' => 'required|integer|min:1|max:8',
+            'sifat' => 'required|in:Wajib,Pilihan',
+            'prodi_id' => 'required|exists:prodis,id',
         ]);
 
-        MataKuliah::create($request->all());
+        // Menyimpan data mata kuliah ke dalam database
+        MataKuliah::create([
+            'kodemk' => $request->kodemk,
+            'nama' => $request->nama,
+            'sks' => $request->sks,
+            'semester' => $request->semester,
+            'sifat' => $request->sifat,
+            'prodi_id' => $request->prodi_id,
+        ]);
 
-        return redirect()->route('kaprodi.mataKuliah')->with('success', 'Mata Kuliah berhasil ditambahkan!');
+        return redirect()->route('kaprodi.mataKuliah')->with('success', 'Mata Kuliah berhasil ditambahkan.');
+        //dd($request->all());
     }
 
     /**
@@ -84,11 +106,11 @@ class MataKuliahController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy($kodemk)
-{
-    $mataKuliah = MataKuliah::findOrFail($kodemk);
-    $mataKuliah->delete();
+    {
+        $mataKuliah = MataKuliah::where('kodemk', $kodemk)->first();
+        $mataKuliah->delete();
 
-    return redirect()->route('kaprodi.mataKuliah')->with('success', 'Mata Kuliah berhasil dihapus!');
-}
+        return redirect()->route('kaprodi.mataKuliah')->with('success', 'Mata Kuliah berhasil dihapus!');
+    }
 
 }

@@ -13,14 +13,15 @@ class MataKuliah extends Model
 {
 
     protected $table ='mata_kuliahs';
+    protected $primaryKey = 'kodemk';
+    protected $keyType = 'string';
     protected $fillable = [
         'kodemk',
         'nama',
         'sks',
         'semester',
         'sifat',
-        'prodi_id',
-        'status'
+        'prodi_id'
     ];
 
     public function jadwals() {

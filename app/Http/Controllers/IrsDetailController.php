@@ -124,10 +124,14 @@ class IrsDetailController extends Controller
                     $detail
                 );
             }
+            return response()->json([
+                'message' => 'Data IRS berhasil diperbarui',
+                'new_total_sks' => $newTotalSks,
+            ], 200);
 
-            return response()->json(['message' => 'Data IRS berhasil diperbarui'], 200);
+            // return response()->json(['message' => 'Data IRS berhasil diperbarui'], 200);
         } catch (\Exception $e) {
-            \Log::error('Error processing IRS store:', ['error' => $e->getMessage()]);
+            // \Log::error('Error processing IRS store:', ['error' => $e->getMessage()]);
             return response()->json(['message' => 'Terjadi kesalahan saat memproses data', 'error' => $e->getMessage()], 500);
         }
     }

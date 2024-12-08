@@ -2,10 +2,10 @@
     <x-slot:title>Edit Mata Kuliah</x-slot:title>
 
     <div class="min-h-full">
-        <x-sidebar-kaprodi></x-sidebar-kaprodi>
+        <x-navbar-kaprodi></x-navbar-kaprodi>
 
-        <main>
-            <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        <main class="flex justify-center w-full px-4 py-6 sm:px-6 lg:px-8">
+            <div class="max-w-lg w-full bg-white shadow-lg rounded-lg p-8">
                 <h4 class="text-4xl font-bold text-gray-900 mb-6">Edit Mata Kuliah</h4>
 
                 <form action="{{ route('kaprodi.updateMataKuliah', $mataKuliah->kodemk) }}" method="POST" class="bg-white p-6 rounded-lg shadow-lg">

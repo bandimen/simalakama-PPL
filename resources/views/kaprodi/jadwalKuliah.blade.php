@@ -1,7 +1,7 @@
 <x-layout>
     <x-slot:title>Jadwal Kuliah</x-slot:title>
     <div class="min-h-full">
-        <x-sidebar-kaprodi></x-sidebar-kaprodi>
+        <x-navbar-kaprodi></x-navbar-kaprodi>
 
         <main>
             <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
@@ -11,13 +11,8 @@
                 <div class="flex justify-between items-center mb-6">
                     <a href="{{ route('kaprodi.tambahJadwal') }}" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">Tambah Jadwal</a>
                     <form action="{{ route('kaprodi.jadwalKuliah') }}" method="GET" class="flex items-center">
-                        <input type="text" name="search" placeholder="Cari mata kuliah..."
-                            class="border border-gray-300 rounded-lg px-4 py-2 text-sm focus:ring focus:ring-blue-300"
-                            value="{{ request('search') }}">
-                        <button type="submit"
-                            class="ml-2 bg-gray-700 text-white py-2 px-4 rounded-lg hover:bg-gray-800">
-                            Cari
-                        </button>
+                        <input type="text" name="search" placeholder="Cari mata kuliah..." class="border border-gray-300 rounded-lg px-4 py-2 text-sm focus:ring focus:ring-blue-300" value="{{ request('search') }}">
+                        <button type="submit" class="ml-2 bg-gray-700 text-white py-2 px-4 rounded-lg hover:bg-gray-800">Cari</button>
                     </form>
                 </div>
 
@@ -101,7 +96,7 @@
                 .then(response => response.json())
                 .then(data => {
                     const tableBody = document.getElementById('table-body');
-                    tableBody.innerHTML = ''; // Kosongkan tabel sebelum mengisi ulang
+                    tableBody.innerHTML = '';
 
                     if (data.length > 0) {
                         data.forEach((item, index) => {

@@ -522,3 +522,36 @@ document.addEventListener("DOMContentLoaded", () => {
   console.log("DOM sepenuhnya dimuat. Elemen tersedia.");
 });
 
+
+// Fungsi untuk mengupdate total SKS
+function updateTotalSks(newTotalSks) {
+  document.getElementById('totalsks').innerText = newTotalSks;
+}
+
+// Contoh fungsi untuk menambahkan jadwal baru
+async function tambahJadwal(dataJadwal) {
+  try {
+      const response = await fetch('/irs-detail/store', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+          },
+          body: JSON.stringify({ bottomSheetData: dataJadwal }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+          // Jika berhasil, perbarui total SKS
+          updateTotalSks(result.new_total_sks);
+          alert('Jadwal berhasil ditambahkan');
+      } else {
+          // Jika gagal, tampilkan pesan error
+          alert(result.message || 'Gagal menambahkan jadwal');
+      }
+  } catch (error) {
+      console.error('Error:', error);
+      alert('Terjadi kesalahan, silakan coba lagi');
+  }
+}
