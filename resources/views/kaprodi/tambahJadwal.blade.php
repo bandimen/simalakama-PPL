@@ -119,7 +119,7 @@
             const ruangId = ruangSelect.value;
             const hari = hariSelect.value;
             const waktuMulai = waktuMulaiSelect.value;
-            // const selectedOption = ruangSelect.options[ruangSelect.selectedIndex];
+            const selectedOption = ruangSelect.options[ruangSelect.selectedIndex];
             const kapasitas = selectedOption ? selectedOption.getAttribute('data-kapasitas') : null;
 
             if (ruangId && hari && waktuMulai) {
