@@ -74,7 +74,14 @@ class JadwalKuliahController extends Controller
         $hari = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Belum dijadwalkan'];
         $waktu_mulai = ['07:00', '09:40', '13:00', '15:40'];
 
-        return view('kaprodi.tambahJadwal', compact('mataKuliah', 'ruang', 'kelas', 'hari', 'tahun_ajaran', 'kuota_kelas', 'waktu_mulai'));
+        $jadwalTerpakai = JadwalKuliah::select('kelas', 'hari', 'waktu_mulai', 'ruang_id')
+            ->get()
+            ->groupBy('kelas')
+            ->map(function ($items) {
+                return $items->groupBy('hari');
+            });
+
+        return view('kaprodi.tambahJadwal', compact('mataKuliah', 'ruang', 'kelas', 'hari', 'tahun_ajaran', 'kuota_kelas', 'waktu_mulai', 'jadwalTerpakai'));
     }
 
     /**
@@ -103,16 +110,18 @@ class JadwalKuliahController extends Controller
             return redirect()->back()->withErrors(['kodemk' => 'Mata kuliah ini sudah memiliki 4 jadwal berbeda.']);
         }
 
-        // Cek apakah ada jadwal yang tumpang tindih
-        $existingSchedule = JadwalKuliah::where('kodemk', $request->kodemk)
+        // Cek apakah ada jadwal yang tumpang tindih di hari, ruang, dan waktu yang sama
+        $existingSchedule = JadwalKuliah::where('kelas', $request->kelas)
+            ->where('ruang_id', $request->ruang_id)
             ->where('hari', $request->hari)
             ->where('waktu_mulai', $request->waktu_mulai)
-            ->where('ruang_id', $request->ruang_id)
-            ->first();
+            ->exists();
 
         if ($existingSchedule) {
-            return redirect()->back()->withErrors([
-                'jadwal_tumpang_tindih' => 'Jadwal kuliah ini sudah ada pada hari dan waktu yang sama di ruang yang dipilih.'
+        return redirect()->back()
+            ->withInput($request->all())
+            ->withErrors([
+                'jadwal_bentrok' => 'Tidak dapat menambahkan jadwal. Ruangan sudah digunakan pada waktu tersebut di hari yang sama.'
             ]);
         }
 
@@ -175,7 +184,14 @@ class JadwalKuliahController extends Controller
                                         ->where('waktu_mulai', $jadwalKuliah->waktu_mulai)
                                         ->get();
 
-        return view('kaprodi.editJadwal', compact('jadwalKuliah', 'mataKuliah', 'ruang', 'kelas', 'hari', 'tahun_ajaran','kuota_kelas', 'waktu_mulai', 'waktuSelesai', 'existingJadwals'));
+        $jadwalTerpakai = JadwalKuliah::select('kelas', 'hari', 'waktu_mulai', 'ruang_id')
+            ->get()
+            ->groupBy('kelas')
+            ->map(function ($items) {
+                return $items->groupBy('hari');
+            });
+
+        return view('kaprodi.editJadwal', compact('jadwalKuliah', 'mataKuliah', 'ruang', 'kelas', 'hari', 'tahun_ajaran','kuota_kelas', 'waktu_mulai', 'waktuSelesai', 'existingJadwals', 'jadwalTerpakai'));
     }
 
     /**
@@ -200,17 +216,19 @@ class JadwalKuliahController extends Controller
         $mataKuliahSks = MataKuliah::where('kodemk', $jadwalKuliah->kodemk)->first()?->sks;
         $waktuSelesai = date('H:i', strtotime($jadwalKuliah->waktu_mulai) + $mataKuliahSks * 50 * 60);
 
-        // Cek apakah kelas yang dipilih sudah ada pada waktu yang sama
-        $existingSchedule = JadwalKuliah::where('kodemk', $request->kodemk)
-                                    ->where('hari', $request->hari)
-                                    ->where('waktu_mulai', $request->waktu_mulai)
-                                    ->where('id', '!=', $id) // Pastikan tidak memeriksa jadwal yang sedang diupdate
-                                    ->where('ruang_id', $request->ruang_id)
-                                    ->first();
+        // Cek apakah ada jadwal yang tumpang tindih untuk update
+        $existingSchedule = JadwalKuliah::where('kelas', $request->kelas)
+            ->where('ruang_id', $request->ruang_id)
+            ->where('hari', $request->hari)
+            ->where('waktu_mulai', $request->waktu_mulai)
+            ->where('id', '!=', $id)  // Mengecualikan jadwal yang sedang diupdate
+            ->exists();
 
         if ($existingSchedule) {
-            return redirect()->back()->withErrors([
-                'jadwal_tumpang_tindih' => 'Jadwal kuliah ini sudah ada pada hari dan waktu yang sama di ruang yang dipilih.'
+        return redirect()->back()
+            ->withInput($request->all())
+            ->withErrors([
+                'jadwal_bentrok' => 'Jadwal bentrok dengan jadwal yang sudah ada.'
             ]);
         }
 
