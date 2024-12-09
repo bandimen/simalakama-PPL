@@ -23,18 +23,18 @@ class MataKuliahController extends Controller
         $prodi = $user->kaprodi?->dosen?->prodi;
         $mataKuliah = MataKuliah::where('prodi_id', $prodi->id)
         ->get();
-
+        
         $query = MataKuliah::query();
-
+        
         // Cek apakah ada query pencarian
         if ($request->has('search') && $request->search != '') {
             $searchTerm = $request->search;
             $query->where('nama', 'like', '%' . $searchTerm . '%')
-                ->orWhere('kodemk', 'like', '%' . $searchTerm . '%');
+            ->orWhere('kodemk', 'like', '%' . $searchTerm . '%');
         }
-
+        
         // Ambil hasil pencarian atau semua data
-        $mataKuliah = $query->get();
+        $mataKuliah = $query->where('prodi_id', $prodi->id)->get();
 
         return view('kaprodi.mataKuliah', compact('mataKuliah'));
     }

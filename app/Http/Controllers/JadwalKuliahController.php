@@ -16,12 +16,16 @@ class JadwalKuliahController extends Controller
      */
     public function index(Request $request)
     {
+        $irsPeriodsController = new IrsPeriodsController();
+        $currentPeriod = $irsPeriodsController->getCurrentPeriod();
+
         $user = Auth::user();
         $prodi = $user->kaprodi?->dosen?->prodi;
         $search = $request->input('search');
         $jadwalKuliah = JadwalKuliah::whereHas('matakuliah', function ($query) use ($prodi) {
             $query->where('prodi_id', $prodi->id);
         })
+        ->where('tahun_ajaran', $currentPeriod->tahun_ajaran)
         ->search($search)
         ->get();
 
@@ -34,15 +38,32 @@ class JadwalKuliahController extends Controller
     public function create(Request $request)
     {
         $user = Auth::user();
-        $currentYear = date('Y');
-        $semester = (date('n') <= 6) ? 'genap' : 'ganjil';
+        // $currentYear = date('Y');
+        // $semester = (date('n') <= 6) ? 'genap' : 'ganjil';
+        $irsPeriodsController = new IrsPeriodsController();
+        $currentPeriod = $irsPeriodsController->getCurrentPeriod();
+
+        $semester = $currentPeriod->semester;
 
         $prodi = $user->kaprodi?->dosen?->prodi;
-        // Filter mata kuliah berdasarkan semester
-        $mataKuliah = MataKuliah::where('prodi_id', $prodi->id)
-                             ->where('semester', $semester === 'ganjil' ? 1 : 2)
-                             ->get();
-
+        $mataKuliah = null;
+        if ($currentPeriod) {
+            // ini ambil mata kuliah yang punya jadwal dan sudah disetujui
+            if ($currentPeriod->semester == 'Gasal') {
+                $mataKuliah = MataKuliah::where(function ($query) {
+                    $query->where('semester', 0)
+                        ->orWhereRaw('semester % 2 != 0');
+                    })
+                ->where('prodi_id', $prodi->id)
+                ->orderBy('semester', 'asc')
+                ->get();
+            } elseif ($currentPeriod->semester == 'Genap') {
+                $mataKuliah = MataKuliah::whereRaw('semester % 2 = 0')
+                    ->where('prodi_id', $prodi->id)
+                    ->orderBy('semester', 'asc')
+                    ->get();
+            }
+        }
         // Ambil ruang yang tersedia
         $ruang = Ruang::where('status', 'Disetujui')->get();
         $kuota_kelas = Ruang::where('kapasitas')->get();
@@ -50,7 +71,7 @@ class JadwalKuliahController extends Controller
 
         // Data dropdown lainnya
         $kelas = ['A', 'B', 'C', 'D'];
-        $hari = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'];
+        $hari = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Belum dijadwalkan'];
         $waktu_mulai = ['07:00', '09:40', '13:00', '15:40'];
 
         return view('kaprodi.tambahJadwal', compact('mataKuliah', 'ruang', 'kelas', 'hari', 'tahun_ajaran', 'kuota_kelas', 'waktu_mulai'));
