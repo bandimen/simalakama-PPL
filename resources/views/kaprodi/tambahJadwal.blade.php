@@ -10,7 +10,7 @@
                 <form action="{{ route('kaprodi.storeJadwal') }}" method="POST" class="space-y-6">
                     @csrf
                     @if ($errors->has('jadwal_bentrok'))
-                        <div class="alert alert-danger">
+                        <div class="alert alert-danger text-red-700">
                             {{ $errors->first('jadwal_bentrok') }}
                         </div>
                     @endif
