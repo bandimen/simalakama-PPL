@@ -12,6 +12,12 @@
                         @csrf
                         @method('PUT')
 
+                        @if ($errors->has('jadwal_bentrok'))
+                        <div class="alert alert-danger">
+                            {{ $errors->first('jadwal_bentrok') }}
+                        </div>
+                    @endif
+
                         <!-- Mata Kuliah -->
                         <div class="mb-4">
                             <label for="kodemk" class="block text-sm font-medium text-gray-700">Mata Kuliah</label>
@@ -54,13 +60,7 @@
                             <select id="kelas" name="kelas" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
                                 <option value="" disabled selected>Pilih Kelas</option>
                                 @foreach ($kelas as $k)
-                                    <option value="{{ $k }}" {{ $jadwalKuliah->kelas == $k ? 'selected' : '' }}
-                                            @foreach ($existingJadwals as $existingJadwal)
-                                                @if ($existingJadwal->kelas == $k)
-                                                    disabled
-                                                @endif
-                                            @endforeach
-                                    >
+                                    <option value="{{ $k }}" {{ $jadwalKuliah->kelas == $k ? 'selected' : '' }}>
                                         {{ $k }}
                                     </option>
                                 @endforeach
@@ -133,55 +133,100 @@
     </div>
 
     <script>
-        const ruangSelect = document.getElementById('ruang_id');
-        const kuotaInput = document.getElementById('kuota_kelas');
+        // Fungsi untuk memperbarui kuota ruangan
+        function updateRuangKuota(ruangSelectId, kuotaInputId) {
+            const ruangSelect = document.getElementById(ruangSelectId);
+            const kuotaInput = document.getElementById(kuotaInputId);
 
-        ruangSelect.addEventListener('change', function() {
-            const selectedOption = ruangSelect.options[ruangSelect.selectedIndex];
-            const kapasitas = selectedOption ? selectedOption.getAttribute('data-kapasitas') : null;
-
-            kuotaInput.value = kapasitas;
-            document.getElementById('kuota_kelas').value = kapasitas;
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            // Ambil elemen waktu mulai dan waktu selesai
-            const waktuMulaiElement = document.getElementById('waktu_mulai');
-            const waktuSelesaiElement = document.getElementById('waktu_selesai');
-
-            // Ambil SKS dari mata kuliah yang sedang dipilih
-            const mataKuliahElement = document.getElementById('kodemk');
-            const selectedMataKuliah = mataKuliahElement.options[mataKuliahElement.selectedIndex];
-            const sks = selectedMataKuliah ? parseInt(selectedMataKuliah.getAttribute('data-sks')) : 0;
-
-            // Fungsi untuk menghitung waktu selesai
-            function hitungWaktuSelesai(waktuMulai) {
-                if (waktuMulai && sks > 0) {
-                    const waktuMulaiParts = waktuMulai.split(':');
-                    const jamMulai = parseInt(waktuMulaiParts[0]);
-                    const menitMulai = parseInt(waktuMulaiParts[1]);
-
-                    // Hitung durasi waktu selesai berdasarkan SKS
-                    const durasiMenit = sks * 50; // 1 SKS = 50 menit
-                    const waktuSelesaiDate = new Date(0, 0, 0, jamMulai, menitMulai + durasiMenit);
-
-                    // Format waktu selesai ke format HH:MM
-                    const jamSelesai = String(waktuSelesaiDate.getHours()).padStart(2, '0');
-                    const menitSelesai = String(waktuSelesaiDate.getMinutes()).padStart(2, '0');
-
-                    return `${jamSelesai}:${menitSelesai}`;
-                }
-
-                return '';
-            }
-
-            // Set waktu selesai saat halaman dimuat pertama kali
-            waktuSelesaiElement.value = hitungWaktuSelesai(waktuMulaiElement.value);
-
-            // Tambahkan event listener untuk perubahan waktu mulai
-            waktuMulaiElement.addEventListener('change', function() {
-                waktuSelesaiElement.value = hitungWaktuSelesai(this.value);
+            ruangSelect.addEventListener('change', () => {
+                const selectedOption = ruangSelect.options[ruangSelect.selectedIndex];
+                kuotaInput.value = selectedOption ? selectedOption.getAttribute('data-kapasitas') : '';
             });
-        });
+        }
+
+        // Fungsi untuk memvalidasi jadwal ruangan
+        function validateRuangJadwal(ruangSelectId, hariSelectId, waktuMulaiSelectId, apiUrl) {
+            const ruangSelect = document.getElementById(ruangSelectId);
+            const hariSelect = document.getElementById(hariSelectId);
+            const waktuMulaiSelect = document.getElementById(waktuMulaiSelectId);
+
+            ruangSelect.addEventListener('change', () => checkJadwalConflict(apiUrl));
+            hariSelect.addEventListener('change', () => checkJadwalConflict(apiUrl));
+            waktuMulaiSelect.addEventListener('change', () => checkJadwalConflict(apiUrl));
+
+            function checkJadwalConflict(apiUrl) {
+                const ruangId = ruangSelect.value;
+                const hari = hariSelect.value;
+                const waktuMulai = waktuMulaiSelect.value;
+
+                if (ruangId && hari && waktuMulai) {
+                    fetch(`${apiUrl}/${ruangId}/${hari}/${waktuMulai}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.is_conflict) {
+                                alert('Ada jadwal lain pada ruang dan waktu ini.');
+                            }
+                        })
+                        .catch(console.error);
+                }
+            }
+        }
+
+        // Fungsi untuk menghitung waktu selesai
+        function calculateWaktuSelesai(mataKuliahSelectId, waktuMulaiSelectId, waktuSelesaiInputId) {
+            const mataKuliahSelect = document.getElementById(mataKuliahSelectId);
+            const waktuMulaiSelect = document.getElementById(waktuMulaiSelectId);
+            const waktuSelesaiInput = document.getElementById(waktuSelesaiInputId);
+
+            const updateWaktuSelesai = () => {
+                const sks = mataKuliahSelect.options[mataKuliahSelect.selectedIndex]?.getAttribute('data-sks');
+                const waktuMulai = waktuMulaiSelect.value;
+
+                if (waktuMulai && sks) {
+                    const waktuMulaiObj = new Date(`1970-01-01T${waktuMulai}Z`);
+                    const waktuSelesai = new Date(waktuMulaiObj.getTime() + sks * 50 * 60 * 1000).toISOString().substr(11, 5);
+                    waktuSelesaiInput.value = waktuSelesai;
+                }
+            };
+
+            mataKuliahSelect.addEventListener('change', updateWaktuSelesai);
+            waktuMulaiSelect.addEventListener('change', updateWaktuSelesai);
+        }
+
+        // Fungsi untuk memvalidasi jadwal kelas
+        function validateKelasJadwal(hariSelectId, waktuMulaiSelectId, kelasSelectId, apiUrl) {
+            const hariSelect = document.getElementById(hariSelectId);
+            const waktuMulaiSelect = document.getElementById(waktuMulaiSelectId);
+            const kelasSelect = document.getElementById(kelasSelectId);
+
+            const updateKelasOptions = () => {
+                const hari = hariSelect.value;
+                const waktuMulai = waktuMulaiSelect.value;
+
+                if (hari && waktuMulai) {
+                    fetch(`${apiUrl}/${hari}/${waktuMulai}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            Array.from(kelasSelect.options).forEach(option => {
+                                const kelas = option.value;
+                                option.disabled = data.jadwalTerpakai.includes(kelas);
+                                option.textContent = option.disabled
+                                    ? `${kelas} (Sudah Digunakan)`
+                                    : kelas;
+                            });
+                        })
+                        .catch(console.error);
+                }
+            };
+
+            hariSelect.addEventListener('change', updateKelasOptions);
+            waktuMulaiSelect.addEventListener('change', updateKelasOptions);
+        }
+
+        // Inisialisasi fungsi
+        updateRuangKuota('ruang_id', 'kuota_kelas');
+        validateRuangJadwal('ruang_id', 'hari', 'waktu_mulai', '/cek-jadwal-ruang');
+        calculateWaktuSelesai('kodemk', 'waktu_mulai', 'waktu_selesai');
+        validateKelasJadwal('hari', 'waktu_mulai', 'kelas', '/cek-jadwal-kelas');
     </script>
 </x-layout>

@@ -110,19 +110,23 @@ class JadwalKuliahController extends Controller
             return redirect()->back()->withErrors(['kodemk' => 'Mata kuliah ini sudah memiliki 4 jadwal berbeda.']);
         }
 
-        // Cek apakah ada jadwal yang tumpang tindih di hari, ruang, dan waktu yang sama
-        $existingSchedule = JadwalKuliah::where('kelas', $request->kelas)
-            ->where('ruang_id', $request->ruang_id)
-            ->where('hari', $request->hari)
-            ->where('waktu_mulai', $request->waktu_mulai)
-            ->exists();
+        // Cek apakah ada jadwal yang tumpang tindih untuk ruang dan waktu
+        $existingSchedule = JadwalKuliah::where('ruang_id', $request->ruang_id)
+        ->where('hari', $request->hari)
+        ->where(function ($query) use ($request) {
+            $query->where('waktu_mulai', $request->waktu_mulai)
+                ->orWhere(function ($query) use ($request) {
+                    // Mengecek apakah waktu jadwal baru bentrok dengan jadwal yang sudah ada
+                    $query->where('waktu_selesai', '>', $request->waktu_mulai)
+                        ->where('waktu_mulai', '<', $request->waktu_selesai);
+                });
+        })
+        ->exists();
 
         if ($existingSchedule) {
-        return redirect()->back()
-            ->withInput($request->all())
-            ->withErrors([
-                'jadwal_bentrok' => 'Tidak dapat menambahkan jadwal. Ruangan sudah digunakan pada waktu tersebut di hari yang sama.'
-            ]);
+            return redirect()->back()
+                ->withInput($request->all())
+                ->withErrors(['jadwal_bentrok' => 'Jadwal bentrok dengan jadwal yang sudah ada.']);
         }
 
         // Simpan jadwal
@@ -216,21 +220,25 @@ class JadwalKuliahController extends Controller
         $mataKuliahSks = MataKuliah::where('kodemk', $jadwalKuliah->kodemk)->first()?->sks;
         $waktuSelesai = date('H:i', strtotime($jadwalKuliah->waktu_mulai) + $mataKuliahSks * 50 * 60);
 
-        // Cek apakah ada jadwal yang tumpang tindih untuk update
-        $existingSchedule = JadwalKuliah::where('kelas', $request->kelas)
-            ->where('ruang_id', $request->ruang_id)
-            ->where('hari', $request->hari)
-            ->where('waktu_mulai', $request->waktu_mulai)
-            ->where('id', '!=', $id)  // Mengecualikan jadwal yang sedang diupdate
-            ->exists();
+        // Cek apakah ada jadwal yang tumpang tindih saat update
+        $existingSchedule = JadwalKuliah::where('ruang_id', $request->ruang_id)
+        ->where('hari', $request->hari)
+        ->where(function ($query) use ($request) {
+            $query->where('waktu_mulai', $request->waktu_mulai)
+                ->orWhere(function ($query) use ($request) {
+                    // Mengecek apakah waktu jadwal baru bentrok dengan jadwal yang sudah ada
+                    $query->where('waktu_selesai', '>', $request->waktu_mulai)
+                        ->where('waktu_mulai', '<', $request->waktu_selesai);
+                });
+        })
+        ->where('id', '!=', $id) // Mengecualikan jadwal yang sedang diupdate
+        ->exists();
 
-        if ($existingSchedule) {
+    if ($existingSchedule) {
         return redirect()->back()
             ->withInput($request->all())
-            ->withErrors([
-                'jadwal_bentrok' => 'Jadwal bentrok dengan jadwal yang sudah ada.'
-            ]);
-        }
+            ->withErrors(['jadwal_bentrok' => 'Jadwal bentrok dengan jadwal yang sudah ada.']);
+    }
 
         // Periksa batas 4 kelas untuk mata kuliah
         $existingClasses = JadwalKuliah::where('kodemk', $request->kodemk)->distinct('kelas')->count();
