@@ -91,9 +91,9 @@
                         @if ($irsForCurrentPeriod && $irsForCurrentPeriod->status == 'Disetujui')
                             <div
                                 class="w-full p-4 text-center bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
-                                <h5 class="mb-2 text-3xl font-bold text-gray-900 dark:text-white">IRS Anda sudah
+                                <h5 class="mb-2 text-3xl font-bold text-gray-900 dark:text-white">Pengajuan IRS Anda sudah
                                     disetujui.</h5>
-                                <p class="mb-5 text-base text-gray-500 sm:text-lg dark:text-gray-400">IRS Anda disetujui
+                                <p class="mb-5 text-base text-gray-500 sm:text-lg dark:text-gray-400">Pengajuan IRS Anda disetujui
                                     oleh Pembimbing Akademik. Anda tidak bisa mengubah IRS. Jika Anda
                                     ingin melihat IRS, silakan menuju ke halaman Lihat IRS. Jika Anda ingin melakukan
                                     perubahan IRS, hubungi Pembimbing Akademik Anda untuk mendapatkan akses.</p>
@@ -373,13 +373,13 @@
                         @if ($irsForCurrentPeriod && $irsForCurrentPeriod->status == 'Disetujui')
                             <div
                                 class="w-full p-4 text-center bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
-                                <h5 class="mb-2 text-3xl font-bold text-gray-900 dark:text-white">IRS Anda sudah
+                                <h5 class="mb-2 text-3xl font-bold text-gray-900 dark:text-white">Perubahan IRS Anda sudah
                                     disetujui.</h5>
-                                <p class="mb-5 text-base text-gray-500 sm:text-lg dark:text-gray-400">IRS Anda
+                                <p class="mb-5 text-base text-gray-500 sm:text-lg dark:text-gray-400">Perubahan IRS Anda
                                     disetujui
-                                    oleh Pembimbing Akademik. Anda tidak bisa mengubah IRS. Jika Anda
-                                    ingin melihat IRS, silakan menuju ke halaman Lihat IRS. Jika Anda ingin melakukan
-                                    perubahan IRS, hubungi Pembimbing Akademik Anda untuk mendapatkan akses.</p>
+                                    oleh Pembimbing Akademik. Jika Anda
+                                    ingin melihat dan/atau mencetak IRS, silakan menuju ke halaman Lihat IRS. Jika Anda ingin melakukan
+                                    perubahan IRS, hubungi Pembimbing Akademik kembali untuk mendapatkan izin.</p>
                                 {{-- <div class="flex items-center justify-center ">
                                     <img src="/images/sonic.png" alt="Sonic" class="bg-center">
                                 </div> --}}
