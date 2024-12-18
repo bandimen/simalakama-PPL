@@ -59,7 +59,14 @@
                 </div>
                 <br>
                 @if ($currentPeriod)
-
+                    @php
+                        $irsForCurrentPeriod = $mahasiswa
+                            ->irs()
+                            ->where('jenis_semester', $currentPeriod->semester)
+                            ->where('tahun_ajaran', $currentPeriod->tahun_ajaran)
+                            ->first();
+                    @endphp
+                    {{-- Jika dalam periode pengisian --}}
                     @if ($activePeriodType == 'pengisian')
                         <div id="alert-additional-content-1"
                             class="p-4 text-blue-800 border border-blue-300 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400 dark:border-blue-800"
@@ -71,7 +78,7 @@
                                         d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
                                 </svg>
                                 <span class="sr-only">Info</span>
-                                <h3 class="text-lg font-medium">Anda dalam Masa Pengisian IRS</h3>
+                                <h3 class="text-lg font-medium">Anda dalam <b>Masa Pengisian IRS</b></h3>
                             </div>
                             <div class="mt-2 mb-4 text-sm">
                                 Masa pengisian IRS dimulai pada tanggal {{ $currentPeriod->periode_pengisian_start }}
@@ -79,13 +86,8 @@
                             </div>
                         </div>
                         <br>
-                        @php
-                            $irsForCurrentPeriod = $mahasiswa
-                                ->irs()
-                                ->where('jenis_semester', $currentPeriod->semester)
-                                ->where('tahun_ajaran', $currentPeriod->tahun_ajaran)
-                                ->first();
-                        @endphp
+
+                        {{-- Jika IRS mahasiswa sudah disetujui --}}
                         @if ($irsForCurrentPeriod && $irsForCurrentPeriod->status == 'Disetujui')
                             <div
                                 class="w-full p-4 text-center bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
@@ -343,25 +345,133 @@
                                 </div>
                             </div>
                         @endif
-                        @elseif ($activePeriodType == 'perubahan')
-                            <div id="alert-additional-content-1"
-                                class="p-4 mb-4 text-blue-800 border border-blue-300 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400 dark:border-blue-800"
-                                role="alert">
-                                <div class="flex items-center">
-                                    <svg class="flex-shrink-0 w-4 h-4 me-2" aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                        <path
-                                            d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
-                                    </svg>
-                                    <span class="sr-only">Info</span>
-                                    <h3 class="text-lg font-medium">Anda dalam Masa Perubahan IRS</h3>
-                                </div>
-                                <div class="mt-2 mb-4 text-sm">
-                                    Masa perubahan IRS dimulai pada tanggal
-                                    {{ $currentPeriod->periode_perubahan_start }} hingga
-                                    {{ $currentPeriod->periode_perubahan_end }}.
+                        {{-- Jika masa periode perubahan --}}
+                    @elseif ($activePeriodType == 'perubahan')
+                        <div id="alert-additional-content-1"
+                            class="p-4 mb-4 text-blue-800 border border-blue-300 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400 dark:border-blue-800"
+                            role="alert">
+                            <div class="flex items-center">
+                                <svg class="flex-shrink-0 w-4 h-4 me-2" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                    <path
+                                        d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                                </svg>
+                                <span class="sr-only">Info</span>
+                                <h3 class="text-lg font-medium">Anda dalam <b>Masa Perubahan IRS</b></h3>
+                            </div>
+                            <div class="mt-2 mb-4 text-sm">
+                                Masa perubahan IRS dimulai pada tanggal
+                                {{ $currentPeriod->periode_perubahan_start }} hingga
+                                {{ $currentPeriod->periode_perubahan_end }}.
+                            </div>
+                        </div>
+
+                        <br>
+
+
+                        {{-- Jika IRS mahasiswa sudah disetujui --}}
+                        @if ($irsForCurrentPeriod && $irsForCurrentPeriod->status == 'Disetujui')
+                            <div
+                                class="w-full p-4 text-center bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
+                                <h5 class="mb-2 text-3xl font-bold text-gray-900 dark:text-white">IRS Anda sudah
+                                    disetujui.</h5>
+                                <p class="mb-5 text-base text-gray-500 sm:text-lg dark:text-gray-400">IRS Anda
+                                    disetujui
+                                    oleh Pembimbing Akademik. Anda tidak bisa mengubah IRS. Jika Anda
+                                    ingin melihat IRS, silakan menuju ke halaman Lihat IRS. Jika Anda ingin melakukan
+                                    perubahan IRS, hubungi Pembimbing Akademik Anda untuk mendapatkan akses.</p>
+                                {{-- <div class="flex items-center justify-center ">
+                                    <img src="/images/sonic.png" alt="Sonic" class="bg-center">
+                                </div> --}}
+                                <div
+                                    class="items-center justify-center space-y-4 sm:flex sm:space-y-0 sm:space-x-4 rtl:space-x-reverse">
+                                    <a href="/mhs/akademik/lihatirs"
+                                        class="w-full sm:w-auto bg-gray-800 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-300 text-white rounded-lg inline-flex items-center justify-center px-4 py-2.5 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700">
+                                        <div class="text-left rtl:text-right">
+                                            <div class="-mt-1 font-sans text-sm font-semibold">Lihat IRS</div>
+                                        </div>
+                                    </a>
+                                    <a href="https://wa.me/6285227715658"
+                                        class="w-full sm:w-auto bg-gray-800 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-300 text-white rounded-lg inline-flex items-center justify-center px-4 py-2.5 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700">
+                                        <div class="text-left rtl:text-right">
+                                            <div class="-mt-1 font-sans text-sm font-semibold">Hubungi Pembimbing
+                                                Akademik</div>
+                                        </div>
+                                    </a>
                                 </div>
                             </div>
+                            {{-- Jika IRS mahasiswa sudah diberi akses edit --}}
+                        @else
+                            {{-- Alert info perubahan --}}
+                            <div id="alert-3"
+                                class="flex border border-green-300 items-center p-4 mb-4 text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400"
+                                role="alert">
+                                <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                    <path
+                                        d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                                </svg>
+                                <span class="sr-only">Info</span>
+                                <div class="ms-3 text-sm font-medium">
+                                    IRS Anda sudah diberi akses perubahan. Silakan hubungi <a
+                                        href="https://wa.me/6285227715658"
+                                        class="font-semibold underline hover:no-underline">Pembimbing Akademik</a> Anda
+                                    untuk meminta persetujuan IRS kembali.
+                                </div>
+                                <button type="button"
+                                    class="ms-auto -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-green-400 dark:hover:bg-gray-700"
+                                    data-dismiss-target="#alert-3" aria-label="Close">
+                                    <span class="sr-only">Close</span>
+                                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                        fill="none" viewBox="0 0 14 14">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                    </svg>
+                                </button>
+                            </div>
+                            {{-- kotak informasi mahasiswa --}}
+                            <section
+                                class="block max-w p-6 bg-white border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700">
+                                <p class="mb-2 text-m tracking-tight text-gray-700 dark:text-white">Nama:
+                                    {{ $mahasiswa->nama }}</p>
+                                <p class="mb-2 text-m tracking-tight text-gray-700 dark:text-white">NIM:
+                                    {{ $mahasiswa->nim }}</p>
+                                <!-- Garis Horizontal -->
+                                <hr class="border-gray-300 w-full mb-4 dark:border-gray-600">
+                                <p class="mb-2 text-m tracking-tight text-gray-700 dark:text-white">Tahun Ajaran:
+                                    {{ $currentPeriod->tahun_ajaran }}</p>
+                                <p class="mb-2 text-m tracking-tight text-gray-700 dark:text-white">Indeks Prestasi
+                                    Kumulatif: {{ $mahasiswa->getIPK() }} </p>
+                                <p class="mb-2 text-m tracking-tight text-gray-700 dark:text-white">Indeks Prestasi
+                                    Semester (lalu): {{ $mahasiswa->getIPSemesterLalu() }}</p>
+                                <p class="mb-2 text-m tracking-tight text-gray-700 dark:text-white">Maksimal Beban SKS:
+                                    {{ $mahasiswa->getMaxBebanSks() }}</p>
+                            </section>
+
+                            <br>
+
+                            {{-- kotak untuk milih mata kuliah --}}
+                            <section
+                                class="block max-w p-6 bg-white border border-gray-200 rounded-lg  dark:bg-gray-800 dark:border-gray-700">
+                                <label for="courses">
+                                    <p class="mb-2 text-m font-bold tracking-tight text-gray-900 dark:text-white">Pilih
+                                        Mata Kuliah</p>
+                                </label>
+                                <br>
+                                <select name="courses" id="courses" onchange="addCourse()">
+                                    <option value="" hidden>-- Pilih Mata Kuliah --</option>
+                                    @foreach ($matkuls as $matkul)
+                                        <option value="{{ $matkul }}">[{{ $matkul->kodemk }}]
+                                            {{ $matkul->nama }} | {{ $matkul->sks }} SKS | Semester
+                                            {{ $matkul->semester }} | {{ $matkul->sifat }}</option>
+                                    @endforeach
+                                </select>
+                                <br><br>
+                                <div class="selected-courses" id="selectedCourses">
+                                    <h3>Mata Kuliah yang Dipilih:</h3>
+                                    <ul id="courseList"></ul>
+                                </div>
+                            </section>
 
                             <br>
 
@@ -382,7 +492,8 @@
                                             <thead>
                                                 <tr>
                                                     <th class="border p-2 bg-gray-100 text-center"
-                                                        style="width: 80px;">Waktu</th>
+                                                        style="width: 80px;">
+                                                        Waktu</th>
                                                     <th class="border p-2 bg-gray-100 text-center" data-day="Senin">
                                                         Senin</th>
                                                     <th class="border p-2 bg-gray-100 text-center" data-day="Selasa">
@@ -420,7 +531,7 @@
                                 <div id="toggleButton"
                                     class="flex justify-center items-center h-12 bg-black-200 rounded-t-lg cursor-pointer">
                                     <div id="toggleIcon" class="text-lg font-bold text-white">
-                                        <span id="totalSKS">0</span> SKS
+                                        <span id="totalsks">0</span> SKS
                                     </div>
                                 </div>
 
@@ -476,19 +587,20 @@
                                 #toggleButton {
                                     height: 50px;
                                     /* Tinggi bagian kecil */
-                                    background-color: #f3f4f6;
+                                    background-color: #5c7ec4;
                                     /* Warna abu-abu terang */
                                     border-radius: 10px 10px 0 0;
                                     /* Rounded di bagian atas */
                                     cursor: pointer;
                                     /* Tampilkan pointer */
+
                                 }
 
                                 /* Ikon toggle */
                                 #toggleIcon {
                                     font-size: 16px;
                                     /* Ukuran ikon */
-                                    color: #4b5563;
+                                    color: #ffffff;
                                     /* Warna ikon */
                                 }
 
@@ -508,36 +620,186 @@
                                     /* Jarak konten di tabel */
                                 }
                             </style>
-                        @elseif ($activePeriodType == 'pembatalan')
-                            <div id="alert-additional-content-1"
-                                class="p-4 mb-4 text-blue-800 border border-blue-300 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400 dark:border-blue-800"
-                                role="alert">
-                                <div class="flex items-center">
-                                    <svg class="flex-shrink-0 w-4 h-4 me-2" aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                        <path
-                                            d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
-                                    </svg>
-                                    <span class="sr-only">Info</span>
-                                    <h3 class="text-lg font-medium">Anda dalam Masa Pembatalan IRS</h3>
-                                </div>
-                                <div class="mt-2 mb-4 text-sm">
-                                    Masa pembatalan IRS dimulai pada tanggal
-                                    {{ $currentPeriod->periode_pembatalan_start }} hingga
-                                    {{ $currentPeriod->periode_pembatalan_end }}.
+
+
+                            <!-- Overlay dan Modal Alert IRS -->
+                            <div id="confirmationModal"
+                                class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-50">
+                                <div class="bg-white rounded-lg p-6 w-80 text-center z-50">
+                                    <h2 class="text-xl font-semibold mb-4">Konfirmasi IRS</h2>
+                                    <p class="text-gray-700 mb-6">Apakah anda yakin ingin memilih mata kuliah ini?</p>
+                                    <div class="flex justify-center gap-4">
+                                        <button id="confirmButton"
+                                            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Ya</button>
+                                        <button id="cancelButton"
+                                            class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Tidak</button>
+                                    </div>
                                 </div>
                             </div>
 
+                            <!-- Overlay dan Modal Alert Pembatalan IRS -->
+                            <div id="cancelConfirmationModal"
+                                class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-50">
+                                <div class="bg-white rounded-lg p-6 w-80 text-center z-50">
+                                    <h2 class="text-xl font-semibold mb-4">Pembatalan IRS</h2>
+                                    <p class="text-gray-700 mb-6">Apakah anda yakin ingin membatalkan pengambilan mata
+                                        kuliah ini?</p>
+                                    <div class="flex justify-center gap-4">
+                                        <button id="confirmCancelButton"
+                                            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Ya</button>
+                                        <button id="cancelCancelButton"
+                                            class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Tidak</button>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                    @elseif ($activePeriodType == 'pembatalan')
+                        <div id="alert-additional-content-1"
+                            class="p-4 mb-4 text-blue-800 border border-blue-300 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400 dark:border-blue-800"
+                            role="alert">
+                            <div class="flex items-center">
+                                <svg class="flex-shrink-0 w-4 h-4 me-2" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                    <path
+                                        d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                                </svg>
+                                <span class="sr-only">Info</span>
+                                <h3 class="text-lg font-medium">Anda dalam <b>Masa Pembatalan IRS</b></h3>
+                            </div>
+                            <div class="mt-2 mb-4 text-sm">
+                                Masa pembatalan IRS dimulai pada tanggal
+                                {{ $currentPeriod->periode_pembatalan_start }} hingga
+                                {{ $currentPeriod->periode_pembatalan_end }}.
+                            </div>
+                        </div>
+                        @if ($irsForCurrentPeriod && $irsForCurrentPeriod->status == 'Disetujui')
+                            <div class="relative">
+                                <!-- Tabel -->
+                                <div class="opacity-60">
+                                    <table id="cancellationTableBody"
+                                        class="min-w-full bg-white border border-gray-300 text-center mt-4">
+                                        <thead class="bg-gray-700 text-white">
+                                            <tr>
+                                                <th class="px-2 py-2 border border-gray-300 w-12">No</th>
+                                                <th class="px-2 py-2 border border-gray-300 w-20">Kode</th>
+                                                <th class="px-2 py-2 border border-gray-300 w-40">Mata Kuliah</th>
+                                                <th class="px-2 py-2 border border-gray-300 w-16">Kelas</th>
+                                                <th class="px-2 py-2 border border-gray-300 w-12">SKS</th>
+                                                <th class="px-2 py-2 border border-gray-300 w-32">Ruang</th>
+                                                <th class="px-2 py-2 border border-gray-300 w-20">Hari</th>
+                                                <th class="px-2 py-2 border border-gray-300 w-32 whitespace-nowrap">Jam
+                                                </th>
+                                                <th class="px-2 py-2 border border-gray-300 w-20">Status</th>
+                                                <th class="px-2 py-2 border border-gray-300 w-20">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="cancellationTableBodyContent">
+                                            @if ($mahasiswa->irs->first()->irsDetails->isNotEmpty())
+                                                @php
+                                                    $counter = 0;
+                                                @endphp
+                                                @foreach ($mahasiswa->irs->first()->irsDetails as $detail)
+                                                    <tr>
+                                                        <td class="px-2 py-2 border border-gray-300 w-12">
+                                                            {{ ++$counter }}
+                                                        </td>
+                                                        <td class="px-2 py-4 border border-gray-300">
+                                                            {{ $detail->kodemk }}
+                                                        </td>
+                                                        <td class="px-2 py-4 border border-gray-300">
+                                                            {{ $detail->mataKuliah->nama ?? '-' }}</td>
+                                                        <td class="px-2 py-4 border border-gray-300">
+                                                            {{ $detail->jadwalKuliah->kelas ?? '-' }}</td>
+                                                        <td class="px-2 py-4 border border-gray-300">
+                                                            {{ $detail->mataKuliah->sks ?? '-' }}</td>
+                                                        <td class="px-2 py-4 border border-gray-300">
+                                                            {{ $detail->jadwalKuliah->ruang->nama ?? '-' }}</td>
+                                                        <td class="px-2 py-4 border border-gray-300">
+                                                            {{ $detail->jadwalKuliah->hari ?? '-' }}</td>
+                                                        <td class="px-2 py-4 border border-gray-300 whitespace-nowrap">
+                                                            {{ $detail->jadwalKuliah->waktu_mulai ?? '-' }} -
+                                                            {{ $detail->jadwalKuliah->waktu_selesai ?? '-' }}
+                                                        </td>
+                                                        <td class="px-2 py-4 border border-gray-300">
+                                                            {{ $detail->status ?? '-' }}
+                                                        </td>
+                                                        <td class="px-2 py-2 border border-gray-300 w-20"><a
+                                                                href="{{ route('deleteIrsDetail', $detail->id) }}"><button
+                                                                    type="button"
+                                                                    class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-2.5 py-1.5 me-1 mb-1 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">X</button>
+                                                            </a></td>
+                                                    </tr>
+                                                @endforeach
+                                            @endif
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Overlay Konten -->
+                                <div
+                                    class="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-50 text-white">
+                                    <!-- Ikon Gembok -->
+                                    <div class="mb-4">
+                                        <img src="/images/icons/lock.png" alt="Ikon Gembok"
+                                            class="w-auto max-w-[50px] max-h-[50px]">
+                                    </div>
+                                    <!-- Teks -->
+                                    <div class="mb-4 text-lg font-medium">
+                                        IRS Anda sudah disetujui.
+                                    </div>
+                                    <div class="mb-4 text-lg font-medium">
+                                        Silakan hubungi Pembimbing Akademik untuk melakukan pembatalan mata kuliah.
+                                    </div>
+                                    <!-- Tombol -->
+                                    <a href="https://wa.me/6285227715658">
+                                        <button
+                                            class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300">
+                                            Hubungi PA
+                                        </button>
+                                    </a>
+                                </div>
+                            </div>
+                        @else
+                            {{-- Alert info perubahan --}}
+                            <div id="alert-3"
+                                class="flex border border-green-300 items-center p-4 mb-4 text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400"
+                                role="alert">
+                                <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                    <path
+                                        d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                                </svg>
+                                <span class="sr-only">Info</span>
+                                <div class="ms-3 text-sm font-medium">
+                                    IRS Anda sudah diberi akses untuk <b>pembatalan</b>. Silakan hubungi <a
+                                        href="https://wa.me/6285227715658"
+                                        class="font-semibold underline hover:no-underline">Pembimbing Akademik</a> Anda
+                                    untuk meminta persetujuan IRS kembali.
+                                </div>
+                                <button type="button"
+                                    class="ms-auto -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-green-400 dark:hover:bg-gray-700"
+                                    data-dismiss-target="#alert-3" aria-label="Close">
+                                    <span class="sr-only">Close</span>
+                                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                        fill="none" viewBox="0 0 14 14">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                    </svg>
+                                </button>
+                            </div>
                             <table id="cancellationTableBody"
                                 class="min-w-full bg-white border border-gray-300 text-center mt-4">
                                 <thead class="bg-gray-700 text-white">
                                     <tr>
                                         <th class="px-2 py-2 border border-gray-300 w-12">No</th>
-                                        <th class="px-2 py-2 border border-gray-300 w-20">Kode MK</th>
+                                        <th class="px-2 py-2 border border-gray-300 w-20">Kode</th>
                                         <th class="px-2 py-2 border border-gray-300 w-40">Mata Kuliah</th>
                                         <th class="px-2 py-2 border border-gray-300 w-16">Kelas</th>
-                                        <th class="px-2 py-2 border border-gray-300 w-12">Hari</th>
-                                        <th class="px-2 py-2 border border-gray-300 w-32">Jam</th>
+                                        <th class="px-2 py-2 border border-gray-300 w-12">SKS</th>
+                                        <th class="px-2 py-2 border border-gray-300 w-32">Ruang</th>
+                                        <th class="px-2 py-2 border border-gray-300 w-20">Hari</th>
+                                        <th class="px-2 py-2 border border-gray-300 w-32 whitespace-nowrap">Jam</th>
+                                        <th class="px-2 py-2 border border-gray-300 w-20">Status</th>
                                         <th class="px-2 py-2 border border-gray-300 w-20">Aksi</th>
                                     </tr>
                                 </thead>
@@ -551,57 +813,74 @@
                                             <tr>
                                                 <td class="px-2 py-2 border border-gray-300 w-12"> {{ ++$counter }}
                                                 </td>
-                                                <td class="px-2 py-2 border border-gray-300 w-20">
-                                                    {{ $detail->mataKuliah->kodemk }}</td>
-                                                <td class="px-2 py-2 border border-gray-300 w-40">
-                                                    {{ $detail->mataKuliah->nama }}</td>
-                                                <td class="px-2 py-2 border border-gray-300 w-16">
-                                                    {{ $detail->jadwalKuliah->kelas }}</td>
-                                                <td class="px-2 py-2 border border-gray-300 w-12">
-                                                    {{ $detail->jadwalKuliah->hari }}</td>
-                                                <td class="px-2 py-2 border border-gray-300 w-32">
-                                                    {{ $detail->jadwalKuliah->waktu_mulai }} -
-                                                    {{ $detail->jadwalKuliah->waktu_selesai }}</td>
+                                                <td class="px-2 py-4 border border-gray-300">{{ $detail->kodemk }}
+                                                </td>
+                                                <td class="px-2 py-4 border border-gray-300">
+                                                    {{ $detail->mataKuliah->nama ?? '-' }}</td>
+                                                <td class="px-2 py-4 border border-gray-300">
+                                                    {{ $detail->jadwalKuliah->kelas ?? '-' }}</td>
+                                                <td class="px-2 py-4 border border-gray-300">
+                                                    {{ $detail->mataKuliah->sks ?? '-' }}</td>
+                                                <td class="px-2 py-4 border border-gray-300">
+                                                    {{ $detail->jadwalKuliah->ruang->nama ?? '-' }}</td>
+                                                <td class="px-2 py-4 border border-gray-300">
+                                                    {{ $detail->jadwalKuliah->hari ?? '-' }}</td>
+                                                <td class="px-2 py-4 border border-gray-300 whitespace-nowrap">
+                                                    {{ $detail->jadwalKuliah->waktu_mulai ?? '-' }} -
+                                                    {{ $detail->jadwalKuliah->waktu_selesai ?? '-' }}
+                                                </td>
+                                                <td class="px-2 py-4 border border-gray-300">
+                                                    {{ $detail->status ?? '-' }}
+                                                </td>
                                                 <td class="px-2 py-2 border border-gray-300 w-20"><a
-                                                        href="{{ route('deleteIrsDetail', $detail->id) }}">X</a></td>
+                                                        href="{{ route('deleteIrsDetail', $detail->id) }}"><button
+                                                            type="button"
+                                                            class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-2.5 py-1.5 me-1 mb-1 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">X</button>
+                                                    </a></td>
                                             </tr>
                                         @endforeach
-
                                     @endif
                                 </tbody>
                             </table>
-                        @else
-                            <div id="alert-additional-content-2"
-                                class="p-4 mb-4 text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800"
-                                role="alert">
-                                <div class="flex items-center">
-                                    <svg class="flex-shrink-0 w-4 h-4 me-2" aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                        <path
-                                            d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
-                                    </svg>
-                                    <span class="sr-only">Info</span>
-                                    <h3 class="text-lg font-medium">Tidak dalam masa IRS-an</h3>
-                                </div>
-                                <div class="mt-2 mb-4 text-sm">
-                                    Masa IRS sudah selesai. Tidak ada lagi pengisian, perubahan, dan pembatalan IRS
-                                    untuk semester ini, silakan nikmati perkuliahan dengan baik. Miaw.
-                                </div>
-                                <div class="flex">
-                                    <a href="/mhs">
-                                        <button type="button"
-                                            class="text-red-800 bg-transparent border border-red-800 hover:bg-red-900 hover:text-white focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-xs px-3 py-1.5 text-center dark:hover:bg-red-600 dark:border-red-600 dark:text-red-500 dark:hover:text-white dark:focus:ring-red-800"
-                                            data-dismiss-target="#alert-additional-content-2" aria-label="Close">
-                                            Kembali
-                                        </button>
-                                    </a>
-                                </div>
-                            </div>
+                            <br>
+                            <a href="https://wa.me/6285227715658">
+                                <button type="button"
+                                    class="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800">Hubungi
+                                    PA</button>
+                            </a>
                         @endif
-
+                    @else
+                        <div id="alert-additional-content-2"
+                            class="p-4 mb-4 text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800"
+                            role="alert">
+                            <div class="flex items-center">
+                                <svg class="flex-shrink-0 w-4 h-4 me-2" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                    <path
+                                        d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                                </svg>
+                                <span class="sr-only">Info</span>
+                                <h3 class="text-lg font-medium">Tidak dalam masa IRS-an</h3>
+                            </div>
+                            <div class="mt-2 mb-4 text-sm">
+                                Masa IRS sudah selesai. Tidak ada lagi pengisian, perubahan, dan pembatalan IRS
+                                untuk semester ini, silakan nikmati perkuliahan dengan baik. Miaw.
+                            </div>
+                            <div class="flex">
+                                <a href="/mhs">
+                                    <button type="button"
+                                        class="text-red-800 bg-transparent border border-red-800 hover:bg-red-900 hover:text-white focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-xs px-3 py-1.5 text-center dark:hover:bg-red-600 dark:border-red-600 dark:text-red-500 dark:hover:text-white dark:focus:ring-red-800"
+                                        data-dismiss-target="#alert-additional-content-2" aria-label="Close">
+                                        Kembali
+                                    </button>
+                                </a>
+                            </div>
+                        </div>
                     @endif
 
-                    <br>
+                @endif
+
+                <br>
 
         </main>
     </div>

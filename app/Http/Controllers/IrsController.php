@@ -247,7 +247,10 @@ class IrsController extends Controller
         // Perbarui data di database
         DB::table('irs')
             ->where('id', $id)
-            ->update(['status' => 'Disetujui']);
+            ->update([
+                'status' => 'Disetujui',
+                'updated_at' => now()
+            ]);
     
         // Balas dengan respons JSON
         return response()->json(['message' => 'IRS berhasil disetujui!'], 200);
@@ -261,8 +264,10 @@ class IrsController extends Controller
         // Perbarui data di database
         DB::table('irs')
             ->where('id', $id)
-            ->update(['status' => 'Belum disetujui']);
-    
+            ->update([
+                'status' => 'Belum disetujui',
+                'updated_at' => now()
+            ]);    
         // Balas dengan respons JSON
         return response()->json(['message' => 'IRS berhasil dibatalkan!'], 200);
     }
