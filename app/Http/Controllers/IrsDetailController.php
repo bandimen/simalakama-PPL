@@ -205,9 +205,7 @@ class IrsDetailController extends Controller
     {
         // Pastikan data ada sebelum dihapus
         $irsDetail = IrsDetail::find($id);
-        $irs = Irs::where('id', $irsDetail->irs_id);
         if ($irsDetail) {
-            $irs->update('total_sks', $irs->total_sks - $irsDetail->mataKuliah->sks);
             $irsDetail->delete(); // Hapus data
         }
     

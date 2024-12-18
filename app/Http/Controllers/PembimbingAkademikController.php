@@ -127,7 +127,16 @@ class PembimbingAkademikController extends Controller
             $pa = Auth::user()->pembimbingAkademik;
             $irsPeriodsController = new IrsPeriodsController();
             $currentPeriod = $irsPeriodsController->getCurrentPeriod();
+            $currentDateTime = now();
 
+            $activePeriodType = null;
+            if ($currentDateTime->between($currentPeriod->periode_pengisian_start, $currentPeriod->periode_pengisian_end)) {
+                $activePeriodType = 'pengisian';
+            } elseif ($currentDateTime->between($currentPeriod->periode_perubahan_start, $currentPeriod->periode_perubahan_end)) {
+                $activePeriodType = 'perubahan';
+            } elseif ($currentDateTime->between($currentPeriod->periode_pembatalan_start, $currentPeriod->periode_pembatalan_end)) {
+                $activePeriodType = 'pembatalan';
+            }
             $data = Mahasiswa::with(['irs' => function ($query) use ($currentPeriod) {
                 $query->where('jenis_semester', $currentPeriod->semester)
                     ->where('tahun_ajaran', $currentPeriod->tahun_ajaran);
@@ -157,7 +166,11 @@ class PembimbingAkademikController extends Controller
 
             $data = $data->get();
 
-            return view('pa.perwalian.tabel-perwalian', ['data' => $data]);
+            return view('pa.perwalian.tabel-perwalian', [
+                'data' => $data,
+                'activePeriodType' => $activePeriodType,
+                'currentPeriod' => $currentPeriod,
+            ]);
         }
     }
 
