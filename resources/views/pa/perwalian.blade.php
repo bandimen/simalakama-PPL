@@ -40,18 +40,81 @@
                 </div>
                 <br>
 
+
+                @if ($activePeriodType == 'pengisian')
+                    <div id="alert-additional-content-1"
+                        class="p-4 text-blue-800 border border-blue-300 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400 dark:border-blue-800"
+                        role="alert">
+                        <div class="flex items-center">
+                            <svg class="flex-shrink-0 w-4 h-4 me-2" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                            </svg>
+                            <span class="sr-only">Info</span>
+                            <h3 class="text-lg font-medium">Saat Ini Merupakan <b>Masa Pengisian IRS</b></h3>
+                        </div>
+                        <div class="mt-2 mb-4 text-sm">
+                            Masa pengisian IRS dimulai pada tanggal {{ $currentPeriod->periode_pengisian_start }}
+                            hingga {{ $currentPeriod->periode_pengisian_end }}. Anda sebagai Pembimbing Akademik
+                            dapat melakukan persetujuan untuk IRS yang sudah diajukan mahasiswa.
+                        </div>
+                    </div>
+                    <br>
+                @elseif ($activePeriodType == 'perubahan')
+                    <div id="alert-additional-content-1"
+                        class="p-4 mb-4 text-blue-800 border border-blue-300 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400 dark:border-blue-800"
+                        role="alert">
+                        <div class="flex items-center">
+                            <svg class="flex-shrink-0 w-4 h-4 me-2" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                            </svg>
+                            <span class="sr-only">Info</span>
+                            <h3 class="text-lg font-medium">Saat Ini Merupakan <b>Masa Perubahan IRS</b></h3>
+                        </div>
+                        <div class="mt-2 mb-4 text-sm">
+                            Masa perubahan IRS dimulai pada tanggal
+                            {{ $currentPeriod->periode_perubahan_start }} hingga
+                            {{ $currentPeriod->periode_perubahan_end }}. Anda dapat memberikan izin kepada mahasiswa
+                            yang ingin melakukan perubahan pengambilan mata kuliah dengan cara membatalkan IRS. Silakan
+                            setujui kembali IRS mahasiswa apabila IRS sudah diubah oleh mahasiswa.
+                        </div>
+                    </div>
+                    <br>
+                @elseif ($activePeriodType == 'pembatalan')
+                    <div id="alert-additional-content-1"
+                        class="p-4 mb-4 text-blue-800 border border-blue-300 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400 dark:border-blue-800"
+                        role="alert">
+                        <div class="flex items-center">
+                            <svg class="flex-shrink-0 w-4 h-4 me-2" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                            </svg>
+                            <span class="sr-only">Info</span>
+                            <h3 class="text-lg font-medium">Saat Ini Merupakan <b>Masa Pembatalan IRS</b></h3>
+                        </div>
+                        <div class="mt-2 mb-4 text-sm">
+                            Masa pembatalan IRS dimulai pada tanggal
+                            {{ $currentPeriod->periode_pembatalan_start }} hingga
+                            {{ $currentPeriod->periode_pembatalan_end }}. Anda dapat memberikan izin kepada mahasiswa
+                            yang ingin melakukan pembatalan mata kuliah dengan cara membatalkan IRS.
+                        </div>
+                    </div>
+                    <br>
+                @endif
                 {{-- Tabel --}}
                 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-
                         <caption
                             class="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white dark:bg-gray-800">
                             IRS Mahasiswa
-                            <p class="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400"><br>Pembimbing Akademik
-                                dapat melakukan persetujuan dan pembatalan untuk IRS mahasiswa perwaliannya. Klik
-                                nama/NIM mahasiswa untuk melihat rincian mata kuliah yang diambil mahasiswa pada periode
+                            <p class="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">Klik
+                                NIM/ nama mahasiswa untuk melihat rincian mata kuliah yang diambil mahasiswa pada periode
                                 semester ini.</p>
-                            <br><br>
+                            <br>
                             <div
                                 class="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900">
                                 <div>
@@ -99,8 +162,9 @@
                                         class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
                                         <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
                                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                                            <path stroke="currentColor" stroke-linecap="round"
+                                                stroke-linejoin="round" stroke-width="2"
+                                                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                                         </svg>
                                     </div>
                                     <input type="text" id="searchTabel" name="search"
@@ -123,7 +187,6 @@
                                 <th scope="col" class="px-6 py-3">
                                     <div class="flex items-center">
                                         NIM
-
                                     </div>
                                 </th>
                                 <th scope="col" class="px-6 py-3">
@@ -151,9 +214,11 @@
                                         Status
                                     </div>
                                 </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Aksi
-                                </th>
+                                @if ($activePeriodType)
+                                    <th scope="col" class="px-6 py-3">
+                                        Aksi
+                                    </th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody id="bodyTabel">
@@ -308,18 +373,22 @@
                                                         <!-- Modal footer -->
                                                         <div
                                                             class="flex justify-center items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-                                                            @if ($m->irs->first()->status == 'Belum disetujui')
+                                                            @if ($m->irs->first()->status == 'Belum disetujui' && $activePeriodType)
                                                                 <button
                                                                     onclick="setujuiIrs({{ $m->irs->first()->id }})"
                                                                     type="button"
                                                                     class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                                                                     Setujui
                                                                 </button>
-                                                            @elseif ($m->irs->first()->status == 'Disetujui')
+                                                            @elseif ($m->irs->first()->status == 'Disetujui' && $activePeriodType)
                                                                 <button
                                                                     onclick="batalkanIrs({{ $m->irs->first()->id }})"
                                                                     type="button"
                                                                     class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Batalkan</button>
+                                                            @else
+                                                                <button data-modal-hide="modal-{{ $m->nim }}"
+                                                                    type="button"
+                                                                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Tutup</button>
                                                             @endif
                                                         </div>
                                                     </div>
@@ -350,15 +419,20 @@
                                             @endif
 
                                         </td>
-                                        <td class="px-6 py-4 text-right">
-                                            @if ($m->irs->first()->status == 'Belum disetujui')
-                                                <a href="#" onclick="setujuiIrs({{ $m->irs->first()->id }})"
-                                                    class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Setujui</a>
-                                            @elseif ($m->irs->first()->status == 'Disetujui')
-                                                <a href="#" onclick="batalkanIrs({{ $m->irs->first()->id }})"
-                                                    class="font-medium text-red-500 dark:text-red-500 hover:underline">Batalkan</a>
-                                            @endif
-                                        </td>
+                                        @if ($activePeriodType)
+                                            <td class="px-6 py-4 text-right">
+                                                @if ($m->irs->first()->status == 'Belum disetujui')
+                                                    <a href="#"
+                                                        onclick="setujuiIrs({{ $m->irs->first()->id }})"
+                                                        class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Setujui</a>
+                                                @elseif ($m->irs->first()->status == 'Disetujui')
+                                                    <a href="#"
+                                                        onclick="batalkanIrs({{ $m->irs->first()->id }})"
+                                                        class="font-medium text-red-500 dark:text-red-500 hover:underline">Batalkan</a>
+                                                @endif
+                                            </td>
+                                        @endif
+
                                     </tr>
                                     {{-- Jika mahasiswa belum mengisi IRS --}}
                                 @else
@@ -487,9 +561,11 @@
                                             </span>
 
                                         </td>
-                                        <td class="px-6 py-4 text-center">
-                                            -
-                                        </td>
+                                        @if ($activePeriodType)
+                                            <td class="px-6 py-4 text-center">
+                                                -
+                                            </td>
+                                        @endif
                                     </tr>
                                 @endif
                             @endforeach
@@ -582,68 +658,67 @@
             });
         }
 
-        $(document).ready(function () {
-    // Fungsi untuk mengambil data tabel berdasarkan pencarian dan status
-    function fetchTableData() {
-        var query = $('#searchTabel').val(); // Ambil input dari pencarian
-        var status = $('#dropdownAction a.active').data('status'); // Ambil status yang dipilih
+        $(document).ready(function() {
+            // Fungsi untuk mengambil data tabel berdasarkan pencarian dan status
+            function fetchTableData() {
+                var query = $('#searchTabel').val(); // Ambil input dari pencarian
+                var status = $('#dropdownAction a.active').data('status'); // Ambil status yang dipilih
 
-        $.ajax({
-            url: "{{ route('ajaxPerwalian') }}", // Endpoint untuk live search dan filter
-            type: "GET",
-            data: {
-                search: query,
-                status: status
-            }, // Kirim data ke server
-            success: function (data) {
-                $('#bodyTabel').html(data); // Update isi tabel
-            },
-            error: function (xhr) {
-                console.error(xhr.responseText); // Debug error
+                $.ajax({
+                    url: "{{ route('ajaxPerwalian') }}", // Endpoint untuk live search dan filter
+                    type: "GET",
+                    data: {
+                        search: query,
+                        status: status
+                    }, // Kirim data ke server
+                    success: function(data) {
+                        $('#bodyTabel').html(data); // Update isi tabel
+                    },
+                    error: function(xhr) {
+                        console.error(xhr.responseText); // Debug error
+                    }
+                });
             }
+
+            // Event untuk modal toggle dan close secara dinamis
+            $(document).on('click', '[data-modal-toggle]', function(e) {
+                e.preventDefault();
+                var modalId = $(this).data('modal-target');
+                $('#' + modalId).removeClass('hidden');
+
+                // Inisialisasi ulang Flowbite modal jika perlu
+                const modal = new Modal(document.getElementById(modalId));
+                modal.show();
+            });
+
+            $(document).on('click', '[data-modal-hide]', function(e) {
+                e.preventDefault();
+                var modalId = $(this).data('modal-hide');
+                $('#' + modalId).addClass('hidden');
+
+                // Inisialisasi ulang Flowbite modal saat menutup
+                const modal = new Modal(document.getElementById(modalId));
+                modal.hide();
+            });
+
+            // Event untuk Live Search
+            $('#searchTabel').on('keyup', function() {
+                fetchTableData(); // Panggil fungsi fetchTableData setiap kali input berubah
+            });
+
+            // Event untuk Dropdown
+            $('#dropdownAction a').on('click', function(e) {
+                e.preventDefault(); // Mencegah navigasi ke #
+                $('#dropdownAction a').removeClass('active'); // Hapus status aktif dari semua item
+                $(this).addClass('active'); // Tandai item yang dipilih
+
+                // Perbarui teks tombol dropdown
+                const selectedText = $(this).text().trim();
+                $('#dropdownActionButton span').text(selectedText);
+
+                // Panggil fungsi fetchTableData
+                fetchTableData();
+            });
         });
-    }
-
-    // Event untuk modal toggle dan close secara dinamis
-    $(document).on('click', '[data-modal-toggle]', function (e) {
-        e.preventDefault();
-        var modalId = $(this).data('modal-target');
-        $('#' + modalId).removeClass('hidden');
-
-        // Inisialisasi ulang Flowbite modal jika perlu
-        const modal = new Modal(document.getElementById(modalId));
-        modal.show();
-    });
-
-    $(document).on('click', '[data-modal-hide]', function (e) {
-        e.preventDefault();
-        var modalId = $(this).data('modal-hide');
-        $('#' + modalId).addClass('hidden');
-
-        // Inisialisasi ulang Flowbite modal saat menutup
-        const modal = new Modal(document.getElementById(modalId));
-        modal.hide();
-    });
-
-    // Event untuk Live Search
-    $('#searchTabel').on('keyup', function () {
-        fetchTableData(); // Panggil fungsi fetchTableData setiap kali input berubah
-    });
-
-    // Event untuk Dropdown
-    $('#dropdownAction a').on('click', function (e) {
-        e.preventDefault(); // Mencegah navigasi ke #
-        $('#dropdownAction a').removeClass('active'); // Hapus status aktif dari semua item
-        $(this).addClass('active'); // Tandai item yang dipilih
-
-        // Perbarui teks tombol dropdown
-        const selectedText = $(this).text().trim();
-        $('#dropdownActionButton span').text(selectedText);
-
-        // Panggil fungsi fetchTableData
-        fetchTableData();
-    });
-});
-
     </script>
 </x-layout>

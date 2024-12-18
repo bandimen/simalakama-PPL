@@ -234,12 +234,33 @@
                                                 </tbody>
 
                                             </table>
+                                            <br>
+                                            <p class="text-sm">
+                                                Disetujui pada <strong class="font-bold">{{ $i->updated_at }}</strong>
+                                            </p>
+                                            @if ($i->status == 'Disetujui')
+                                                
+                                            <a href="{{ route('cetakIrsPerSmt', ['nim' => $mhs->nim, 'id' => $i->id]) }}"  target="_blank">
+                                                <button type="button" class="flex items-center text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-xs px-3 py-1.5 text-center me-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800">
+                                                    <img src="/images/irs.png" class="h-3 w-3 mr-2" alt="irs"> <!-- Ikon lebih kecil -->
+                                                    Cetak IRS
+                                                </button>
+                                            </a>
+                                            @endif
+                                            
                                         </div>
 
                                     </div>
                                     </div>
                                 </div>
                             @endforeach
+                            <br>
+                            <a href="{{ route('cetakIrsAll', $mhs->nim) }}"  target="_blank">
+                                <button type="button" class="flex items-center text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-xs px-3 py-1.5 text-center me-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800">
+                                    <img src="/images/irs.png" class="h-3 w-3 mr-2" alt="irs"> <!-- Ikon lebih kecil -->
+                                    Cetak Semua IRS
+                                </button>
+                            </a>
                         @else
                         <p class="text-gray-500">Mahasiswa belum memiliki riwayat studi.</p>
                         @endif

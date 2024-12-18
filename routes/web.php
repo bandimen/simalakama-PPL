@@ -67,6 +67,9 @@ Route::middleware(['auth'])->group(function () {
   // show irs dan khs mhs
   Route::get('pa/rekapmhs/irs/{nim}', [PembimbingAkademikController::class, 'showIrsByNim'])->name('showIrsByNim');
   Route::get('pa/rekapmhs/khs/{nim}', [PembimbingAkademikController::class, 'showKhsByNim'])->name('showKhsByNim');
+  // cetak irs
+  Route::get('pa/perwalian/cetak/irs/{nim}/{id}', [IrsController::class, 'cetakIrsPerSmt'])->name('cetakIrsPerSmt');
+  Route::get('pa/perwalian/cetak/irs/{nim}', [IrsController::class, 'cetakIrsAll'])->name('cetakIrsAll');
   // ajax tabel perwalian
   Route::get('/pa/perwalian/search', [PembimbingAkademikController::class, 'ajaxTabelPerwalian'])->name('ajaxPerwalian');
   // ajax tabel rekapmhs

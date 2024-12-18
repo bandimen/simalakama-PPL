@@ -36,12 +36,30 @@ class PembimbingAkademikController extends Controller
     }
     public function perwalian()
     {
+        $irsPeriodsController = new IrsPeriodsController();
+        $currentPeriod = $irsPeriodsController->getCurrentPeriod();
+        $currentDateTime = now();
+
+        $activePeriodType = null;
+        if ($currentDateTime->between($currentPeriod->periode_pengisian_start, $currentPeriod->periode_pengisian_end)) {
+            $activePeriodType = 'pengisian';
+        } elseif ($currentDateTime->between($currentPeriod->periode_perubahan_start, $currentPeriod->periode_perubahan_end)) {
+            $activePeriodType = 'perubahan';
+        } elseif ($currentDateTime->between($currentPeriod->periode_pembatalan_start, $currentPeriod->periode_pembatalan_end)) {
+            $activePeriodType = 'pembatalan';
+        }
+
         $pa = Auth::user()->pembimbingAkademik;
 
         $irsController = new IrsController();
 
         $mhs = $irsController->getAllMhsPerwalianWithIrsCurrentPeriod($pa);
-        return view('pa.perwalian', ['title' => 'Perwalian - PA', 'mhs' => $mhs]);
+        return view('pa.perwalian', [
+            'title' => 'Perwalian - PA', 
+            'mhs' => $mhs,
+            'activePeriodType' => $activePeriodType,
+            'currentPeriod' => $currentPeriod,
+        ]);
     }
 
 
@@ -161,4 +179,7 @@ class PembimbingAkademikController extends Controller
 
         return view('pa.rekapmhs.tabel-rekapmhs', ['mhs' => $mhs]);
     }
+
+
+
 }

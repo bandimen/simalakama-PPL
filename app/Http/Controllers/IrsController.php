@@ -321,4 +321,32 @@ class IrsController extends Controller
 
         return $mhs;
     }
+
+    public function cetakIrsPerSmt($nim, $id)
+    {
+        $mhs = Mahasiswa::with(['irs' => function ($query) use ($id) {
+            $query->where('id', $id);
+        }, 'irs.irsDetails', 'irs.irsDetails.mataKuliah', 'prodi'])
+        ->where('nim', $nim)
+        ->get();
+        
+        $mhs = $mhs->first();
+        
+        return view('pa.cetak.irs', [
+            'mhs' => $mhs,
+        ]);
+    }
+
+    public function cetakIrsAll($nim)
+    {
+        $mhs = Mahasiswa::with(['irs', 'irs.irsDetails', 'irs.irsDetails.mataKuliah', 'prodi'])
+        ->where('nim', $nim)
+        ->get();
+        
+        $mhs = $mhs->first();
+        
+        return view('pa.cetak.irs_all', [
+            'mhs' => $mhs,
+        ]);
+    }
 }
