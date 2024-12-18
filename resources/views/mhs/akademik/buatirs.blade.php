@@ -694,11 +694,11 @@
                                             </tr>
                                         </thead>
                                         <tbody id="cancellationTableBodyContent">
-                                            @if ($mahasiswa->irs->first()->irsDetails->isNotEmpty())
+                                            @if ($mahasiswa->irs->last()->irsDetails->isNotEmpty())
                                                 @php
                                                     $counter = 0;
                                                 @endphp
-                                                @foreach ($mahasiswa->irs->first()->irsDetails as $detail)
+                                                @foreach ($mahasiswa->irs->last()->irsDetails as $detail)
                                                     <tr>
                                                         <td class="px-2 py-2 border border-gray-300 w-12">
                                                             {{ ++$counter }}
@@ -805,11 +805,11 @@
                                 </thead>
                                 <tbody id="cancellationTableBodyContent">
                                     <!-- Data akan ditambahkan di sini -->
-                                    @if ($mahasiswa->irs->first()->irsDetails->isNotEmpty())
+                                    @if ($mahasiswa->irs->last()->irsDetails->isNotEmpty())
                                         @php
                                             $counter = 0;
                                         @endphp
-                                        @foreach ($mahasiswa->irs->first()->irsDetails as $detail)
+                                        @foreach ($mahasiswa->irs->last()->irsDetails as $detail)
                                             <tr>
                                                 <td class="px-2 py-2 border border-gray-300 w-12"> {{ ++$counter }}
                                                 </td>
